@@ -52,7 +52,7 @@ function renderClassifiche() {
 function getSquadraLogoSmall(nomeSquadra) {
     const squadra = squadreDB.find(s => s.nome === nomeSquadra);
     if (squadra && squadra.logo) {
-        return `<img src="Loghi/${squadra.logo}" alt="${squadra.nome}" style="width:28px;height:28px;object-fit:contain;border-radius:4px;background:#000;">`;
+        return `<img src="Loghi/${squadra.logo}" alt="${squadra.nome}" style="width:28px;height:28px;object-fit:contain;border-radius:4px;">`;
     }
     return `<div style="width:28px;height:28px;border-radius:4px;background:${squadra?.colore||'#333'};display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:900;">${squadra?.badge||'?'}</div>`;
 }

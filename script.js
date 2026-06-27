@@ -12,7 +12,9 @@ const squadreDB = [
             { numero: 3, nome: "Francesco Francese" },
             { numero: 7, nome: "Emanuele Cavallini", capitano: true },
             { numero: 8, nome: "Leonardo Lemmi" },
+            { numero: 9, nome: "Alessandro Riccardi" },
             { numero: 10, nome: "Luigi Bartolozzi" },
+            { numero: 14, nome: "Gabriele Massimo Catalano Belisario" },
             { numero: 20, nome: "Gianni Landi" },
             { numero: 47, nome: "Alessandro Salvadori" },
             { numero: 63, nome: "Mattia Aprile" },
@@ -46,12 +48,12 @@ const squadreDB = [
         colore: "#004488",
         coloreScuro: "#002244",
         giocatori: [
-            { nome: "Giannetti Giorgio", capitano: true },
-            { nome: "Marinai Francesco" },
-            { nome: "Piendibene Stefan" },
-            { nome: "Mannucci Cristiano" },
-            { nome: "Casapieri Matteo" },
-            { nome: "Petracchi Alessandro" }
+            { nome: "Giorgio Giannetti", capitano: true },
+            { nome: "Francesco Marinai" },
+            { nome: "Stefan Piendibene" },
+            { nome: "Cristiano Mannucci" },
+            { nome: "Matteo Casapieri" },
+            { nome: "Alessandro Petracchi" }
         ]
     },
     {

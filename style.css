@@ -1331,7 +1331,7 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     height: 42px;
     object-fit: contain;
     border-radius: 8px;
-    background: #000;
+    background: transparent;
 }
 
 /* CLASSIFICA - intestazione sezione */
