@@ -2,24 +2,24 @@
 const squadreDB = [
     {
         id: 1,
-        nome: "ADLSR",
+        nome: "ADLSR FC",
         badge: "ADLSR",
         logo: "ADLSR.png",
         girone: "Girone B",
         colore: "#00cc44",
         coloreScuro: "#008833",
         giocatori: [
-            { numero: 3, nome: "Francesco Francese" },
-            { numero: 7, nome: "Emanuele Cavallini", capitano: true },
-            { numero: 8, nome: "Leonardo Lemmi" },
-            { numero: 9, nome: "Alessandro Riccardi" },
+            { numero: 3,  nome: "Francesco Francese" },
+            { numero: 7,  nome: "Emanuele Cavallini", capitano: true },
+            { numero: 8,  nome: "Leonardo Lemmi" },
             { numero: 10, nome: "Luigi Bartolozzi" },
-            { numero: 14, nome: "Gabriele Massimo Catalano Belisario" },
             { numero: 20, nome: "Gianni Landi" },
             { numero: 47, nome: "Alessandro Salvadori" },
             { numero: 63, nome: "Mattia Aprile" },
             { numero: 67, nome: "Gianmarco Lelli" },
-            { numero: 77, nome: "Gabriele Lemmi" }
+            { numero: 77, nome: "Gabriele Lemmi" },
+            { numero: 9,  nome: "Alessandro Riccardi" },
+            { numero: 14, nome: "Gabriele Massimo Catalano Belisario" }
         ]
     },
     {
@@ -122,16 +122,16 @@ const partiteDB = [
     { id: 1, giorno: 1, orario: "18:30-19:00", girone: "A", squadra1: "Narcos", squadra2: "Staff Poco Tecnico", risultato: null, marcatori: [] },
     { id: 2, giorno: 1, orario: "19:00-19:30", girone: "B", squadra1: "Atletico Gaza", squadra2: "DA PIERINO PSG", risultato: null, marcatori: [] },
     { id: 3, giorno: 1, orario: "19:30-20:00", girone: "A", squadra1: "Bundesdini All-Stars", squadra2: "Staff Poco Tecnico", risultato: null, marcatori: [] },
-    { id: 4, giorno: 1, orario: "20:00-20:30", girone: "B", squadra1: "ADLSR", squadra2: "DA PIERINO PSG", risultato: null, marcatori: [] },
+    { id: 4, giorno: 1, orario: "20:00-20:30", girone: "B", squadra1: "ADLSR FC", squadra2: "DA PIERINO PSG", risultato: null, marcatori: [] },
     { id: 5, giorno: 1, orario: "20:30-21:00", girone: "A", squadra1: "Narcos", squadra2: "Bundesdini All-Stars", risultato: null, marcatori: [] },
-    { id: 6, giorno: 1, orario: "21:00-21:30", girone: "B", squadra1: "ADLSR", squadra2: "Atletico Gaza", risultato: null, marcatori: [] }
+    { id: 6, giorno: 1, orario: "21:00-21:30", girone: "B", squadra1: "ADLSR FC", squadra2: "Atletico Gaza", risultato: null, marcatori: [] }
 ];
 
 // Database centrale dei marcatori e assist
 const giocatoriStatsDB = [
-    { nome: "Francesco Francese", squadra: "ADLSR", marcatori: 0, assist: 0 },
-    { nome: "Emanuele Cavallini", squadra: "ADLSR", marcatori: 0, assist: 0 },
-    { nome: "Leonardo Lemmi", squadra: "ADLSR", marcatori: 0, assist: 0 }
+    { nome: "Francesco Francese", squadra: "ADLSR FC", marcatori: 0, assist: 0 },
+    { nome: "Emanuele Cavallini", squadra: "ADLSR FC", marcatori: 0, assist: 0 },
+    { nome: "Leonardo Lemmi", squadra: "ADLSR FC", marcatori: 0, assist: 0 }
 ];
 
 // Database classifiche
@@ -142,7 +142,7 @@ const classificheDB = {
         { posizione: 3, squadra: 'Staff Poco Tecnico', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 }
     ],
     'B': [
-        { posizione: 1, squadra: 'ADLSR', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
+        { posizione: 1, squadra: 'ADLSR FC', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
         { posizione: 2, squadra: 'Atletico Gaza', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
         { posizione: 3, squadra: 'DA PIERINO PSG', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 }
     ]
