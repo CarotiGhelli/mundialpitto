@@ -530,40 +530,98 @@ nav.nav-centered .nav-links {
     padding-bottom: 0.8rem;
 }
 
-.player-row {
+.players-table {
     display: grid;
     grid-template-columns: 1fr max-content max-content;
     column-gap: 0.5rem;
-    align-items: center;
+}
+.player-row { display: contents; }
+.pr-name, .pr-g, .pr-a {
     padding: 0.8rem 0;
-    border-bottom: 1px solid var(--border-glass);
+    border-top: 1px solid var(--border-glass);
+    align-self: center;
     font-size: 0.95rem;
 }
-
-.player-row:last-child {
-    border-bottom: none;
-}
-
+.players-table > :nth-child(-n+3) { border-top: none; }
 .pr-name { font-weight: 600; }
 .pr-g, .pr-a { white-space: nowrap; text-align: right; font-size: 0.82rem; color: var(--neon-green); font-weight: 700; }
 
-.player-match-stats {
+.player-mvp-tag { font-size: 0.88rem; margin-left: 0.25rem; }
+
+/* MVP box in partita.html */
+.mvp-box {
+    background: linear-gradient(135deg, rgba(255,215,0,0.15) 0%, rgba(255,165,0,0.08) 100%);
+    border: 2px solid rgba(255,215,0,0.5);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    margin: 1.5rem 0;
+    color: #ffd700;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+.mvp-box .mvp-label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-bottom: 0.4rem;
+}
+
+/* MVP row in match cards */
+.mvp-card-row {
+    text-align: center;
     font-size: 0.82rem;
-    color: var(--neon-green);
+    color: #ffd700;
     font-weight: 700;
-    white-space: nowrap;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255,215,0,0.25);
 }
 
-.player-mvp-tag {
-    font-size: 0.88rem;
-    margin-left: 0.25rem;
+/* Mini pitch for admin formation editor */
+.mini-pitch {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    background: linear-gradient(135deg, #1a4a1a 0%, #2d5a27 100%);
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    overflow: hidden;
+    user-select: none;
+    touch-action: none;
 }
-
-.player-events {
+.mini-pitch::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 50%;
+    width: 1px;
+    background: rgba(255,255,255,0.25);
+}
+.form-dot {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
     display: flex;
-    gap: 0.3rem;
-    font-size: 1.2rem;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.5rem;
+    font-weight: 900;
+    font-family: 'Montserrat', sans-serif;
+    cursor: grab;
+    user-select: none;
+    border: 2px solid rgba(255,255,255,0.7);
+    z-index: 10;
+    touch-action: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
+.form-dot.team1-dot { background: rgba(0,200,100,0.85); color: #fff; }
+.form-dot.team2-dot { background: rgba(220,60,60,0.85); color: #fff; }
+.form-dot:active { cursor: grabbing; }
 
 /* PAGINA SQUADRE */
 .squadre-container {

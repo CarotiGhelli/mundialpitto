@@ -174,6 +174,7 @@ function _applyFirebaseData(data) {
                 p.marcatori = saved.marcatori
                     ? (Array.isArray(saved.marcatori) ? saved.marcatori : Object.values(saved.marcatori))
                     : [];
+                p.mvp = saved.mvp || null;
             }
         });
     }
@@ -214,7 +215,7 @@ firebaseDB.ref('mundialPitto').once('value', snapshot => {
 function saveDataToFirebase() {
     const partiteDaSalvare = {};
     partiteDB.forEach(p => {
-        partiteDaSalvare[p.id] = { risultato: p.risultato || null, marcatori: p.marcatori || [] };
+        partiteDaSalvare[p.id] = { risultato: p.risultato || null, marcatori: p.marcatori || [], mvp: p.mvp || null };
     });
     const statsDaSalvare = {};
     giocatoriStatsDB.forEach(g => {
@@ -225,6 +226,33 @@ function saveDataToFirebase() {
         partite: partiteDaSalvare,
         giocatoriStats: statsDaSalvare,
         classifiche: classificheDB
+    });
+}
+
+// Default formation positions (used as fallback if no formation is saved)
+const DEFAULT_FORMATION = {
+    casa:      { gk:{left:5,top:50}, def:{left:20,top:50}, ml:{left:33,top:24}, mr:{left:33,top:76}, fw:{left:46,top:50} },
+    trasferta: { gk:{left:95,top:50}, def:{left:80,top:50}, ml:{left:67,top:24}, mr:{left:67,top:76}, fw:{left:54,top:50} }
+};
+
+function saveFormazioniToFirebase(squadraId, data) {
+    return firebaseDB.ref(`mundialPitto/formazioni/${squadraId}`).set(data);
+}
+function loadFormazioniFromFirebase(squadraId) {
+    return new Promise(resolve => {
+        firebaseDB.ref(`mundialPitto/formazioni/${squadraId}`).once('value', snap => {
+            resolve(snap.exists() ? snap.val() : null);
+        });
+    });
+}
+function savePosizioniPartitaToFirebase(partitaId, data) {
+    return firebaseDB.ref(`mundialPitto/posizioniPartita/${partitaId}`).set(data);
+}
+function loadPosizioniPartitaFromFirebase(partitaId) {
+    return new Promise(resolve => {
+        firebaseDB.ref(`mundialPitto/posizioniPartita/${partitaId}`).once('value', snap => {
+            resolve(snap.exists() ? snap.val() : null);
+        });
     });
 }
 

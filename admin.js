@@ -4,6 +4,7 @@ function initAdmin() {
     loadMatchesInSelect();
     displayMatches();
     document.getElementById('match-select').addEventListener('change', onMatchSelect);
+    initFormationEditor();
 }
 
 function loadMatchesInSelect() {
@@ -19,6 +20,8 @@ function loadMatchesInSelect() {
 }
 
 function onMatchSelect() {
+    const posEditor = document.getElementById('posizioni-partita-editor');
+    if (posEditor) posEditor.style.display = 'none';
     const id = parseInt(this.value);
     const section = document.getElementById('match-detail-section');
     if (!id) { section.style.display = 'none'; currentMatchId = null; return; }
@@ -251,6 +254,180 @@ function showError(msg) {
     el.textContent = '❌ ' + msg;
     el.style.display = 'block';
     setTimeout(() => el.style.display = 'none', 3500);
+}
+
+// ===== VITTORIA A TAVOLINO =====
+function vittoriaATavolino(teamNum) {
+    if (!currentMatchId) { showError('Seleziona una partita'); return; }
+    const partita = partiteDB.find(p => p.id === currentMatchId);
+    if (!partita) return;
+    const winner = teamNum === 1 ? partita.squadra1 : partita.squadra2;
+    if (!confirm(`Vittoria a tavolino 3-0 per ${winner}?`)) return;
+
+    partita.risultato = teamNum === 1 ? '3 - 0' : '0 - 3';
+    partita.marcatori = [];
+    partita.mvp = null;
+
+    document.getElementById('goals-team1').value = teamNum === 1 ? 3 : 0;
+    document.getElementById('goals-team2').value = teamNum === 1 ? 0 : 3;
+    document.getElementById('scorers-list').innerHTML = '';
+    document.getElementById('mvp-select').value = '';
+
+    recomputeAllClassifications();
+    recomputeGiocatoriStats();
+    saveDataToFirebase();
+    showSuccess(`Vittoria a tavolino: ${partita.squadra1} ${partita.risultato} ${partita.squadra2}`);
+    loadMatchesInSelect();
+    displayMatches();
+}
+
+// ===== FORMATION EDITOR =====
+const formState = { squadraId: null, casa: null, trasferta: null };
+const matchPosState = { team1: null, team2: null };
+let activeDrag = null;
+
+function deepCopyFormation(f) {
+    const result = {};
+    Object.keys(f).forEach(r => { result[r] = { left: f[r].left, top: f[r].top }; });
+    return result;
+}
+
+function initFormationEditor() {
+    const sel = document.getElementById('formazione-team-select');
+    squadreDB.forEach(sq => {
+        const o = document.createElement('option');
+        o.value = sq.id;
+        o.textContent = sq.nome;
+        sel.appendChild(o);
+    });
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', onDragEnd);
+    document.addEventListener('touchmove', onTouchDragMove, { passive: false });
+    document.addEventListener('touchend', onDragEnd);
+}
+
+function onTeamSelectChange() {
+    const id = parseInt(document.getElementById('formazione-team-select').value);
+    const editor = document.getElementById('formazione-editor');
+    if (!id) { editor.style.display = 'none'; return; }
+    formState.squadraId = id;
+    editor.style.display = 'block';
+    loadFormazioniFromFirebase(id).then(data => {
+        formState.casa      = data && data.casa      ? deepCopyFormation(data.casa)      : deepCopyFormation(DEFAULT_FORMATION.casa);
+        formState.trasferta = data && data.trasferta ? deepCopyFormation(data.trasferta) : deepCopyFormation(DEFAULT_FORMATION.trasferta);
+        renderFormDots('pitch-casa',      formState.casa,      'team1-dot', 'casa');
+        renderFormDots('pitch-trasferta', formState.trasferta, 'team2-dot', 'trasferta');
+    });
+}
+
+const ROLE_LABELS = { gk: 'POR', def: 'DIF', ml: 'CL', mr: 'CR', fw: 'ATT' };
+
+function renderFormDots(pitchId, formation, dotClass, stateKey) {
+    const pitch = document.getElementById(pitchId);
+    if (!pitch) return;
+    pitch.querySelectorAll('.form-dot').forEach(d => d.remove());
+    Object.entries(formation).forEach(([role, pos]) => {
+        const dot = document.createElement('div');
+        dot.className = `form-dot ${dotClass}`;
+        dot.style.left = pos.left + '%';
+        dot.style.top  = pos.top  + '%';
+        dot.textContent = ROLE_LABELS[role] || role.toUpperCase();
+        dot.dataset.role     = role;
+        dot.dataset.stateKey = stateKey;
+        dot.addEventListener('mousedown',  onDragStart);
+        dot.addEventListener('touchstart', onDragStart, { passive: false });
+        pitch.appendChild(dot);
+    });
+}
+
+function onDragStart(e) {
+    activeDrag = {
+        dot: e.currentTarget,
+        pitch: e.currentTarget.parentElement,
+        stateKey: e.currentTarget.dataset.stateKey,
+        role: e.currentTarget.dataset.role
+    };
+    e.preventDefault();
+}
+
+function getPosPct(clientX, clientY, pitch) {
+    const rect = pitch.getBoundingClientRect();
+    return {
+        left: Math.max(2, Math.min(98, (clientX - rect.left) / rect.width  * 100)),
+        top:  Math.max(2, Math.min(98, (clientY - rect.top)  / rect.height * 100))
+    };
+}
+
+function applyDrag(clientX, clientY) {
+    if (!activeDrag) return;
+    const pos = getPosPct(clientX, clientY, activeDrag.pitch);
+    activeDrag.dot.style.left = pos.left.toFixed(1) + '%';
+    activeDrag.dot.style.top  = pos.top.toFixed(1)  + '%';
+    const stored = { left: parseFloat(pos.left.toFixed(1)), top: parseFloat(pos.top.toFixed(1)) };
+    const sk = activeDrag.stateKey;
+    if (sk === 'casa')      formState.casa[activeDrag.role]      = stored;
+    else if (sk === 'trasferta') formState.trasferta[activeDrag.role] = stored;
+    else if (sk === 'match1')    matchPosState.team1[activeDrag.role] = stored;
+    else if (sk === 'match2')    matchPosState.team2[activeDrag.role] = stored;
+}
+
+function onDragMove(e)      { applyDrag(e.clientX, e.clientY); }
+function onTouchDragMove(e) { if (activeDrag) { applyDrag(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }
+function onDragEnd()        { activeDrag = null; }
+
+async function salvaFormazione() {
+    if (!formState.squadraId) { showError('Seleziona una squadra'); return; }
+    await saveFormazioniToFirebase(formState.squadraId, { casa: formState.casa, trasferta: formState.trasferta });
+    showSuccess('Formazione salvata!');
+}
+
+// ===== MATCH POSITION OVERRIDE =====
+async function togglePosizioniPartita() {
+    const editor = document.getElementById('posizioni-partita-editor');
+    if (editor.style.display !== 'none') { editor.style.display = 'none'; return; }
+    if (!currentMatchId) return;
+
+    const partita = partiteDB.find(p => p.id === currentMatchId);
+    if (!partita) return;
+
+    document.getElementById('label-pitch1').textContent = partita.squadra1;
+    document.getElementById('label-pitch2').textContent = partita.squadra2;
+
+    const existing = await loadPosizioniPartitaFromFirebase(currentMatchId);
+    const sq1 = squadreDB.find(s => s.nome === partita.squadra1);
+    const sq2 = squadreDB.find(s => s.nome === partita.squadra2);
+    let f1 = null, f2 = null;
+    if (!existing) {
+        [f1, f2] = await Promise.all([
+            sq1 ? loadFormazioniFromFirebase(sq1.id) : Promise.resolve(null),
+            sq2 ? loadFormazioniFromFirebase(sq2.id) : Promise.resolve(null)
+        ]);
+    }
+
+    matchPosState.team1 = existing && existing.squadra1
+        ? deepCopyFormation(existing.squadra1)
+        : f1 && f1.casa ? deepCopyFormation(f1.casa) : deepCopyFormation(DEFAULT_FORMATION.casa);
+    matchPosState.team2 = existing && existing.squadra2
+        ? deepCopyFormation(existing.squadra2)
+        : f2 && f2.trasferta ? deepCopyFormation(f2.trasferta) : deepCopyFormation(DEFAULT_FORMATION.trasferta);
+
+    renderFormDots('pitch-match1', matchPosState.team1, 'team1-dot', 'match1');
+    renderFormDots('pitch-match2', matchPosState.team2, 'team2-dot', 'match2');
+    editor.style.display = 'block';
+}
+
+async function salvaPosizioniPartita() {
+    if (!currentMatchId) return;
+    await savePosizioniPartitaToFirebase(currentMatchId, { squadra1: matchPosState.team1, squadra2: matchPosState.team2 });
+    showSuccess('Posizioni partita salvate!');
+}
+
+async function cancellaPosizioniPartita() {
+    if (!currentMatchId) return;
+    if (!confirm('Rimuovere le posizioni personalizzate per questa partita?')) return;
+    await firebaseDB.ref(`mundialPitto/posizioniPartita/${currentMatchId}`).remove();
+    document.getElementById('posizioni-partita-editor').style.display = 'none';
+    showSuccess('Posizioni personalizzate rimosse');
 }
 
 document.addEventListener('DOMContentLoaded', async () => {

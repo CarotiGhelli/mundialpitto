@@ -96,6 +96,7 @@
                             <div class="scorers-col">${getScorerText(p, p.squadra1, 'left')}</div>
                             <div class="scorers-col right">${getScorerText(p, p.squadra2, 'right')}</div>
                         </div>
+                        ${p.mvp ? `<div class="mvp-card-row">&#11088; MVP: ${p.mvp}</div>` : ''}
                     </a>`;
             });
 
