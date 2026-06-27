@@ -42,12 +42,19 @@ function renderTeamList(container, partita, squadra, nomeSquadra) {
         container.querySelector('h3').textContent = nomeSquadra;
         return;
     }
-    const playersHtml = squadra.giocatori.map(g => `
-        <div class="player-row">
-            <span>${g.numero ? g.numero + '. ' : ''}${g.nome}${g.capitano ? ' (C)' : ''}</span>
-            <div class="player-events">${playerStatsBadge(partita, g.nome)}</div>
-        </div>
-    `).join('');
+    const playersHtml = squadra.giocatori.map(g => {
+        const stats = getPlayerMatchStats(partita, g.nome);
+        const isMvp = partita.mvp && partita.mvp === g.nome;
+        const label = `${g.numero ? g.numero + '. ' : ''}${g.nome}${g.capitano ? ' (C)' : ''}`;
+        const mvp = isMvp ? ' <span class="player-mvp-tag">&#11088;</span>' : '';
+        const gol = stats && stats.gol > 0   ? `${stats.gol}&#9917;`    : '';
+        const ast = stats && stats.assist > 0 ? `${stats.assist}&#x1F45F;` : '';
+        return `<div class="player-row">
+            <span class="pr-name">${label}${mvp}</span>
+            <span class="pr-g">${gol}</span>
+            <span class="pr-a">${ast}</span>
+        </div>`;
+    }).join('');
     container.innerHTML = `<h3>${nomeSquadra}</h3>` + playersHtml;
 }
 

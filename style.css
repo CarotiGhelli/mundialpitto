@@ -531,8 +531,9 @@ nav.nav-centered .nav-links {
 }
 
 .player-row {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr max-content max-content;
+    column-gap: 0.5rem;
     align-items: center;
     padding: 0.8rem 0;
     border-bottom: 1px solid var(--border-glass);
@@ -543,9 +544,8 @@ nav.nav-centered .nav-links {
     border-bottom: none;
 }
 
-.player-row span {
-    font-weight: 600;
-}
+.pr-name { font-weight: 600; }
+.pr-g, .pr-a { white-space: nowrap; text-align: right; font-size: 0.82rem; color: var(--neon-green); font-weight: 700; }
 
 .player-match-stats {
     font-size: 0.82rem;
