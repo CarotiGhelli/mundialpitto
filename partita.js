@@ -26,7 +26,7 @@ function playerStatsBadge(partita, nome) {
     const parts = [];
     if (stats) {
         if (stats.gol > 0) parts.push(`&#9917; ${stats.gol}`);
-        if (stats.assist > 0) parts.push(`&#127344;&#65039; ${stats.assist}`);
+        if (stats.assist > 0) parts.push(`&#x1F45F; ${stats.assist}`);
     }
     const isMvp = partita.mvp && partita.mvp === nome;
     const statsHtml = parts.length
