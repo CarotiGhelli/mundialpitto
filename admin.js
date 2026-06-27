@@ -1,286 +1,258 @@
-// Inizializza il pannello admin
+let currentMatchId = null;
+
 function initAdmin() {
-    loadMatchesInSelects();
+    loadMatchesInSelect();
     displayMatches();
+    document.getElementById('match-select').addEventListener('change', onMatchSelect);
+}
 
-    // Popola il dropdown giocatori quando si sceglie la partita
-    document.getElementById('scorer-match-select').addEventListener('change', function() {
-        populatePlayerSelect(parseInt(this.value) || null);
+function loadMatchesInSelect() {
+    const sel = document.getElementById('match-select');
+    sel.innerHTML = '<option value="">-- Seleziona una partita --</option>';
+    partiteDB.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        const stato = p.risultato ? ` [${p.risultato}]` : '';
+        opt.textContent = `G${p.giorno} ${p.orario} | ${p.squadra1} vs ${p.squadra2}${stato}`;
+        sel.appendChild(opt);
     });
 }
 
-// Carica le partite nei select
-function loadMatchesInSelects() {
-    const matchSelect = document.getElementById('match-select');
-    const scorerSelect = document.getElementById('scorer-match-select');
+function onMatchSelect() {
+    const id = parseInt(this.value);
+    const section = document.getElementById('match-detail-section');
+    if (!id) { section.style.display = 'none'; currentMatchId = null; return; }
 
-    matchSelect.innerHTML = '<option value="">-- Seleziona una partita --</option>';
-    scorerSelect.innerHTML = '<option value="">-- Seleziona una partita --</option>';
+    currentMatchId = id;
+    section.style.display = 'block';
 
-    partiteDB.forEach(partita => {
-        const option = document.createElement('option');
-        const label = `${partita.squadra1} vs ${partita.squadra2} (Giorno ${partita.giorno} - ${partita.orario})`;
-        option.value = partita.id;
-        option.textContent = label;
-        matchSelect.appendChild(option);
-        scorerSelect.appendChild(option.cloneNode(true));
-    });
-}
+    const partita = partiteDB.find(p => p.id === id);
+    document.getElementById('label-team1').textContent = partita.squadra1;
+    document.getElementById('label-team2').textContent = partita.squadra2;
 
-// Popola il select giocatori in base alla partita selezionata
-function populatePlayerSelect(matchId) {
-    const select = document.getElementById('player-select');
-    select.innerHTML = '<option value="">-- Seleziona giocatore --</option>';
-
-    if (!matchId) {
-        select.innerHTML = '<option value="">-- Prima seleziona la partita --</option>';
-        return;
+    if (partita.risultato) {
+        const [g1, g2] = partita.risultato.split(' - ').map(Number);
+        document.getElementById('goals-team1').value = g1;
+        document.getElementById('goals-team2').value = g2;
+    } else {
+        document.getElementById('goals-team1').value = 0;
+        document.getElementById('goals-team2').value = 0;
     }
 
-    const partita = partiteDB.find(p => p.id === matchId);
+    document.getElementById('scorers-list').innerHTML = '';
+    if (partita.marcatori && partita.marcatori.length > 0) {
+        partita.marcatori.forEach(m => addScorerRow(m.nome, m.gol || 0, m.assist || 0));
+    }
+
+    populateMvpSelect(partita);
+    if (partita.mvp) document.getElementById('mvp-select').value = partita.mvp;
+}
+
+function escHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function buildPlayerOptionsHtml(partita, defaultValue) {
+    let html = '<option value="">-- Giocatore --</option>';
+    [partita.squadra1, partita.squadra2].forEach(nomeSquadra => {
+        const sq = squadreDB.find(s => s.nome === nomeSquadra);
+        if (!sq) return;
+        html += `<optgroup label="${escHtml(nomeSquadra)}">`;
+        sq.giocatori.forEach(g => {
+            const sel = g.nome === defaultValue ? 'selected' : '';
+            html += `<option value="${escHtml(g.nome)}" ${sel}>${escHtml(g.nome)}${g.capitano ? ' (C)' : ''}</option>`;
+        });
+        html += '</optgroup>';
+    });
+    return html;
+}
+
+function addScorerRow(playerName, gol, assist) {
+    playerName = playerName || '';
+    gol = gol || 0;
+    assist = assist || 0;
+    const partita = partiteDB.find(p => p.id === currentMatchId);
     if (!partita) return;
 
-    const squadra1 = squadreDB.find(s => s.nome === partita.squadra1);
-    const squadra2 = squadreDB.find(s => s.nome === partita.squadra2);
+    const list = document.getElementById('scorers-list');
+    const row = document.createElement('div');
+    row.className = 'scorer-row';
+    row.innerHTML = `
+        <select class="s-player">${buildPlayerOptionsHtml(partita, playerName)}</select>
+        <span class="s-lbl">Gol</span>
+        <input type="number" class="s-gol scorer-num" min="0" value="${gol}">
+        <span class="s-lbl">Ast</span>
+        <input type="number" class="s-ast scorer-num" min="0" value="${assist}">
+        <button class="btn-remove-scorer" onclick="this.closest('.scorer-row').remove()">&#x2715;</button>
+    `;
+    list.appendChild(row);
+}
 
-    [squadra1, squadra2].forEach(sq => {
+function populateMvpSelect(partita) {
+    const sel = document.getElementById('mvp-select');
+    sel.innerHTML = '<option value="">-- Nessun MVP --</option>';
+    [partita.squadra1, partita.squadra2].forEach(nomeSquadra => {
+        const sq = squadreDB.find(s => s.nome === nomeSquadra);
         if (!sq) return;
         const group = document.createElement('optgroup');
-        group.label = sq.nome;
+        group.label = nomeSquadra;
         sq.giocatori.forEach(g => {
             const opt = document.createElement('option');
             opt.value = g.nome;
             opt.textContent = g.nome + (g.capitano ? ' (C)' : '');
             group.appendChild(opt);
         });
-        select.appendChild(group);
+        sel.appendChild(group);
     });
 }
 
-// Mostra le partite caricate
+function saveAll() {
+    if (!currentMatchId) { showError('Seleziona una partita'); return; }
+
+    const partita = partiteDB.find(p => p.id === currentMatchId);
+    if (!partita) return;
+
+    const g1 = parseInt(document.getElementById('goals-team1').value) || 0;
+    const g2 = parseInt(document.getElementById('goals-team2').value) || 0;
+
+    const newMarcatori = [];
+    document.querySelectorAll('.scorer-row').forEach(row => {
+        const nome = row.querySelector('.s-player').value;
+        if (!nome) return;
+        const gol = parseInt(row.querySelector('.s-gol').value) || 0;
+        const assist = parseInt(row.querySelector('.s-ast').value) || 0;
+        if (gol === 0 && assist === 0) return;
+
+        let squadra = '';
+        [partita.squadra1, partita.squadra2].forEach(nomeSquadra => {
+            const sq = squadreDB.find(s => s.nome === nomeSquadra);
+            if (sq && sq.giocatori.some(g => g.nome === nome)) squadra = nomeSquadra;
+        });
+        newMarcatori.push({ nome, squadra, gol, assist });
+    });
+
+    partita.risultato = `${g1} - ${g2}`;
+    partita.marcatori = newMarcatori;
+    partita.mvp = document.getElementById('mvp-select').value || null;
+
+    recomputeAllClassifications();
+    recomputeGiocatoriStats();
+    saveDataToFirebase();
+
+    showSuccess(`Salvato: ${partita.squadra1} ${g1}-${g2} ${partita.squadra2}`);
+    loadMatchesInSelect();
+    displayMatches();
+}
+
+function deleteCurrentResult() {
+    if (!currentMatchId) return;
+    if (!confirm('Cancellare il risultato di questa partita?')) return;
+
+    const partita = partiteDB.find(p => p.id === currentMatchId);
+    if (!partita) return;
+
+    partita.risultato = null;
+    partita.marcatori = [];
+    partita.mvp = null;
+
+    recomputeAllClassifications();
+    recomputeGiocatoriStats();
+    saveDataToFirebase();
+
+    showSuccess('Risultato cancellato');
+    loadMatchesInSelect();
+    displayMatches();
+
+    document.getElementById('goals-team1').value = 0;
+    document.getElementById('goals-team2').value = 0;
+    document.getElementById('scorers-list').innerHTML = '';
+    document.getElementById('mvp-select').value = '';
+}
+
+function recomputeAllClassifications() {
+    ['A', 'B'].forEach(girone => {
+        classificheDB[girone].forEach(s => {
+            s.punti = 0; s.giocate = 0; s.vinte = 0; s.pareggiate = 0; s.perse = 0; s.gf = 0; s.gs = 0;
+        });
+    });
+    partiteDB.forEach(p => {
+        if (!p.risultato) return;
+        const [g1, g2] = p.risultato.split(' - ').map(Number);
+        const cl = classificheDB[p.girone];
+        const sq1 = cl.find(s => s.squadra === p.squadra1);
+        const sq2 = cl.find(s => s.squadra === p.squadra2);
+        if (!sq1 || !sq2) return;
+        sq1.giocate++; sq2.giocate++;
+        sq1.gf += g1; sq1.gs += g2;
+        sq2.gf += g2; sq2.gs += g1;
+        if (g1 > g2) { sq1.vinte++; sq2.perse++; sq1.punti += 3; }
+        else if (g1 < g2) { sq2.vinte++; sq1.perse++; sq2.punti += 3; }
+        else { sq1.pareggiate++; sq2.pareggiate++; sq1.punti++; sq2.punti++; }
+    });
+    ['A', 'B'].forEach(girone => {
+        classificheDB[girone].sort((a, b) => b.punti !== a.punti ? b.punti - a.punti : (b.gf - b.gs) - (a.gf - a.gs));
+        classificheDB[girone].forEach((s, i) => s.posizione = i + 1);
+    });
+}
+
+function recomputeGiocatoriStats() {
+    giocatoriStatsDB.forEach(g => { g.marcatori = 0; g.assist = 0; });
+    partiteDB.forEach(p => {
+        (p.marcatori || []).forEach(m => {
+            let g = giocatoriStatsDB.find(x => x.nome === m.nome);
+            if (!g) {
+                g = { nome: m.nome, squadra: m.squadra, marcatori: 0, assist: 0 };
+                giocatoriStatsDB.push(g);
+            }
+            g.marcatori += m.gol || 0;
+            g.assist += m.assist || 0;
+        });
+    });
+}
+
 function displayMatches() {
     const container = document.getElementById('matches-list');
     let html = '';
-
     partiteDB.forEach(partita => {
+        const stato = partita.risultato
+            ? `<strong style="color:var(--neon-green)">${partita.risultato}</strong>`
+            : '<span style="color:var(--text-muted)">In attesa</span>';
+        const mvpTag = partita.mvp ? ` | MVP: ${escHtml(partita.mvp)}` : '';
         html += `
             <div class="match-item">
                 <div class="match-info">
-                    <div class="match-title">${partita.squadra1} vs ${partita.squadra2}</div>
-                    <div class="match-meta">
-                        Giorno ${partita.giorno} - ${partita.orario} | Girone ${partita.girone}
-                        ${partita.risultato ? ` | Risultato: ${partita.risultato}` : ' | In attesa'}
-                    </div>
+                    <div class="match-title">${escHtml(partita.squadra1)} vs ${escHtml(partita.squadra2)}</div>
+                    <div class="match-meta">G${partita.giorno} &ndash; ${partita.orario} | Girone ${partita.girone} | ${stato}${mvpTag}</div>
                 </div>
                 <div class="match-actions">
                     <button class="btn-small btn-edit" onclick="editMatch(${partita.id})">Modifica</button>
-                    <button class="btn-small btn-delete" onclick="deleteMatch(${partita.id})">Cancella</button>
                 </div>
             </div>
         `;
     });
-
-    container.innerHTML = html || '<p style="color: var(--text-muted);">Nessuna partita caricata</p>';
+    container.innerHTML = html || '<p style="color: var(--text-muted);">Nessuna partita</p>';
 }
 
-// Salva il risultato della partita
-function saveMatchResult() {
-    const matchId = parseInt(document.getElementById('match-select').value);
-    const goalsTeam1 = parseInt(document.getElementById('goals-team1').value);
-    const goalsTeam2 = parseInt(document.getElementById('goals-team2').value);
-
-    if (!matchId) {
-        showError('Seleziona una partita');
-        return;
-    }
-
-    const partita = partiteDB.find(p => p.id === matchId);
-    if (!partita) {
-        showError('Partita non trovata');
-        return;
-    }
-
-    // Aggiorna il risultato
-    partita.risultato = `${goalsTeam1} - ${goalsTeam2}`;
-
-    // Aggiorna la classifica
-    updateClassification(partita, goalsTeam1, goalsTeam2);
-
-    // Salva nel localStorage
-    saveDataToFirebase();
-
-    // Mostra messaggio di successo
-    showSuccess(`Risultato salvato: ${partita.squadra1} ${goalsTeam1} - ${goalsTeam2} ${partita.squadra2}`);
-
-    // Aggiorna la lista
-    displayMatches();
-
-    // Reset form
-    document.getElementById('match-select').value = '';
-    document.getElementById('goals-team1').value = '0';
-    document.getElementById('goals-team2').value = '0';
-}
-
-// Aggiorna la classifica dopo un risultato
-function updateClassification(partita, goalsTeam1, goalsTeam2) {
-    const girone = partita.girone;
-    const classifiche = classificheDB[girone];
-
-    const squadra1 = classifiche.find(s => s.squadra === partita.squadra1);
-    const squadra2 = classifiche.find(s => s.squadra === partita.squadra2);
-
-    if (!squadra1 || !squadra2) return;
-
-    // Aggiorna partite giocate
-    squadra1.giocate++;
-    squadra2.giocate++;
-
-    // Aggiorna gol
-    squadra1.gf += goalsTeam1;
-    squadra1.gs += goalsTeam2;
-    squadra2.gf += goalsTeam2;
-    squadra2.gs += goalsTeam1;
-
-    // Calcola punti
-    if (goalsTeam1 > goalsTeam2) {
-        squadra1.vinte++;
-        squadra2.perse++;
-        squadra1.punti += 3;
-    } else if (goalsTeam1 < goalsTeam2) {
-        squadra2.vinte++;
-        squadra1.perse++;
-        squadra2.punti += 3;
-    } else {
-        squadra1.pareggiate++;
-        squadra2.pareggiate++;
-        squadra1.punti += 1;
-        squadra2.punti += 1;
-    }
-
-    // Riordina la classifica
-    classifiche.sort((a, b) => {
-        if (b.punti !== a.punti) return b.punti - a.punti;
-        return (b.gf - b.gs) - (a.gf - a.gs);
-    });
-
-    // Aggiorna le posizioni
-    classifiche.forEach((s, i) => s.posizione = i + 1);
-}
-
-// Aggiungi marcatore/assist
-function addScorerStats() {
-    const matchId = parseInt(document.getElementById('scorer-match-select').value);
-    const playerName = document.getElementById('player-select').value.trim();
-    const goals = parseInt(document.getElementById('goals-count').value) || 0;
-    const assists = parseInt(document.getElementById('assists-count').value) || 0;
-
-    if (!matchId || !playerName) {
-        showError('Compila tutti i campi');
-        return;
-    }
-
-    if (goals === 0 && assists === 0) {
-        showError('Inserisci almeno un gol o un assist');
-        return;
-    }
-
-    const partita = partiteDB.find(p => p.id === matchId);
-    if (!partita) {
-        showError('Partita non trovata');
-        return;
-    }
-
-    // Cerca o crea il giocatore nel database
-    let giocatore = giocatoriStatsDB.find(g => g.nome === playerName);
-    if (!giocatore) {
-        // Trova la squadra
-        const squadra1 = squadreDB.find(s => s.nome === partita.squadra1);
-        const squadra2 = squadreDB.find(s => s.nome === partita.squadra2);
-
-        let squadra = null;
-        if (squadra1 && squadra1.giocatori.some(g => g.nome === playerName)) {
-            squadra = squadra1.nome;
-        } else if (squadra2 && squadra2.giocatori.some(g => g.nome === playerName)) {
-            squadra = squadra2.nome;
-        }
-
-        if (!squadra) {
-            showError('Giocatore non trovato nelle squadre');
-            return;
-        }
-
-        giocatore = { nome: playerName, squadra, marcatori: 0, assist: 0 };
-        giocatoriStatsDB.push(giocatore);
-    }
-
-    giocatore.marcatori += goals;
-    giocatore.assist += assists;
-
-    // Aggiorna anche i marcatori per partita
-    if (!partita.marcatori) partita.marcatori = [];
-    let matchScorer = partita.marcatori.find(m => m.nome === playerName);
-    if (!matchScorer) {
-        matchScorer = { nome: playerName, squadra: giocatore.squadra, gol: 0, assist: 0 };
-        partita.marcatori.push(matchScorer);
-    }
-    matchScorer.gol += goals;
-    matchScorer.assist += assists;
-
-    saveDataToFirebase();
-    showSuccess(`${playerName}: +${goals} gol, +${assists} assist`);
-
-    // Reset form
-    document.getElementById('scorer-match-select').value = '';
-    populatePlayerSelect(null);
-    document.getElementById('goals-count').value = '0';
-    document.getElementById('assists-count').value = '0';
-}
-
-// Modifica una partita
 function editMatch(id) {
-    const partita = partiteDB.find(p => p.id === id);
-    if (!partita) return;
-
     document.getElementById('match-select').value = id;
-    const [goals1, goals2] = partita.risultato ? partita.risultato.split(' - ').map(Number) : [0, 0];
-    document.getElementById('goals-team1').value = goals1;
-    document.getElementById('goals-team2').value = goals2;
-
-    // Scroll al form
+    document.getElementById('match-select').dispatchEvent(new Event('change'));
     document.getElementById('match-select').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Cancella il risultato di una partita
-function deleteMatch(id) {
-    if (!confirm('Sei sicuro di voler cancellare questo risultato?')) return;
-
-    const partita = partiteDB.find(p => p.id === id);
-    if (partita) {
-        partita.risultato = null;
-        partita.marcatori = [];
-        saveDataToFirebase();
-        showSuccess('Risultato cancellato');
-        displayMatches();
-    }
+function showSuccess(msg) {
+    const el = document.getElementById('success-msg');
+    el.textContent = '✅ ' + msg;
+    el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 3500);
 }
 
-// Mostra messaggio di successo
-function showSuccess(message) {
-    const element = document.getElementById('success-msg');
-    element.textContent = '✅ ' + message;
-    element.style.display = 'block';
-    setTimeout(() => element.style.display = 'none', 3000);
+function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = '❌ ' + msg;
+    el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 3500);
 }
 
-// Mostra messaggio di errore
-function showError(message) {
-    const element = document.getElementById('error-msg');
-    element.textContent = '❌ ' + message;
-    element.style.display = 'block';
-    setTimeout(() => element.style.display = 'none', 3000);
-}
-
-// Inizializza al caricamento (script.js carica i dati da Firebase)
 document.addEventListener('DOMContentLoaded', async () => {
     await firebaseReady;
     initAdmin();

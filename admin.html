@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -63,12 +63,6 @@
             box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
         .btn-submit {
             background: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 136, 0.1) 100%);
             color: var(--neon-green);
@@ -111,11 +105,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
-        .match-info {
-            flex: 1;
-        }
+        .match-info { flex: 1; min-width: 0; }
 
         .match-title {
             font-weight: 600;
@@ -147,12 +141,6 @@
             border: 1px solid rgba(0, 255, 136, 0.3);
         }
 
-        .btn-delete {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
         .success-message {
             background: rgba(16, 185, 129, 0.2);
             border: 1px solid rgba(16, 185, 129, 0.4);
@@ -174,16 +162,133 @@
         }
 
         /* Fix visibilità dropdown su sfondo scuro */
-        .form-group select option,
-        .form-group select optgroup {
+        select option, select optgroup {
             background: #1a2035;
             color: #ffffff;
         }
 
-        .form-group select option:checked,
-        .form-group select option:hover {
-            background: #00cc66;
-            color: #000;
+        /* Riga risultato */
+        .score-input-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+            background: rgba(0, 255, 136, 0.04);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+        }
+        .team-score-label {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            text-align: center;
+            flex: 1;
+            min-width: 80px;
+        }
+        .score-num-input {
+            width: 65px;
+            padding: 0.6rem;
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid rgba(0, 255, 136, 0.4);
+            color: var(--neon-green);
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.4rem;
+            text-align: center;
+        }
+        .score-sep {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-muted);
+        }
+
+        /* Marcatori */
+        .scorers-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        .btn-add-scorer {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--neon-green);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 0.4rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-add-scorer:hover { background: rgba(0, 255, 136, 0.2); }
+
+        .scorer-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 0.5rem;
+        }
+        .scorer-row .s-player {
+            flex: 1;
+            min-width: 120px;
+            padding: 0.55rem 0.6rem;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.25);
+            color: var(--text-main);
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+        }
+        .scorer-num {
+            width: 56px;
+            padding: 0.55rem 0.4rem;
+            text-align: center;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.25);
+            color: var(--text-main);
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+        }
+        .s-lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .btn-remove-scorer {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 0.35rem 0.55rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            line-height: 1;
+        }
+        .btn-action-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 640px) {
+            .admin-container { padding: 1rem 0.75rem; }
+            .admin-panel { padding: 1.25rem; }
+            .admin-section-title { font-size: 1.2rem; }
+            .score-input-row { padding: 0.75rem; gap: 0.5rem; }
+            .team-score-label { font-size: 0.78rem; min-width: 60px; }
+            .score-num-input { width: 55px; font-size: 1.2rem; }
+            .btn-submit { padding: 0.85rem 1.25rem; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -192,18 +297,18 @@
     <nav>
         <a href="index.html" class="nav-brand">MundialPitto <span>ADMIN</span></a>
         <div class="nav-links">
-            <a href="index.html">← Torna al Sito</a>
+            <a href="index.html">&#8592; Torna al Sito</a>
         </div>
         <div class="nav-spacer"></div>
     </nav>
 
     <div class="admin-container">
 
-        <h1 style="text-align: center; color: var(--neon-green); margin-bottom: 2rem;">🛠️ PANNELLO AMMINISTRATORE</h1>
+        <h1 style="text-align: center; color: var(--neon-green); margin-bottom: 2rem;">&#128295; PANNELLO AMMINISTRATORE</h1>
 
-        <!-- SEZIONE RISULTATI PARTITE -->
+        <!-- PANNELLO UNIFICATO RISULTATO -->
         <div class="admin-panel">
-            <div class="admin-section-title">Inserisci Risultati Partite</div>
+            <div class="admin-section-title">Inserisci Risultato</div>
 
             <div class="success-message" id="success-msg"></div>
             <div class="error-message" id="error-msg"></div>
@@ -215,50 +320,37 @@
                 </select>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Gol Squadra 1</label>
-                    <input type="number" id="goals-team1" min="0" value="0">
+            <div id="match-detail-section" style="display:none;">
+
+                <div class="score-input-row">
+                    <span class="team-score-label" id="label-team1">Squadra 1</span>
+                    <input type="number" id="goals-team1" class="score-num-input" min="0" value="0">
+                    <span class="score-sep">&mdash;</span>
+                    <input type="number" id="goals-team2" class="score-num-input" min="0" value="0">
+                    <span class="team-score-label" id="label-team2">Squadra 2</span>
                 </div>
-                <div class="form-group">
-                    <label>Gol Squadra 2</label>
-                    <input type="number" id="goals-team2" min="0" value="0">
+
+                <div>
+                    <div class="scorers-header">
+                        <label style="margin:0;font-weight:700;">Marcatori &amp; Assist</label>
+                        <button class="btn-add-scorer" onclick="addScorerRow()">+ Aggiungi</button>
+                    </div>
+                    <div id="scorers-list"></div>
                 </div>
-            </div>
 
-            <button class="btn-submit" onclick="saveMatchResult()">Salva Risultato</button>
-        </div>
-
-        <!-- SEZIONE MARCATORI -->
-        <div class="admin-panel">
-            <div class="admin-section-title">Aggiungi Marcatore/Assist</div>
-
-            <div class="form-group">
-                <label>Partita</label>
-                <select id="scorer-match-select">
-                    <option value="">-- Seleziona una partita --</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Giocatore</label>
-                <select id="player-select">
-                    <option value="">-- Prima seleziona la partita --</option>
-                </select>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Gol</label>
-                    <input type="number" id="goals-count" min="0" value="0">
+                <div class="form-group" style="margin-top:1.25rem;">
+                    <label>MVP della partita</label>
+                    <select id="mvp-select">
+                        <option value="">-- Nessun MVP --</option>
+                    </select>
                 </div>
-                <div class="form-group">
-                    <label>Assist</label>
-                    <input type="number" id="assists-count" min="0" value="0">
-                </div>
-            </div>
 
-            <button class="btn-submit" onclick="addScorerStats()">Aggiungi Marcatore</button>
+                <div class="btn-action-row">
+                    <button class="btn-submit" style="flex:1;" onclick="saveAll()">&#128190; SALVA TUTTO</button>
+                    <button class="btn-submit btn-danger" onclick="deleteCurrentResult()">&#128465; Cancella</button>
+                </div>
+
+            </div>
         </div>
 
         <!-- SEZIONE PARTITE CARICATE -->

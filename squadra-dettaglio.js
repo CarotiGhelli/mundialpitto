@@ -57,6 +57,17 @@ function renderInfo(squadra) {
         document.getElementById('presidente-item').style.display = 'flex';
     }
 
+    // Se nessuno staff, mostra "Autogestito"
+    if (!squadra.dirigente && !squadra.allenatore && !squadra.assistente && !squadra.presidente) {
+        const staffCard = document.querySelector('.info-card.dirigenza');
+        if (staffCard) {
+            const tag = document.createElement('div');
+            tag.style.cssText = 'padding:1.2rem 0;text-align:center;color:var(--text-muted);font-style:italic;letter-spacing:1px;font-size:0.95rem;';
+            tag.textContent = '⚽  Autogestito';
+            staffCard.appendChild(tag);
+        }
+    }
+
     document.getElementById('num-giocatori').textContent = squadra.giocatori.length;
     document.getElementById('girone').textContent = squadra.girone;
 }

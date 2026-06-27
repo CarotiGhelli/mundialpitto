@@ -74,31 +74,29 @@
                 return;
             }
 
+            // Mostra solo le ultime 2 partite concluse
+            const ultimi = [...played].sort((a, b) => b.id - a.id).slice(0, 2);
+
             let html = `<h2 class="section-title"><span class="dot">&bull;</span> ULTIMI RISULTATI</h2>`;
 
-            ['A', 'B'].forEach(girone => {
-                const partite = played.filter(p => p.girone === girone);
-                if (partite.length === 0) return;
-                html += `<div class="cal-girone-divider">Girone ${girone}</div>`;
-                partite.forEach(p => {
-                    const b1 = getHomeBadge(p.squadra1);
-                    const b2 = getHomeBadge(p.squadra2);
-                    html += `
-                        <a href="partita.html?id=${p.id}" class="match-card">
-                            <div class="match-row">
-                                <div class="team"><span class="team-name">${p.squadra1}</span>${b1}</div>
-                                <div class="score-center">
-                                    <span class="match-time-label">${p.orario}</span>
-                                    <div class="score-pill">${p.risultato}</div>
-                                </div>
-                                <div class="team away">${b2}<span class="team-name">${p.squadra2}</span></div>
+            ultimi.forEach(p => {
+                const b1 = getHomeBadge(p.squadra1);
+                const b2 = getHomeBadge(p.squadra2);
+                html += `
+                    <a href="partita.html?id=${p.id}" class="match-card">
+                        <div class="match-row">
+                            <div class="team"><span class="team-name">${p.squadra1}</span>${b1}</div>
+                            <div class="score-center">
+                                <span class="match-time-label">${p.orario}</span>
+                                <div class="score-pill">${p.risultato}</div>
                             </div>
-                            <div class="match-scorers-row">
-                                <div class="scorers-col">${getScorerText(p, p.squadra1)}</div>
-                                <div class="scorers-col right">${getScorerText(p, p.squadra2)}</div>
-                            </div>
-                        </a>`;
-                });
+                            <div class="team away">${b2}<span class="team-name">${p.squadra2}</span></div>
+                        </div>
+                        <div class="match-scorers-row">
+                            <div class="scorers-col">${getScorerText(p, p.squadra1)}</div>
+                            <div class="scorers-col right">${getScorerText(p, p.squadra2)}</div>
+                        </div>
+                    </a>`;
             });
 
             main.innerHTML = html;
