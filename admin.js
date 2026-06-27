@@ -163,10 +163,10 @@ function deleteCurrentResult() {
     loadMatchesInSelect();
     displayMatches();
 
-    document.getElementById('goals-team1').value = 0;
-    document.getElementById('goals-team2').value = 0;
-    document.getElementById('scorers-list').innerHTML = '';
-    document.getElementById('mvp-select').value = '';
+    // Nascondi il form e resetta la selezione (la partita torna "non giocata")
+    currentMatchId = null;
+    document.getElementById('match-select').value = '';
+    document.getElementById('match-detail-section').style.display = 'none';
 }
 
 function recomputeAllClassifications() {
