@@ -193,9 +193,15 @@ function _applyFirebaseData(data) {
     if (data.classifiche) {
         Object.keys(data.classifiche).forEach(girone => {
             const arr = data.classifiche[girone];
-            classificheDB[girone] = Array.isArray(arr) ? arr : Object.values(arr);
+            classificheDB[girone] = (Array.isArray(arr) ? arr : Object.values(arr))
+                .map(s => ({ ...s, squadra: s.squadra === 'ADLSR' ? 'ADLSR FC' : s.squadra }));
         });
     }
+    // Migra vecchio nome nei marcatori
+    partiteDB.forEach(p => {
+        (p.marcatori || []).forEach(m => { if (m.squadra === 'ADLSR') m.squadra = 'ADLSR FC'; });
+    });
+    giocatoriStatsDB.forEach(g => { if (g.squadra === 'ADLSR') g.squadra = 'ADLSR FC'; });
 }
 
 // Carica i dati una volta all'avvio e risolve firebaseReady
