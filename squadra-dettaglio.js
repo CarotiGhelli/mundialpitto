@@ -16,7 +16,7 @@ function renderHero(squadra) {
         ? `<img src="Loghi/${squadra.logo}" alt="${squadra.nome}" style="width:100%;height:100%;object-fit:contain;border-radius:12px;padding:8px;">`
         : squadra.badge;
     const badgeStyle = squadra.logo
-        ? `background:#000; border: 3px solid var(--neon-green);`
+        ? `background: linear-gradient(135deg, ${squadra.colore}44 0%, ${squadra.coloreScuro}88 100%); border: 3px solid var(--neon-green);`
         : `background: linear-gradient(135deg, ${squadra.colore} 0%, ${squadra.coloreScuro} 100%);`;
 
     hero.innerHTML = `
@@ -63,7 +63,7 @@ function renderInfo(squadra) {
         if (staffCard) {
             const tag = document.createElement('div');
             tag.style.cssText = 'padding:1.2rem 0;text-align:center;color:var(--text-muted);font-style:italic;letter-spacing:1px;font-size:0.95rem;';
-            tag.textContent = '⚽  Autogestito';
+            tag.textContent = 'Autogestito';
             staffCard.appendChild(tag);
         }
     }
