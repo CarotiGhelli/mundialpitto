@@ -4,7 +4,7 @@ const squadreDB = [
         id: 1,
         nome: "ADLSR",
         badge: "ADLSR",
-        logo: "ADLSR FC.png",
+        logo: "ADLSR.png",
         girone: "Girone B",
         colore: "#00cc44",
         coloreScuro: "#008833",
