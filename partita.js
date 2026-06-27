@@ -8,14 +8,15 @@ function renderTeamList(container, partita, squadra, nomeSquadra) {
         if (container.querySelector('h3')) container.querySelector('h3').textContent = nomeSquadra;
         return;
     }
-    const rows = squadra.giocatori.map(g => {
+    const rows = squadra.giocatori.map((g, i) => {
         const stats = getPlayerMatchStats(partita, g.nome);
         const isMvp = partita.mvp && partita.mvp === g.nome;
         const label = (g.numero ? g.numero + '. ' : '') + g.nome + (g.capitano ? ' (C)' : '');
         const mvpTag = isMvp ? ' <span class="player-mvp-tag">&#11088;</span>' : '';
         const gol = stats && stats.gol   > 0 ? stats.gol   + '&#9917;'      : '';
         const ast = stats && stats.assist > 0 ? stats.assist + '&#x1F45F;'   : '';
-        return `<div class="player-row">
+        const sep = i > 0 ? '<div class="player-sep"></div>' : '';
+        return `${sep}<div class="player-row">
             <span class="pr-name">${label}${mvpTag}</span>
             <span class="pr-g">${gol}</span>
             <span class="pr-a">${ast}</span>

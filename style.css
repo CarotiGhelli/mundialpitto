@@ -538,13 +538,12 @@ nav.nav-centered .nav-links {
 .player-row { display: contents; }
 .pr-name, .pr-g, .pr-a {
     padding: 0.8rem 0;
-    border-top: 1px solid var(--border-glass);
     align-self: center;
     font-size: 0.95rem;
 }
-.players-table > :nth-child(-n+3) { border-top: none; }
 .pr-name { font-weight: 600; }
 .pr-g, .pr-a { white-space: nowrap; text-align: right; font-size: 0.82rem; color: var(--neon-green); font-weight: 700; }
+.player-sep { grid-column: 1 / -1; height: 1px; background: var(--border-glass); }
 
 .player-mvp-tag { font-size: 0.88rem; margin-left: 0.25rem; }
 
