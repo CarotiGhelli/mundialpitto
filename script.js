@@ -235,18 +235,19 @@ function loadBracketFromFirebase() {
 }
 
 // Utility: testo marcatori per una squadra in una partita
-// side='left': stats|nome  side='right': nome|stats  — grid a 2 colonne sul parent
+// 3 celle per giocatore: gol | assist | nome (left) oppure nome | gol | assist (right)
+// Il grid a 3 colonne sul parent mantiene goals e assists sempre nella stessa colonna
 function getScorerText(partita, squadra, side) {
     if (!partita.risultato) return '<span class="no-scorer">&mdash;</span>';
     const lista = (partita.marcatori || []).filter(m => m.squadra === squadra && (m.gol > 0 || m.assist > 0));
     if (lista.length === 0) return '<span class="no-scorer">&mdash;</span>';
     return lista.map(m => {
-        const parts = [];
-        if (m.gol > 0)   parts.push(`${m.gol}&#9917;`);
-        if (m.assist > 0) parts.push(`${m.assist}&#x1F45F;`);
-        const stats = `<span class="scorer-stats">${parts.join(' ')}</span>`;
-        const nome  = `<span class="scorer-name">${m.nome}</span>`;
-        return side === 'right' ? nome + stats : stats + nome;
+        const g = m.gol   > 0 ? `${m.gol}&#9917;`    : '';
+        const a = m.assist > 0 ? `${m.assist}&#x1F45F;` : '';
+        const gSpan = `<span class="scorer-g">${g}</span>`;
+        const aSpan = `<span class="scorer-a">${a}</span>`;
+        const nSpan = `<span class="scorer-name">${m.nome}</span>`;
+        return side === 'right' ? nSpan + gSpan + aSpan : gSpan + aSpan + nSpan;
     }).join('');
 }
 
