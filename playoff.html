@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabellone Playoff - Torneo MundialPitto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:ital,wght@0,800;0,900;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-brand">Torneo <span>MundialPitto</span></a>
+        <div class="nav-links">
+            <a href="index.html">Live &amp; Risultati</a>
+            <a href="squadre.html">Squadre</a>
+            <a href="calendario.html">Calendario</a>
+            <a href="classifica.html">Classifiche</a>
+        </div>
+        <div class="nav-spacer"></div>
+    </nav>
+
+    <div class="playoff-page-container">
+
+        <header class="page-header">
+            <h1>TABELLONE PLAYOFF</h1>
+            <p>30 Giugno 2026 &mdash; Fase ad eliminazione diretta</p>
+        </header>
+
+        <!-- BRACKET PRINCIPALE -->
+        <div class="bracket-wrapper">
+
+            <!-- QUARTI DI FINALE -->
+            <div class="bracket-col">
+                <div class="bracket-col-title">QUARTI DI FINALE</div>
+
+                <div class="bracket-match-block" id="qf1">
+                    <div class="bracket-slot top">
+                        <span class="bracket-seed">2&deg; Girone B</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="qf1-t1">&mdash;</span>
+                            <span class="bracket-goals" id="qf1-g1">&mdash;</span>
+                        </div>
+                    </div>
+                    <div class="bracket-vs">vs</div>
+                    <div class="bracket-slot bottom">
+                        <span class="bracket-seed">3&deg; Girone A</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="qf1-t2">&mdash;</span>
+                            <span class="bracket-goals" id="qf1-g2">&mdash;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bracket-spacer"></div>
+
+                <div class="bracket-match-block" id="qf2">
+                    <div class="bracket-slot top">
+                        <span class="bracket-seed">2&deg; Girone A</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="qf2-t1">&mdash;</span>
+                            <span class="bracket-goals" id="qf2-g1">&mdash;</span>
+                        </div>
+                    </div>
+                    <div class="bracket-vs">vs</div>
+                    <div class="bracket-slot bottom">
+                        <span class="bracket-seed">3&deg; Girone B</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="qf2-t2">&mdash;</span>
+                            <span class="bracket-goals" id="qf2-g2">&mdash;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONNETTORI Q→SF -->
+            <div class="bracket-connectors">
+                <div class="bracket-col-title" style="visibility:hidden;pointer-events:none;"></div>
+                <div class="connector top-conn"></div>
+                <div class="connector bottom-conn"></div>
+            </div>
+
+            <!-- SEMIFINALI -->
+            <div class="bracket-col">
+                <div class="bracket-col-title">SEMIFINALI</div>
+
+                <div class="bracket-match-block" id="sf1">
+                    <div class="bracket-slot top">
+                        <span class="bracket-seed">1&deg; Girone A</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="sf1-t1">&mdash;</span>
+                            <span class="bracket-goals" id="sf1-g1">&mdash;</span>
+                        </div>
+                    </div>
+                    <div class="bracket-vs">vs</div>
+                    <div class="bracket-slot bottom">
+                        <span class="bracket-seed">Vin. QF1</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="sf1-t2">&mdash;</span>
+                            <span class="bracket-goals" id="sf1-g2">&mdash;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bracket-spacer"></div>
+
+                <div class="bracket-match-block" id="sf2">
+                    <div class="bracket-slot top">
+                        <span class="bracket-seed">1&deg; Girone B</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="sf2-t1">&mdash;</span>
+                            <span class="bracket-goals" id="sf2-g1">&mdash;</span>
+                        </div>
+                    </div>
+                    <div class="bracket-vs">vs</div>
+                    <div class="bracket-slot bottom">
+                        <span class="bracket-seed">Vin. QF2</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="sf2-t2">&mdash;</span>
+                            <span class="bracket-goals" id="sf2-g2">&mdash;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONNETTORI SF→F -->
+            <div class="bracket-connectors">
+                <div class="bracket-col-title" style="visibility:hidden;pointer-events:none;"></div>
+                <div class="connector top-conn"></div>
+                <div class="connector bottom-conn"></div>
+            </div>
+
+            <!-- FINALE + VINCITORE -->
+            <div class="bracket-col bracket-col-finale">
+                <div class="bracket-col-title">FINALE</div>
+                <div class="finale-center-wrapper">
+                    <div class="bracket-match-block finale-block" id="finale">
+                        <div class="bracket-slot top">
+                            <span class="bracket-seed">Vin. Semifinale 1</span>
+                            <div class="bracket-team-row">
+                                <span class="bracket-team" id="fin-t1">&mdash;</span>
+                                <span class="bracket-goals" id="fin-g1">&mdash;</span>
+                            </div>
+                        </div>
+                        <div class="bracket-vs">vs</div>
+                        <div class="bracket-slot bottom">
+                            <span class="bracket-seed">Vin. Semifinale 2</span>
+                            <div class="bracket-team-row">
+                                <span class="bracket-team" id="fin-t2">&mdash;</span>
+                                <span class="bracket-goals" id="fin-g2">&mdash;</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="winner-trophy" id="winner-box">
+                        <div class="trophy-icon">&#127942;</div>
+                        <div class="trophy-label">CAMPIONE</div>
+                        <div class="trophy-name" id="winner-name">&mdash;</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PARTITE PER IL PIAZZAMENTO -->
+        <h2 class="classifica-section-label" style="margin-top:3rem;">PARTITE PER IL PIAZZAMENTO</h2>
+        <div class="placement-grid">
+
+            <div class="placement-card">
+                <div class="placement-title">3&deg; / 4&deg; POSTO</div>
+                <div class="bracket-match-block" id="p34">
+                    <div class="bracket-slot top">
+                        <span class="bracket-seed">Perdente Semifinale 1</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="p34-t1">&mdash;</span>
+                            <span class="bracket-goals" id="p34-g1">&mdash;</span>
+                        </div>
+                    </div>
+                    <div class="bracket-vs">vs</div>
+                    <div class="bracket-slot bottom">
+                        <span class="bracket-seed">Perdente Semifinale 2</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="p34-t2">&mdash;</span>
+                            <span class="bracket-goals" id="p34-g2">&mdash;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="placement-card">
+                <div class="placement-title">5&deg; / 6&deg; POSTO</div>
+                <div class="bracket-match-block" id="p56">
+                    <div class="bracket-slot top">
+                        <span class="bracket-seed">Perdente QF1</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="p56-t1">&mdash;</span>
+                            <span class="bracket-goals" id="p56-g1">&mdash;</span>
+                        </div>
+                    </div>
+                    <div class="bracket-vs">vs</div>
+                    <div class="bracket-slot bottom">
+                        <span class="bracket-seed">Perdente QF2</span>
+                        <div class="bracket-team-row">
+                            <span class="bracket-team" id="p56-t2">&mdash;</span>
+                            <span class="bracket-goals" id="p56-g2">&mdash;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Torneo MundialPitto. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="playoff.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneo MundialPitto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:ital,wght@0,800;0,900;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-brand">Torneo <span>MundialPitto</span></a>
+        <div class="nav-links">
+            <a href="index.html" class="active">Live &amp; Risultati</a>
+            <a href="squadre.html">Squadre</a>
+            <a href="calendario.html">Calendario</a>
+            <a href="classifica.html">Classifiche</a>
+        </div>
+        <div class="nav-spacer"></div>
+    </nav>
+
+    <div class="master-container">
+
+        <main id="main-results">
+            <!-- Popolato dinamicamente -->
+        </main>
+
+        <aside>
+            <div class="stats-widget">
+                <div class="widget-header">
+                    <button class="arrow-btn" id="btn-prev">&#9664;</button>
+                    <h3 class="widget-title" id="widget-title">CLASSIFICA MARCATORI</h3>
+                    <button class="arrow-btn" id="btn-next">&#9654;</button>
+                </div>
+                <div class="stat-list" id="stat-list"></div>
+                <a href="classifica.html" class="btn-vedi-tutti">Vedi Tutti</a>
+            </div>
+        </aside>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Torneo MundialPitto. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function getHomeBadge(nome) {
+            const sq = squadreDB.find(s => s.nome === nome);
+            if (sq && sq.logo) {
+                return `<img src="Loghi/${sq.logo}" alt="${sq.nome}" class="team-badge-img">`;
+            }
+            return `<div class="team-badge">${sq ? sq.badge : '?'}</div>`;
+        }
+
+        function renderRisultati() {
+            const main = document.getElementById('main-results');
+            const played = partiteDB.filter(p => p.risultato);
+
+            if (played.length === 0) {
+                main.innerHTML = `
+                    <h2 class="section-title"><span class="dot">&bull;</span> ULTIMI RISULTATI</h2>
+                    <div class="no-results-msg">
+                        <p class="no-results-icon">&#9203;</p>
+                        <p class="no-results-title">Nessun risultato ancora</p>
+                        <p class="no-results-sub">Le partite iniziano il 29 giugno 2026!</p>
+                        <a href="calendario.html" class="btn-roster" style="margin-top:1.5rem;display:inline-block;">Vedi il Calendario &rarr;</a>
+                    </div>`;
+                return;
+            }
+
+            let html = `<h2 class="section-title"><span class="dot">&bull;</span> ULTIMI RISULTATI</h2>`;
+
+            ['A', 'B'].forEach(girone => {
+                const partite = played.filter(p => p.girone === girone);
+                if (partite.length === 0) return;
+                html += `<div class="cal-girone-divider">Girone ${girone}</div>`;
+                partite.forEach(p => {
+                    const b1 = getHomeBadge(p.squadra1);
+                    const b2 = getHomeBadge(p.squadra2);
+                    html += `
+                        <a href="partita.html?id=${p.id}" class="match-card">
+                            <div class="match-row">
+                                <div class="team"><span class="team-name">${p.squadra1}</span>${b1}</div>
+                                <div class="score-center">
+                                    <span class="match-time-label">${p.orario}</span>
+                                    <div class="score-pill">${p.risultato}</div>
+                                </div>
+                                <div class="team away">${b2}<span class="team-name">${p.squadra2}</span></div>
+                            </div>
+                            <div class="match-scorers-row">
+                                <div class="scorers-col">${getScorerText(p, p.squadra1)}</div>
+                                <div class="scorers-col right">${getScorerText(p, p.squadra2)}</div>
+                            </div>
+                        </a>`;
+                });
+            });
+
+            main.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', renderRisultati);
+    </script>
+
+</body>
+</html>

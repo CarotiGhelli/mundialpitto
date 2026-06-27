@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - MundialPitto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:ital,wght@0,800;0,900;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            flex: 1;
+        }
+
+        .admin-panel {
+            background: var(--bg-card);
+            border: 2px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--neon-green);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-glass);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--text-main);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 136, 0.1) 100%);
+            color: var(--neon-green);
+            border: 2px solid rgba(0, 255, 136, 0.5);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.4) 0%, rgba(0, 255, 136, 0.2) 100%);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+        }
+
+        .match-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .match-item {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .match-info {
+            flex: 1;
+        }
+
+        .match-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .match-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .match-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--neon-green);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #10b981;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #ef4444;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        /* Fix visibilità dropdown su sfondo scuro */
+        .form-group select option,
+        .form-group select optgroup {
+            background: #1a2035;
+            color: #ffffff;
+        }
+
+        .form-group select option:checked,
+        .form-group select option:hover {
+            background: #00cc66;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-brand">MundialPitto <span>ADMIN</span></a>
+        <div class="nav-links">
+            <a href="index.html">← Torna al Sito</a>
+        </div>
+        <div class="nav-spacer"></div>
+    </nav>
+
+    <div class="admin-container">
+
+        <h1 style="text-align: center; color: var(--neon-green); margin-bottom: 2rem;">🛠️ PANNELLO AMMINISTRATORE</h1>
+
+        <!-- SEZIONE RISULTATI PARTITE -->
+        <div class="admin-panel">
+            <div class="admin-section-title">Inserisci Risultati Partite</div>
+
+            <div class="success-message" id="success-msg"></div>
+            <div class="error-message" id="error-msg"></div>
+
+            <div class="form-group">
+                <label>Seleziona Partita</label>
+                <select id="match-select">
+                    <option value="">-- Seleziona una partita --</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Gol Squadra 1</label>
+                    <input type="number" id="goals-team1" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Gol Squadra 2</label>
+                    <input type="number" id="goals-team2" min="0" value="0">
+                </div>
+            </div>
+
+            <button class="btn-submit" onclick="saveMatchResult()">Salva Risultato</button>
+        </div>
+
+        <!-- SEZIONE MARCATORI -->
+        <div class="admin-panel">
+            <div class="admin-section-title">Aggiungi Marcatore/Assist</div>
+
+            <div class="form-group">
+                <label>Partita</label>
+                <select id="scorer-match-select">
+                    <option value="">-- Seleziona una partita --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Giocatore</label>
+                <select id="player-select">
+                    <option value="">-- Prima seleziona la partita --</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Gol</label>
+                    <input type="number" id="goals-count" min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Assist</label>
+                    <input type="number" id="assists-count" min="0" value="0">
+                </div>
+            </div>
+
+            <button class="btn-submit" onclick="addScorerStats()">Aggiungi Marcatore</button>
+        </div>
+
+        <!-- SEZIONE PARTITE CARICATE -->
+        <div class="admin-panel">
+            <div class="admin-section-title">Partite Caricate</div>
+            <div class="match-list" id="matches-list"></div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 MundialPitto. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="admin.js"></script>
+
+</body>
+</html>

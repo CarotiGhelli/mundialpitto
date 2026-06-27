@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squadra - MundialPitto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:ital,wght@0,800;0,900;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-brand">Torneo <span>MundialPitto</span></a>
+        <div class="nav-links">
+            <a href="index.html">Live & Risultati</a>
+            <a href="squadre.html" class="active">Squadre</a>
+            <a href="calendario.html">Calendario</a>
+            <a href="classifica.html">Classifiche</a>
+        </div>
+        <div class="nav-spacer"></div>
+    </nav>
+
+    <div class="squadra-detail-container">
+
+        <nav class="breadcrumb">
+            <a href="squadre.html">Squadre</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current" id="breadcrumb-squadra">-</span>
+        </nav>
+
+        <div class="squadra-hero" id="squadra-hero"></div>
+
+        <div class="squadra-info-grid">
+
+            <div class="info-card dirigenza">
+                <h3>STAFF TECNICO</h3>
+                <div class="dirigenza-item" id="dirigente-item" style="display: none;">
+                    <span class="ruolo">Dirigente</span>
+                    <span class="nome" id="dirigente">-</span>
+                </div>
+                <div class="dirigenza-item" id="allenatore-item" style="display: none;">
+                    <span class="ruolo">Allenatore</span>
+                    <span class="nome" id="allenatore">-</span>
+                </div>
+                <div class="dirigenza-item" id="assistente-item" style="display: none;">
+                    <span class="ruolo">Assistente</span>
+                    <span class="nome" id="assistente">-</span>
+                </div>
+                <div class="dirigenza-item" id="presidente-item" style="display: none;">
+                    <span class="ruolo">Presidente</span>
+                    <span class="nome" id="presidente">-</span>
+                </div>
+            </div>
+
+            <div class="info-card stats">
+                <h3>STATISTICHE</h3>
+                <div class="stat-row">
+                    <span>Giocatori in rosa</span>
+                    <span class="value" id="num-giocatori">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>Girone</span>
+                    <span class="value" id="girone">-</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="roster-section">
+            <h2 class="section-heading">ROSA DELLA SQUADRA</h2>
+            <div class="roster-grid" id="roster-container"></div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 MundialPitto. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="squadra-dettaglio.js"></script>
+
+</body>
+</html>

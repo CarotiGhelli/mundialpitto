@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettaglio Partita - Torneo MundialPitto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:ital,wght@0,800;0,900;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-brand">Torneo <span>MundialPitto</span></a>
+        <div class="nav-links">
+            <a href="index.html">Live & Risultati</a>
+            <a href="squadre.html">Squadre</a>
+            <a href="calendario.html">Calendario</a>
+            <a href="classifica.html">Classifiche</a>
+        </div>
+        <div class="nav-spacer"></div>
+    </nav>
+
+    <div class="partita-container">
+
+        <nav class="breadcrumb">
+            <a href="calendario.html">← Torna al Calendario</a>
+        </nav>
+
+        <header class="partita-header">
+            <h1 id="partita-title">- <span class="score-highlight">- - -</span> -</h1>
+            <p class="girone-info" id="partita-info">Caricamento...</p>
+        </header>
+
+        <div class="pitch-container">
+            <div class="pitch-line pitch-center"></div>
+            <div class="pitch-line pitch-circle"></div>
+            <div class="pitch-line pitch-area-left"></div>
+            <div class="pitch-line pitch-area-right"></div>
+
+            <div class="player-dot team1-dot" style="left: 5%; top: 50%;">GK</div>
+            <div class="player-dot team1-dot" style="left: 25%; top: 30%;"></div>
+            <div class="player-dot team1-dot" style="left: 25%; top: 70%;"></div>
+            <div class="player-dot team1-dot" style="left: 40%; top: 50%;"></div>
+            <div class="player-dot team1-dot" style="left: 45%; top: 20%;"></div>
+
+            <div class="player-dot team2-dot" style="left: 95%; top: 50%;">GK</div>
+            <div class="player-dot team2-dot" style="left: 75%; top: 20%;"></div>
+            <div class="player-dot team2-dot" style="left: 75%; top: 80%;"></div>
+            <div class="player-dot team2-dot" style="left: 60%; top: 50%;"></div>
+            <div class="player-dot team2-dot" style="left: 55%; top: 70%;"></div>
+        </div>
+
+        <div class="match-details-grid">
+            <div class="team-list" id="team1-list">
+                <h3 id="team1-name">Squadra 1</h3>
+            </div>
+            <div class="team-list" id="team2-list">
+                <h3 id="team2-name">Squadra 2</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Torneo MundialPitto. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="partita.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+// Database centrale di squadre e giocatori - MUNDIAL PITTO 2024
+const squadreDB = [
+    {
+        id: 1,
+        nome: "ADLSR",
+        badge: "ADLSR",
+        logo: "ADLSR FC.PNG",
+        girone: "Girone B",
+        colore: "#00cc44",
+        coloreScuro: "#008833",
+        giocatori: [
+            { numero: 3, nome: "Francesco Francese" },
+            { numero: 7, nome: "Emanuele Cavallini", capitano: true },
+            { numero: 8, nome: "Leonardo Lemmi" },
+            { numero: 10, nome: "Luigi Bartolozzi" },
+            { numero: 20, nome: "Gianni Landi" },
+            { numero: 47, nome: "Alessandro Salvadori" },
+            { numero: 63, nome: "Mattia Aprile" },
+            { numero: 67, nome: "Gianmarco Lelli" },
+            { numero: 77, nome: "Gabriele Lemmi" }
+        ]
+    },
+    {
+        id: 2,
+        nome: "Narcos",
+        badge: "NC",
+        logo: "Narcos.png",
+        girone: "Girone A",
+        colore: "#cc2200",
+        coloreScuro: "#882200",
+        giocatori: [
+            { nome: "Rei Pilinci" },
+            { nome: "Tommaso Carbonel" },
+            { nome: "Mohamed Yamal" },
+            { nome: "Lorenzo Chieppa" },
+            { nome: "Gabriele Gentile" },
+            { nome: "Lorenzo Bertozzi" }
+        ]
+    },
+    {
+        id: 3,
+        nome: "DA PIERINO PSG",
+        badge: "PSG",
+        logo: "Pierino.png",
+        girone: "Girone B",
+        colore: "#004488",
+        coloreScuro: "#002244",
+        giocatori: [
+            { nome: "Giannetti Giorgio", capitano: true },
+            { nome: "Marinai Francesco" },
+            { nome: "Piendibene Stefan" },
+            { nome: "Mannucci Cristiano" },
+            { nome: "Casapieri Matteo" },
+            { nome: "Petracchi Alessandro" }
+        ]
+    },
+    {
+        id: 4,
+        nome: "Atletico Gaza",
+        badge: "AG",
+        logo: "Atletico_Gaza.png",
+        girone: "Girone B",
+        colore: "#1e3a8a",
+        coloreScuro: "#0f172a",
+        giocatori: [
+            { nome: "Leonardo Castagnoli", capitano: true },
+            { nome: "Lorenzo Bacci" },
+            { nome: "Davide Palma" },
+            { nome: "Francesco Ceccarelli" },
+            { nome: "Leonardo Manetti" },
+            { nome: "Diego Giannetti" }
+        ]
+    },
+    {
+        id: 5,
+        nome: "Staff Poco Tecnico",
+        badge: "SPT",
+        logo: "Football_Livorno.png",
+        girone: "Girone A",
+        colore: "#cc1111",
+        coloreScuro: "#880000",
+        giocatori: [
+            { nome: "Andrea Sorrentino" },
+            { nome: "Matteo Abrans" },
+            { nome: "Marzio Casaccio" },
+            { nome: "Lorenzo Baldi" },
+            { nome: "Samuele Norfini" },
+            { nome: "Simone Bernardi" },
+            { nome: "Elia Mannelli" },
+            { nome: "Alberto Dainelli" }
+        ]
+    },
+    {
+        id: 6,
+        nome: "Bundesdini All-Stars",
+        badge: "BUN",
+        logo: "Bundesdini.png",
+        girone: "Girone A",
+        colore: "#cc0000",
+        coloreScuro: "#880000",
+        allenatore: "Pietro Caroti Ghelli",
+        assistente: "Giacomo Cunardi",
+        dirigente: "Mattia Lo Giudice",
+        giocatori: [
+            { nome: "Emanuele Nannetti" },
+            { nome: "Elias Meliani" },
+            { nome: "Christian Del Nobile" },
+            { nome: "Francesko Vrapi" },
+            { nome: "Matteo Biagi" },
+            { nome: "Tommaso Albanesi" },
+            { nome: "Cesare Kevin Desi" },
+            { nome: "Xhovani Hokja" }
+        ]
+    }
+];
+
+// Database partite - MUNDIAL PITTO 2026
+const partiteDB = [
+    // GIORNATA 1 - 29 giugno
+    { id: 1, giorno: 1, orario: "18:30-19:00", girone: "A", squadra1: "Narcos", squadra2: "Staff Poco Tecnico", risultato: null, marcatori: [] },
+    { id: 2, giorno: 1, orario: "19:00-19:30", girone: "B", squadra1: "Atletico Gaza", squadra2: "DA PIERINO PSG", risultato: null, marcatori: [] },
+    { id: 3, giorno: 1, orario: "19:30-20:00", girone: "A", squadra1: "Bundesdini All-Stars", squadra2: "Staff Poco Tecnico", risultato: null, marcatori: [] },
+    { id: 4, giorno: 1, orario: "20:00-20:30", girone: "B", squadra1: "ADLSR", squadra2: "DA PIERINO PSG", risultato: null, marcatori: [] },
+    { id: 5, giorno: 1, orario: "20:30-21:00", girone: "A", squadra1: "Narcos", squadra2: "Bundesdini All-Stars", risultato: null, marcatori: [] },
+    { id: 6, giorno: 1, orario: "21:00-21:30", girone: "B", squadra1: "ADLSR", squadra2: "Atletico Gaza", risultato: null, marcatori: [] }
+];
+
+// Database centrale dei marcatori e assist
+const giocatoriStatsDB = [
+    { nome: "Francesco Francese", squadra: "ADLSR", marcatori: 0, assist: 0 },
+    { nome: "Emanuele Cavallini", squadra: "ADLSR", marcatori: 0, assist: 0 },
+    { nome: "Leonardo Lemmi", squadra: "ADLSR", marcatori: 0, assist: 0 }
+];
+
+// Database classifiche
+const classificheDB = {
+    'A': [
+        { posizione: 1, squadra: 'Narcos', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
+        { posizione: 2, squadra: 'Bundesdini All-Stars', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
+        { posizione: 3, squadra: 'Staff Poco Tecnico', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 }
+    ],
+    'B': [
+        { posizione: 1, squadra: 'ADLSR', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
+        { posizione: 2, squadra: 'Atletico Gaza', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
+        { posizione: 3, squadra: 'DA PIERINO PSG', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 }
+    ]
+};
+
+// Carica i dati dal localStorage se disponibili
+function loadDataFromLocalStorage() {
+    const matches = localStorage.getItem('mundialPitto_matches');
+    const stats = localStorage.getItem('mundialPitto_stats');
+    const classifiche = localStorage.getItem('mundialPitto_classifiche');
+
+    if (matches) {
+        const loadedMatches = JSON.parse(matches);
+        partiteDB.forEach((partita, index) => {
+            if (loadedMatches[index]) {
+                Object.assign(partita, loadedMatches[index]);
+            }
+        });
+    }
+
+    if (stats) {
+        giocatoriStatsDB.splice(0, giocatoriStatsDB.length, ...JSON.parse(stats));
+    }
+
+    if (classifiche) {
+        const loadedClassifiche = JSON.parse(classifiche);
+        Object.keys(loadedClassifiche).forEach(girone => {
+            if (loadedClassifiche[girone]) {
+                classificheDB[girone] = loadedClassifiche[girone];
+            }
+        });
+    }
+}
+
+// Carica i dati all'inizio
+loadDataFromLocalStorage();
+
+// Utility: testo marcatori per una squadra in una partita
+function getScorerText(partita, squadra) {
+    if (!partita.risultato) return '<span class="no-scorer">&mdash;</span>';
+    const lista = (partita.marcatori || []).filter(m => m.squadra === squadra && m.gol > 0);
+    if (lista.length === 0) return '<span class="no-scorer">&mdash;</span>';
+    return '&#9917; ' + lista.map(m => m.gol > 1 ? `${m.nome} (${m.gol})` : m.nome).join(', ');
+}
+
+// Stato della vista attuale del widget ("marcatori" o "assist")
+let vistaAttuale = "marcatori"; 
+
+const configurazioneVista = {
+    marcatori: {
+        titolo: "CLASSIFICA MARCATORI",
+        proprieta: "marcatori"
+    },
+    assist: {
+        titolo: "CLASSIFICA ASSIST",
+        proprieta: "assist"
+    }
+};
+
+// Riferimenti agli elementi HTML reali del widget (dentro l'aside)
+const widgetTitle = document.getElementById('widget-title');
+const statList = document.getElementById('stat-list');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+
+// Funzione principale di rendering basata sul database unificato
+function renderLista(tipo) {
+    if (!statList || !widgetTitle) return;
+
+    const config = configurazioneVista[tipo];
+    widgetTitle.textContent = config.titolo;
+    
+    // Svuota i vecchi elementi orfani
+    statList.innerHTML = '';
+
+    // Ordina i giocatori clonando l'array per preservare il DB intatto
+    const giocatoriOrdinati = [...giocatoriStatsDB]
+        .filter(g => g[config.proprieta] > 0) // Mostra solo chi ha fatto almeno un'azione rilevante
+        .sort((a, b) => b[config.proprieta] - a[config.proprieta]);
+
+    // Prendi fino a un massimo di 5 giocatori per la home page
+    const topCinque = giocatoriOrdinati.slice(0, 5);
+
+    topCinque.forEach((giocatore, index) => {
+        const coloreNumeroUno = index === 0 ? 'style="color: var(--neon-green);"' : '';
+        const valoreStatistica = giocatore[config.proprieta];
+
+        const itemHTML = `
+            <div class="stat-item">
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <span class="pos-number" ${coloreNumeroUno}>${index + 1}</span>
+                    <div>
+                        <span class="p-name">${giocatore.nome}</span>
+                        <span class="p-team">${giocatore.squadra}</span>
+                    </div>
+                </div>
+                <span class="stat-value">${valoreStatistica}</span>
+            </div>
+        `;
+        statList.innerHTML += itemHTML;
+    });
+
+    // Se non ci sono dati
+    if (topCinque.length === 0) {
+        statList.innerHTML = '<div class="stat-item" style="color: var(--text-muted)">Nessun dato registrato</div>';
+    }
+}
+
+// Funzione di switch bidirezionale
+function switchClassifica() {
+    vistaAttuale = (vistaAttuale === "marcatori") ? "assist" : "marcatori";
+    renderLista(vistaAttuale);
+}
+
+// Associazione degli eventi click ai pulsanti corretti
+if (btnPrev && btnNext) {
+    btnPrev.addEventListener('click', switchClassifica);
+    btnNext.addEventListener('click', switchClassifica);
+}
+
+// Avvio al caricamento della pagina
+document.addEventListener("DOMContentLoaded", () => {
+    renderLista(vistaAttuale);
+});

@@ -1,0 +1,21 @@
+# Cartella Claude
+.claude/
+
+# File di sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+*.swp
+*.swo
+
+# Node (se mai usato)
+node_modules/
+npm-debug.log*
+
+# Variabili d'ambiente (mai committare chiavi API!)
+.env
+.env.local
+.env.production

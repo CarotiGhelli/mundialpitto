@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classifiche - MundialPitto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:ital,wght@0,800;0,900;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-brand">Torneo <span>MundialPitto</span></a>
+        <div class="nav-links">
+            <a href="index.html">Live & Risultati</a>
+            <a href="squadre.html">Squadre</a>
+            <a href="calendario.html">Calendario</a>
+            <a href="classifica.html" class="active">Classifiche</a>
+        </div>
+        <div class="nav-spacer"></div>
+    </nav>
+
+    <div class="classifica-page-container">
+
+        <header class="page-header">
+            <h1>CLASSIFICHE</h1>
+            <p>La situazione in tempo reale del torneo.</p>
+            <a href="playoff.html" class="btn-playoff">Vedi Tabellone Playoff →</a>
+        </header>
+
+        <h2 class="classifica-section-label">FASE A GIRONI</h2>
+        <div class="gironi-container"></div>
+
+        <h2 class="classifica-section-label" style="margin-top:3rem;">STATISTICHE INDIVIDUALI</h2>
+        <div class="gironi-container stats-container"></div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 MundialPitto. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="classifica.js"></script>
+
+</body>
+</html>
