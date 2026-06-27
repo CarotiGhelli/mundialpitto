@@ -69,4 +69,7 @@ function getSquadraLogo(nomeSquadra) {
     return `<div class="team-badge">${squadra ? squadra.badge : '?'}</div>`;
 }
 
-document.addEventListener('DOMContentLoaded', renderCalendario);
+document.addEventListener('DOMContentLoaded', async () => {
+    await firebaseReady;
+    renderCalendario();
+});

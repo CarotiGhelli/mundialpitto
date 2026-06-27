@@ -8,7 +8,7 @@ function teamByPos(arr, pos) {
     return sorted[pos - 1]?.squadra || '—';
 }
 
-function renderBracket() {
+async function renderBracket() {
     const classA = classificheDB['A'] || [];
     const classB = classificheDB['B'] || [];
 
@@ -22,8 +22,8 @@ function renderBracket() {
     setText('sf1-t1', teamByPos(classA, 1));
     setText('sf2-t1', teamByPos(classB, 1));
 
-    // Carica i risultati playoff dal localStorage
-    const bracketData = JSON.parse(localStorage.getItem('mundialPitto_bracket') || '{}');
+    // Carica i risultati playoff da Firebase
+    const bracketData = await loadBracketFromFirebase();
 
     // Nomi vincitori/perdenti
     if (bracketData.qf1_winner) setText('sf1-t2', bracketData.qf1_winner);
@@ -63,4 +63,7 @@ function renderBracket() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', renderBracket);
+document.addEventListener('DOMContentLoaded', async () => {
+    await firebaseReady;
+    renderBracket();
+});

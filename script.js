@@ -146,37 +146,91 @@ const classificheDB = {
     ]
 };
 
-// Carica i dati dal localStorage se disponibili
-function loadDataFromLocalStorage() {
-    const matches = localStorage.getItem('mundialPitto_matches');
-    const stats = localStorage.getItem('mundialPitto_stats');
-    const classifiche = localStorage.getItem('mundialPitto_classifiche');
+// --- FIREBASE ---
+const firebaseConfig = {
+    apiKey: "AIzaSyDrClGGLFYtIzo5tt0UcmIVJ9PyIh8mv0Q",
+    authDomain: "mundialpitto.firebaseapp.com",
+    databaseURL: "https://mundialpitto-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "mundialpitto",
+    storageBucket: "mundialpitto.firebasestorage.app",
+    messagingSenderId: "134098735194",
+    appId: "1:134098735194:web:74093e01a91eb420668863"
+};
+firebase.initializeApp(firebaseConfig);
+const firebaseDB = firebase.database();
 
-    if (matches) {
-        const loadedMatches = JSON.parse(matches);
-        partiteDB.forEach((partita, index) => {
-            if (loadedMatches[index]) {
-                Object.assign(partita, loadedMatches[index]);
+// Promise globale che si risolve quando Firebase ha caricato i dati
+let _firebaseReadyResolve;
+const firebaseReady = new Promise(resolve => { _firebaseReadyResolve = resolve; });
+
+function _applyFirebaseData(data) {
+    if (data.partite) {
+        partiteDB.forEach(p => {
+            const saved = data.partite[p.id];
+            if (saved) {
+                p.risultato = saved.risultato || null;
+                p.marcatori = saved.marcatori
+                    ? (Array.isArray(saved.marcatori) ? saved.marcatori : Object.values(saved.marcatori))
+                    : [];
             }
         });
     }
-
-    if (stats) {
-        giocatoriStatsDB.splice(0, giocatoriStatsDB.length, ...JSON.parse(stats));
-    }
-
-    if (classifiche) {
-        const loadedClassifiche = JSON.parse(classifiche);
-        Object.keys(loadedClassifiche).forEach(girone => {
-            if (loadedClassifiche[girone]) {
-                classificheDB[girone] = loadedClassifiche[girone];
+    if (data.giocatoriStats) {
+        const stats = Array.isArray(data.giocatoriStats)
+            ? data.giocatoriStats : Object.values(data.giocatoriStats);
+        stats.forEach(saved => {
+            const g = giocatoriStatsDB.find(x => x.nome === saved.nome);
+            if (g) {
+                g.marcatori = saved.marcatori || 0;
+                g.assist = saved.assist || 0;
+            } else {
+                giocatoriStatsDB.push({ nome: saved.nome, squadra: saved.squadra, marcatori: saved.marcatori || 0, assist: saved.assist || 0 });
             }
+        });
+    }
+    if (data.classifiche) {
+        Object.keys(data.classifiche).forEach(girone => {
+            const arr = data.classifiche[girone];
+            classificheDB[girone] = Array.isArray(arr) ? arr : Object.values(arr);
         });
     }
 }
 
-// Carica i dati all'inizio
-loadDataFromLocalStorage();
+// Carica i dati una volta all'avvio e risolve firebaseReady
+firebaseDB.ref('mundialPitto').once('value', snapshot => {
+    if (snapshot.exists()) _applyFirebaseData(snapshot.val());
+    _firebaseReadyResolve();
+});
+
+// Salva tutti i dati dinamici su Firebase
+function saveDataToFirebase() {
+    const partiteDaSalvare = {};
+    partiteDB.forEach(p => {
+        partiteDaSalvare[p.id] = { risultato: p.risultato || null, marcatori: p.marcatori || [] };
+    });
+    const statsDaSalvare = {};
+    giocatoriStatsDB.forEach(g => {
+        const key = g.nome.replace(/[.#$[\]/]/g, '_');
+        statsDaSalvare[key] = { nome: g.nome, squadra: g.squadra, marcatori: g.marcatori || 0, assist: g.assist || 0 };
+    });
+    return firebaseDB.ref('mundialPitto').update({
+        partite: partiteDaSalvare,
+        giocatoriStats: statsDaSalvare,
+        classifiche: classificheDB
+    });
+}
+
+function saveBracketToFirebase(bracketData) {
+    return firebaseDB.ref('mundialPitto/bracket').set(bracketData);
+}
+
+function loadBracketFromFirebase() {
+    return new Promise(resolve => {
+        firebaseDB.ref('mundialPitto/bracket').once('value', snap => {
+            resolve(snap.exists() ? snap.val() : {});
+        });
+    });
+}
 
 // Utility: testo marcatori per una squadra in una partita
 function getScorerText(partita, squadra) {
@@ -262,6 +316,7 @@ if (btnPrev && btnNext) {
 }
 
 // Avvio al caricamento della pagina
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await firebaseReady;
     renderLista(vistaAttuale);
 });

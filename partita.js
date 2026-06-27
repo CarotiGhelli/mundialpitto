@@ -82,7 +82,8 @@ function renderPartita(partita) {
 }
 
 // Inizializzazione
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await firebaseReady;
     const partitaId = getPartitaId();
     const partita = getPartita(partitaId);
     renderPartita(partita);

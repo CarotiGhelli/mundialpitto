@@ -107,7 +107,7 @@ function saveMatchResult() {
     updateClassification(partita, goalsTeam1, goalsTeam2);
 
     // Salva nel localStorage
-    saveToLocalStorage();
+    saveDataToFirebase();
 
     // Mostra messaggio di successo
     showSuccess(`Risultato salvato: ${partita.squadra1} ${goalsTeam1} - ${goalsTeam2} ${partita.squadra2}`);
@@ -226,7 +226,7 @@ function addScorerStats() {
     matchScorer.gol += goals;
     matchScorer.assist += assists;
 
-    saveToLocalStorage();
+    saveDataToFirebase();
     showSuccess(`${playerName}: +${goals} gol, +${assists} assist`);
 
     // Reset form
@@ -250,15 +250,16 @@ function editMatch(id) {
     document.getElementById('match-select').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Cancella una partita
+// Cancella il risultato di una partita
 function deleteMatch(id) {
-    if (!confirm('Sei sicuro di voler cancellare questa partita?')) return;
+    if (!confirm('Sei sicuro di voler cancellare questo risultato?')) return;
 
-    const index = partiteDB.findIndex(p => p.id === id);
-    if (index > -1) {
-        partiteDB.splice(index, 1);
-        saveToLocalStorage();
-        showSuccess('Partita cancellata');
+    const partita = partiteDB.find(p => p.id === id);
+    if (partita) {
+        partita.risultato = null;
+        partita.marcatori = [];
+        saveDataToFirebase();
+        showSuccess('Risultato cancellato');
         displayMatches();
     }
 }
@@ -279,23 +280,8 @@ function showError(message) {
     setTimeout(() => element.style.display = 'none', 3000);
 }
 
-// Salva nel localStorage
-function saveToLocalStorage() {
-    localStorage.setItem('mundialPitto_matches', JSON.stringify(partiteDB));
-    localStorage.setItem('mundialPitto_stats', JSON.stringify(giocatoriStatsDB));
-    localStorage.setItem('mundialPitto_classifiche', JSON.stringify(classificheDB));
-}
-
-// Carica dal localStorage
-function loadFromLocalStorage() {
-    const matches = localStorage.getItem('mundialPitto_matches');
-    const stats = localStorage.getItem('mundialPitto_stats');
-    const classifiche = localStorage.getItem('mundialPitto_classifiche');
-
-    if (matches) Object.assign(partiteDB, JSON.parse(matches));
-    if (stats) Object.assign(giocatoriStatsDB, JSON.parse(stats));
-    if (classifiche) Object.assign(classificheDB, JSON.parse(classifiche));
-}
-
-// Inizializza al caricamento (script.js carica già i dati da localStorage)
-document.addEventListener('DOMContentLoaded', initAdmin);
+// Inizializza al caricamento (script.js carica i dati da Firebase)
+document.addEventListener('DOMContentLoaded', async () => {
+    await firebaseReady;
+    initAdmin();
+});

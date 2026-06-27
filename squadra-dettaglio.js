@@ -92,7 +92,8 @@ function renderBreadcrumb(squadra) {
 }
 
 // Inizializzazione
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await firebaseReady;
     const squadraId = getSquadraId();
     const squadra = getSquadra(squadraId);
 

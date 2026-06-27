@@ -102,6 +102,7 @@ function renderStatistiche() {
         </div>`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await firebaseReady;
     renderClassifiche();
 });
