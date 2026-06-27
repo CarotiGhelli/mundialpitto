@@ -177,6 +177,7 @@ nav.nav-centered .nav-links {
 .scorers-col { flex: 1; min-width: 0; }
 .scorers-col.right { text-align: right; }
 .no-scorer { opacity: 0.35; }
+.scorer-line { display: block; }
 
 /* Crests / Scudetti quadrati */
 .team-badge {

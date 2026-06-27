@@ -237,9 +237,14 @@ function loadBracketFromFirebase() {
 // Utility: testo marcatori per una squadra in una partita
 function getScorerText(partita, squadra) {
     if (!partita.risultato) return '<span class="no-scorer">&mdash;</span>';
-    const lista = (partita.marcatori || []).filter(m => m.squadra === squadra && m.gol > 0);
+    const lista = (partita.marcatori || []).filter(m => m.squadra === squadra && (m.gol > 0 || m.assist > 0));
     if (lista.length === 0) return '<span class="no-scorer">&mdash;</span>';
-    return '&#9917; ' + lista.map(m => m.gol > 1 ? `${m.nome} (${m.gol})` : m.nome).join(', ');
+    return lista.map(m => {
+        let line = m.nome;
+        if (m.gol > 0) line += ` ${m.gol}&#9917;`;
+        if (m.assist > 0) line += ` ${m.assist}&#127344;&#65039;`;
+        return `<span class="scorer-line">${line}</span>`;
+    }).join('');
 }
 
 // Stato della vista attuale del widget ("marcatori" o "assist")
