@@ -43,8 +43,8 @@ function renderCalendario() {
                         </div>
                     </div>
                     <div class="match-scorers-row">
-                        <div class="scorers-col">${getScorerText(partita, partita.squadra1)}</div>
-                        <div class="scorers-col right">${getScorerText(partita, partita.squadra2)}</div>
+                        <div class="scorers-col">${getScorerText(partita, partita.squadra1, 'left')}</div>
+                        <div class="scorers-col right">${getScorerText(partita, partita.squadra2, 'right')}</div>
                     </div>
                 </a>`;
         });

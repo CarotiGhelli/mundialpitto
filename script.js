@@ -235,15 +235,18 @@ function loadBracketFromFirebase() {
 }
 
 // Utility: testo marcatori per una squadra in una partita
-function getScorerText(partita, squadra) {
+// side='left': stats|nome  side='right': nome|stats  — grid a 2 colonne sul parent
+function getScorerText(partita, squadra, side) {
     if (!partita.risultato) return '<span class="no-scorer">&mdash;</span>';
     const lista = (partita.marcatori || []).filter(m => m.squadra === squadra && (m.gol > 0 || m.assist > 0));
     if (lista.length === 0) return '<span class="no-scorer">&mdash;</span>';
     return lista.map(m => {
-        let line = m.nome;
-        if (m.gol > 0) line += ` ${m.gol}&#9917;`;
-        if (m.assist > 0) line += ` ${m.assist}&#127344;&#65039;`;
-        return `<span class="scorer-line">${line}</span>`;
+        const parts = [];
+        if (m.gol > 0)   parts.push(`${m.gol}&#9917;`);
+        if (m.assist > 0) parts.push(`${m.assist}&#x1F45F;`);
+        const stats = `<span class="scorer-stats">${parts.join(' ')}</span>`;
+        const nome  = `<span class="scorer-name">${m.nome}</span>`;
+        return side === 'right' ? nome + stats : stats + nome;
     }).join('');
 }
 
