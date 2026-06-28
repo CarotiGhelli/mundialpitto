@@ -114,7 +114,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    renderBreadcrumb(squadra);
     renderHero(squadra);
     renderInfo(squadra);
     renderRoster(squadra);
