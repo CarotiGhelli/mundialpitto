@@ -31,12 +31,13 @@ const squadreDB = [
         colore: "#cc2200",
         coloreScuro: "#882200",
         giocatori: [
-            { nome: "Rei Pilinci" },
+            { nome: "Rei Pilinci", capitano: true },
             { nome: "Tommaso Carbonel" },
-            { nome: "Mohamed Yamal" },
-            { nome: "Lorenzo Chieppa" },
+            { nome: "Mohamed" },
             { nome: "Gabriele Gentile" },
-            { nome: "Lorenzo Bertozzi" }
+            { nome: "Lorenzo Bertozzi" },
+            { nome: "Andrea Pengo" },
+            { nome: "Gregorio Cozy" }
         ]
     },
     {
@@ -67,7 +68,7 @@ const squadreDB = [
         giocatori: [
             { nome: "Leonardo Castagnoli", capitano: true },
             { nome: "Lorenzo Bacci" },
-            { nome: "Davide Palma" },
+            { nome: "Gregorio Paglini" },
             { nome: "Francesco Ceccarelli" },
             { nome: "Leonardo Manetti" },
             { nome: "Diego Giannetti" }
