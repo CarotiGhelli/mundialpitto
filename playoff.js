@@ -19,15 +19,17 @@ async function renderBracket() {
     setText('qf2-t2', teamByPos(classB, 3));
 
     // SEMIFINALI (accesso diretto per i 1° classificati)
-    setText('sf1-t1', teamByPos(classA, 1));
-    setText('sf2-t1', teamByPos(classB, 1));
+    // SF1 (top): 1° Girone B vs Vin. QF2
+    // SF2 (bottom): 1° Girone A vs Vin. QF1
+    setText('sf1-t1', teamByPos(classB, 1));
+    setText('sf2-t1', teamByPos(classA, 1));
 
     // Carica i risultati playoff da Firebase
     const bracketData = await loadBracketFromFirebase();
 
     // Nomi vincitori/perdenti
-    if (bracketData.qf1_winner) setText('sf1-t2', bracketData.qf1_winner);
-    if (bracketData.qf2_winner) setText('sf2-t2', bracketData.qf2_winner);
+    if (bracketData.qf2_winner) setText('sf1-t2', bracketData.qf2_winner);
+    if (bracketData.qf1_winner) setText('sf2-t2', bracketData.qf1_winner);
     if (bracketData.sf1_winner) setText('fin-t1', bracketData.sf1_winner);
     if (bracketData.sf2_winner) setText('fin-t2', bracketData.sf2_winner);
     if (bracketData.winner)     setText('winner-name', bracketData.winner);

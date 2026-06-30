@@ -95,10 +95,6 @@ function renderStatistiche() {
         <div class="girone-card">
             <h2 class="girone-title">⚽ CLASSIFICA MARCATORI</h2>
             ${buildTable(marcatori, 'marcatori', 'Gol')}
-        </div>
-        <div class="girone-card">
-            <h2 class="girone-title">🎯 CLASSIFICA ASSIST</h2>
-            ${buildTable(assist, 'assist', 'Ass')}
         </div>`;
 }
 
