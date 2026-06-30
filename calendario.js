@@ -24,6 +24,7 @@ function renderCalendario() {
             const badge1 = getSquadraLogo(partita.squadra1);
             const badge2 = getSquadraLogo(partita.squadra2);
             const risultato = partita.risultato || '- - -';
+            const rigoriHtml = partita.rigori ? `<span class="rigori-badge">d.c.r. ${partita.rigori}</span>` : '';
 
             html += `
                 <div class="cal-girone-divider">${gironeLabel}</div>
@@ -36,6 +37,7 @@ function renderCalendario() {
                         <div class="score-center">
                             <span class="match-time-label">${partita.orario}</span>
                             <div class="score-pill">${risultato}</div>
+                            ${rigoriHtml}
                         </div>
                         <div class="team away">
                             ${badge2}
@@ -87,6 +89,7 @@ function renderCalendarioPlayoff() {
         const badge1 = getSquadraLogo(name1);
         const badge2 = getSquadraLogo(name2);
         const risultato = partita.risultato || '- - -';
+        const rigoriHtml = partita.rigori ? `<span class="rigori-badge">d.c.r. ${partita.rigori}</span>` : '';
 
         html += `
             <div class="cal-girone-divider">${partita.label}</div>
@@ -99,6 +102,7 @@ function renderCalendarioPlayoff() {
                     <div class="score-center">
                         <span class="match-time-label">${partita.orario}</span>
                         <div class="score-pill">${risultato}</div>
+                        ${rigoriHtml}
                     </div>
                     <div class="team away">
                         ${badge2}

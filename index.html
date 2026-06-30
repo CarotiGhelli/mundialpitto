@@ -89,6 +89,7 @@
                             <div class="score-center">
                                 <span class="match-time-label">${p.orario}</span>
                                 <div class="score-pill">${p.risultato}</div>
+                                ${p.rigori ? `<span class="rigori-badge">d.c.r. ${p.rigori}</span>` : ''}
                             </div>
                             <div class="team away">${b2}<span class="team-name">${p.squadra2}</span></div>
                         </div>

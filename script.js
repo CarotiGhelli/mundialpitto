@@ -127,13 +127,13 @@ const partiteDB = [
     { id: 5, giorno: 1, orario: "20:30-21:00", girone: "A", squadra1: "Narcos", squadra2: "Bundesdini All-Stars", risultato: null, marcatori: [] },
     { id: 6, giorno: 1, orario: "21:00-21:30", girone: "B", squadra1: "ADLSR FC", squadra2: "Atletico Gaza", risultato: null, marcatori: [] },
     // PLAYOFF - 30 giugno
-    { id: 101, giorno: 2, orario: '18:00', girone: 'PO', playoffRound: 'qf2', label: 'Quarti di Finale', squadra1: '2° Girone A', squadra2: '3° Girone B', risultato: null, marcatori: [] },
-    { id: 102, giorno: 2, orario: '18:30', girone: 'PO', playoffRound: 'qf1', label: 'Quarti di Finale', squadra1: '2° Girone B', squadra2: '3° Girone A', risultato: null, marcatori: [] },
-    { id: 103, giorno: 2, orario: '19:00', girone: 'PO', playoffRound: 'sf2', label: 'Semifinale',        squadra1: '1° Girone A', squadra2: 'Vin. QF1',    risultato: null, marcatori: [] },
-    { id: 104, giorno: 2, orario: '19:30', girone: 'PO', playoffRound: 'sf1', label: 'Semifinale',        squadra1: '1° Girone B', squadra2: 'Vin. QF2',    risultato: null, marcatori: [] },
-    { id: 105, giorno: 2, orario: '20:00', girone: 'PO', playoffRound: 'p56', label: '5° / 6° Posto',     squadra1: 'Perd. QF1',   squadra2: 'Perd. QF2',   risultato: null, marcatori: [] },
-    { id: 106, giorno: 2, orario: '20:30', girone: 'PO', playoffRound: 'p34', label: '3° / 4° Posto',     squadra1: 'Perd. SF1',   squadra2: 'Perd. SF2',   risultato: null, marcatori: [] },
-    { id: 107, giorno: 2, orario: '21:00', girone: 'PO', playoffRound: 'fin', label: 'Finale',             squadra1: 'Vin. SF1',    squadra2: 'Vin. SF2',    risultato: null, marcatori: [] }
+    { id: 101, giorno: 2, orario: '18:30', girone: 'PO', playoffRound: 'qf2', label: 'Quarti di Finale', squadra1: '2° Girone A', squadra2: '3° Girone B', risultato: null, marcatori: [] },
+    { id: 102, giorno: 2, orario: '19:00', girone: 'PO', playoffRound: 'qf1', label: 'Quarti di Finale', squadra1: '2° Girone B', squadra2: '3° Girone A', risultato: null, marcatori: [] },
+    { id: 103, giorno: 2, orario: '19:30', girone: 'PO', playoffRound: 'sf2', label: 'Semifinale',        squadra1: '1° Girone A', squadra2: 'Vin. QF1',    risultato: null, marcatori: [] },
+    { id: 104, giorno: 2, orario: '20:00', girone: 'PO', playoffRound: 'sf1', label: 'Semifinale',        squadra1: '1° Girone B', squadra2: 'Vin. QF2',    risultato: null, marcatori: [] },
+    { id: 105, giorno: 2, orario: '20:30', girone: 'PO', playoffRound: 'p56', label: '5° / 6° Posto',     squadra1: 'Perd. QF1',   squadra2: 'Perd. QF2',   risultato: null, marcatori: [] },
+    { id: 106, giorno: 2, orario: '21:00', girone: 'PO', playoffRound: 'p34', label: '3° / 4° Posto',     squadra1: 'Perd. SF1',   squadra2: 'Perd. SF2',   risultato: null, marcatori: [] },
+    { id: 107, giorno: 2, orario: '21:30', girone: 'PO', playoffRound: 'fin', label: 'Finale',             squadra1: 'Vin. SF1',    squadra2: 'Vin. SF2',    risultato: null, marcatori: [] }
 ];
 
 // Database centrale dei marcatori e assist
@@ -167,13 +167,21 @@ function applyPlayoffTeams() {
         const p = partiteDB.find(x => x.playoffRound === round);
         if (!p || !p.risultato) return null;
         const [g1, g2] = p.risultato.split(' - ').map(Number);
-        return g1 > g2 ? p.squadra1 : g2 > g1 ? p.squadra2 : null;
+        if (g1 > g2) return p.squadra1;
+        if (g2 > g1) return p.squadra2;
+        if (!p.rigori) return null;
+        const [r1, r2] = p.rigori.split(' - ').map(Number);
+        return r1 > r2 ? p.squadra1 : r2 > r1 ? p.squadra2 : null;
     }
     function getLoser(round) {
         const p = partiteDB.find(x => x.playoffRound === round);
         if (!p || !p.risultato) return null;
         const [g1, g2] = p.risultato.split(' - ').map(Number);
-        return g1 > g2 ? p.squadra2 : g2 > g1 ? p.squadra1 : null;
+        if (g1 > g2) return p.squadra2;
+        if (g2 > g1) return p.squadra1;
+        if (!p.rigori) return null;
+        const [r1, r2] = p.rigori.split(' - ').map(Number);
+        return r1 > r2 ? p.squadra2 : r2 > r1 ? p.squadra1 : null;
     }
     function set(round, t1, t2) {
         const p = partiteDB.find(x => x.playoffRound === round);
@@ -220,6 +228,7 @@ function _applyFirebaseData(data) {
                     ? (Array.isArray(saved.marcatori) ? saved.marcatori : Object.values(saved.marcatori))
                     : [];
                 p.mvp = saved.mvp || null;
+                p.rigori = saved.rigori || null;
             }
         });
     }
@@ -262,7 +271,7 @@ firebaseDB.ref('mundialPitto').once('value', snapshot => {
 function saveDataToFirebase() {
     const partiteDaSalvare = {};
     partiteDB.forEach(p => {
-        partiteDaSalvare[p.id] = { risultato: p.risultato || null, marcatori: p.marcatori || [], mvp: p.mvp || null };
+        partiteDaSalvare[p.id] = { risultato: p.risultato || null, marcatori: p.marcatori || [], mvp: p.mvp || null, rigori: p.rigori || null };
     });
     const statsDaSalvare = {};
     giocatoriStatsDB.forEach(g => {

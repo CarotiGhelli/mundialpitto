@@ -13,6 +13,13 @@ function setGoals(round, slot1, slot2) {
     if (el2) { el2.textContent = g2; el2.classList.add('has-score'); }
 }
 
+function setRigori(round, dcrId) {
+    const p = partiteDB.find(x => x.playoffRound === round);
+    if (!p || !p.rigori) return;
+    const el = document.getElementById(dcrId);
+    if (el) { el.textContent = `d.c.r. ${p.rigori}`; el.style.display = 'block'; }
+}
+
 function renderBracket() {
     // applyPlayoffTeams() is already called inside _applyFirebaseData, so partiteDB is ready
     function p(round) { return partiteDB.find(x => x.playoffRound === round); }
@@ -38,6 +45,15 @@ function renderBracket() {
     setGoals('fin', 'fin-g1',  'fin-g2');
     setGoals('p34', 'p34-g1',  'p34-g2');
     setGoals('p56', 'p56-g1',  'p56-g2');
+
+    // Rigori (d.c.r.)
+    setRigori('qf2', 'qf2-dcr');
+    setRigori('qf1', 'qf1-dcr');
+    setRigori('sf1', 'sf1-dcr');
+    setRigori('sf2', 'sf2-dcr');
+    setRigori('fin', 'fin-dcr');
+    setRigori('p34', 'p34-dcr');
+    setRigori('p56', 'p56-dcr');
 
     // Campione
     if (fin && fin.risultato) {

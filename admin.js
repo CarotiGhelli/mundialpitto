@@ -13,7 +13,7 @@ function loadMatchesInSelect() {
     partiteDB.forEach(p => {
         const opt = document.createElement('option');
         opt.value = p.id;
-        const stato = p.risultato ? ` [${p.risultato}]` : '';
+        const stato = p.risultato ? ` [${p.risultato}${p.rigori ? ` d.c.r. ${p.rigori}` : ''}]` : '';
         const prefix = p.playoffRound
             ? `${p.label} ${p.orario}`
             : `G${p.giorno} ${p.orario} | Girone ${p.girone}`;
@@ -45,6 +45,19 @@ function onMatchSelect() {
     } else {
         document.getElementById('goals-team1').value = 0;
         document.getElementById('goals-team2').value = 0;
+    }
+
+    const rigoriSection = document.getElementById('rigori-section');
+    if (rigoriSection) {
+        rigoriSection.style.display = partita.playoffRound ? 'block' : 'none';
+        if (partita.rigori) {
+            const [r1, r2] = partita.rigori.split(' - ').map(Number);
+            document.getElementById('rigori-team1').value = r1;
+            document.getElementById('rigori-team2').value = r2;
+        } else {
+            document.getElementById('rigori-team1').value = 0;
+            document.getElementById('rigori-team2').value = 0;
+        }
     }
 
     document.getElementById('scorers-list').innerHTML = '';
@@ -142,6 +155,12 @@ function saveAll() {
     partita.risultato = `${g1} - ${g2}`;
     partita.marcatori = newMarcatori;
     partita.mvp = document.getElementById('mvp-select').value || null;
+    partita.rigori = null;
+    if (partita.playoffRound && g1 === g2) {
+        const r1 = parseInt(document.getElementById('rigori-team1')?.value) || 0;
+        const r2 = parseInt(document.getElementById('rigori-team2')?.value) || 0;
+        if (r1 !== r2) partita.rigori = `${r1} - ${r2}`;
+    }
 
     recomputeAllClassifications();
     applyPlayoffTeams();
@@ -163,6 +182,7 @@ function deleteCurrentResult() {
     partita.risultato = null;
     partita.marcatori = [];
     partita.mvp = null;
+    partita.rigori = null;
 
     recomputeAllClassifications();
     applyPlayoffTeams();
@@ -225,8 +245,11 @@ function displayMatches() {
     const container = document.getElementById('matches-list');
     let html = '';
     partiteDB.forEach(partita => {
-        const stato = partita.risultato
-            ? `<strong style="color:var(--neon-green)">${partita.risultato}</strong>`
+        const risDisplay = partita.risultato
+            ? `${partita.risultato}${partita.rigori ? ` (d.c.r. ${partita.rigori})` : ''}`
+            : null;
+        const stato = risDisplay
+            ? `<strong style="color:var(--neon-green)">${risDisplay}</strong>`
             : '<span style="color:var(--text-muted)">In attesa</span>';
         const mvpTag = partita.mvp ? ` | MVP: ${escHtml(partita.mvp)}` : '';
         const t1 = escHtml(partita.squadra1 || '—');

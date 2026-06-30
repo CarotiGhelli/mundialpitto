@@ -71,8 +71,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const squadra1 = squadreDB.find(s => s.nome === partita.squadra1);
     const squadra2 = squadreDB.find(s => s.nome === partita.squadra2);
 
+    const rigoriHtml = (partita.rigori && partita.risultato)
+        ? ` <span class="rigori-badge" style="font-size:0.7rem;vertical-align:middle;">d.c.r. ${partita.rigori}</span>`
+        : '';
     document.querySelector('.partita-header h1').innerHTML =
-        `${partita.squadra1} <span class="score-highlight">${partita.risultato || '- - -'}</span> ${partita.squadra2}`;
+        `${partita.squadra1} <span class="score-highlight">${partita.risultato || '- - -'}</span>${rigoriHtml} ${partita.squadra2}`;
     document.querySelector('.girone-info').textContent = partita.playoffRound
         ? `${partita.label || 'Playoff'} – ${partita.orario}`
         : `Girone ${partita.girone} – Giornata ${partita.giorno} – ${partita.orario}`;
