@@ -125,7 +125,15 @@ const partiteDB = [
     { id: 3, giorno: 1, orario: "19:30-20:00", girone: "A", squadra1: "Bundesdini All-Stars", squadra2: "Staff Poco Tecnico", risultato: null, marcatori: [] },
     { id: 4, giorno: 1, orario: "20:00-20:30", girone: "B", squadra1: "ADLSR FC", squadra2: "DA PIERINO PSG", risultato: null, marcatori: [] },
     { id: 5, giorno: 1, orario: "20:30-21:00", girone: "A", squadra1: "Narcos", squadra2: "Bundesdini All-Stars", risultato: null, marcatori: [] },
-    { id: 6, giorno: 1, orario: "21:00-21:30", girone: "B", squadra1: "ADLSR FC", squadra2: "Atletico Gaza", risultato: null, marcatori: [] }
+    { id: 6, giorno: 1, orario: "21:00-21:30", girone: "B", squadra1: "ADLSR FC", squadra2: "Atletico Gaza", risultato: null, marcatori: [] },
+    // PLAYOFF - 30 giugno
+    { id: 101, giorno: 2, orario: '18:00', girone: 'PO', playoffRound: 'qf2', label: 'Quarti di Finale', squadra1: '2° Girone A', squadra2: '3° Girone B', risultato: null, marcatori: [] },
+    { id: 102, giorno: 2, orario: '18:30', girone: 'PO', playoffRound: 'qf1', label: 'Quarti di Finale', squadra1: '2° Girone B', squadra2: '3° Girone A', risultato: null, marcatori: [] },
+    { id: 103, giorno: 2, orario: '19:00', girone: 'PO', playoffRound: 'sf2', label: 'Semifinale',        squadra1: '1° Girone A', squadra2: 'Vin. QF1',    risultato: null, marcatori: [] },
+    { id: 104, giorno: 2, orario: '19:30', girone: 'PO', playoffRound: 'sf1', label: 'Semifinale',        squadra1: '1° Girone B', squadra2: 'Vin. QF2',    risultato: null, marcatori: [] },
+    { id: 105, giorno: 2, orario: '20:00', girone: 'PO', playoffRound: 'p56', label: '5° / 6° Posto',     squadra1: 'Perd. QF1',   squadra2: 'Perd. QF2',   risultato: null, marcatori: [] },
+    { id: 106, giorno: 2, orario: '20:30', girone: 'PO', playoffRound: 'p34', label: '3° / 4° Posto',     squadra1: 'Perd. SF1',   squadra2: 'Perd. SF2',   risultato: null, marcatori: [] },
+    { id: 107, giorno: 2, orario: '21:00', girone: 'PO', playoffRound: 'fin', label: 'Finale',             squadra1: 'Vin. SF1',    squadra2: 'Vin. SF2',    risultato: null, marcatori: [] }
 ];
 
 // Database centrale dei marcatori e assist
@@ -148,6 +156,42 @@ const classificheDB = {
         { posizione: 3, squadra: 'DA PIERINO PSG', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 }
     ]
 };
+
+// Popola le squadre nelle partite playoff in base a classifiche e risultati precedenti
+function applyPlayoffTeams() {
+    function tp(girone, pos) {
+        const arr = classificheDB[girone] || [];
+        return [...arr].sort((a, b) => a.posizione - b.posizione)[pos - 1]?.squadra || null;
+    }
+    function getWinner(round) {
+        const p = partiteDB.find(x => x.playoffRound === round);
+        if (!p || !p.risultato) return null;
+        const [g1, g2] = p.risultato.split(' - ').map(Number);
+        return g1 > g2 ? p.squadra1 : g2 > g1 ? p.squadra2 : null;
+    }
+    function getLoser(round) {
+        const p = partiteDB.find(x => x.playoffRound === round);
+        if (!p || !p.risultato) return null;
+        const [g1, g2] = p.risultato.split(' - ').map(Number);
+        return g1 > g2 ? p.squadra2 : g2 > g1 ? p.squadra1 : null;
+    }
+    function set(round, t1, t2) {
+        const p = partiteDB.find(x => x.playoffRound === round);
+        if (!p) return;
+        if (t1) p.squadra1 = t1;
+        if (t2) p.squadra2 = t2;
+    }
+    // QF: team da classifica gironi
+    set('qf2', tp('A', 2), tp('B', 3));
+    set('qf1', tp('B', 2), tp('A', 3));
+    // SF: 1° girone + vincitore QF
+    set('sf1', tp('B', 1), getWinner('qf2'));
+    set('sf2', tp('A', 1), getWinner('qf1'));
+    // Piazzamenti e finale
+    set('p56', getLoser('qf1'), getLoser('qf2'));
+    set('p34', getLoser('sf1'), getLoser('sf2'));
+    set('fin', getWinner('sf1'), getWinner('sf2'));
+}
 
 // --- FIREBASE ---
 const firebaseConfig = {
@@ -204,6 +248,8 @@ function _applyFirebaseData(data) {
         (p.marcatori || []).forEach(m => { if (m.squadra === 'ADLSR') m.squadra = 'ADLSR FC'; });
     });
     giocatoriStatsDB.forEach(g => { if (g.squadra === 'ADLSR') g.squadra = 'ADLSR FC'; });
+    // Aggiorna le squadre nelle partite playoff
+    applyPlayoffTeams();
 }
 
 // Carica i dati una volta all'avvio e risolve firebaseReady

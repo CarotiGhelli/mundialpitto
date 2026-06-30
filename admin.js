@@ -14,7 +14,12 @@ function loadMatchesInSelect() {
         const opt = document.createElement('option');
         opt.value = p.id;
         const stato = p.risultato ? ` [${p.risultato}]` : '';
-        opt.textContent = `G${p.giorno} ${p.orario} | ${p.squadra1} vs ${p.squadra2}${stato}`;
+        const prefix = p.playoffRound
+            ? `${p.label} ${p.orario}`
+            : `G${p.giorno} ${p.orario} | Girone ${p.girone}`;
+        const t1 = p.squadra1 || '—';
+        const t2 = p.squadra2 || '—';
+        opt.textContent = `${prefix} | ${t1} vs ${t2}${stato}`;
         sel.appendChild(opt);
     });
 }
@@ -57,7 +62,7 @@ function escHtml(s) {
 
 function buildPlayerOptionsHtml(partita, defaultValue) {
     let html = '<option value="">-- Giocatore --</option>';
-    [partita.squadra1, partita.squadra2].forEach(nomeSquadra => {
+    [partita.squadra1, partita.squadra2].filter(Boolean).forEach(nomeSquadra => {
         const sq = squadreDB.find(s => s.nome === nomeSquadra);
         if (!sq) return;
         html += `<optgroup label="${escHtml(nomeSquadra)}">`;
@@ -139,6 +144,7 @@ function saveAll() {
     partita.mvp = document.getElementById('mvp-select').value || null;
 
     recomputeAllClassifications();
+    applyPlayoffTeams();
     recomputeGiocatoriStats();
     saveDataToFirebase();
 
@@ -159,6 +165,7 @@ function deleteCurrentResult() {
     partita.mvp = null;
 
     recomputeAllClassifications();
+    applyPlayoffTeams();
     recomputeGiocatoriStats();
     saveDataToFirebase();
 
@@ -180,8 +187,9 @@ function recomputeAllClassifications() {
     });
     partiteDB.forEach(p => {
         if (!p.risultato) return;
-        const [g1, g2] = p.risultato.split(' - ').map(Number);
         const cl = classificheDB[p.girone];
+        if (!cl) return; // salta partite playoff (girone: 'PO')
+        const [g1, g2] = p.risultato.split(' - ').map(Number);
         const sq1 = cl.find(s => s.squadra === p.squadra1);
         const sq2 = cl.find(s => s.squadra === p.squadra2);
         if (!sq1 || !sq2) return;
@@ -221,11 +229,16 @@ function displayMatches() {
             ? `<strong style="color:var(--neon-green)">${partita.risultato}</strong>`
             : '<span style="color:var(--text-muted)">In attesa</span>';
         const mvpTag = partita.mvp ? ` | MVP: ${escHtml(partita.mvp)}` : '';
+        const t1 = escHtml(partita.squadra1 || '—');
+        const t2 = escHtml(partita.squadra2 || '—');
+        const meta = partita.playoffRound
+            ? `${partita.label} &ndash; ${partita.orario}`
+            : `G${partita.giorno} &ndash; ${partita.orario} | Girone ${partita.girone}`;
         html += `
             <div class="match-item">
                 <div class="match-info">
-                    <div class="match-title">${escHtml(partita.squadra1)} vs ${escHtml(partita.squadra2)}</div>
-                    <div class="match-meta">G${partita.giorno} &ndash; ${partita.orario} | Girone ${partita.girone} | ${stato}${mvpTag}</div>
+                    <div class="match-title">${t1} vs ${t2}</div>
+                    <div class="match-meta">${meta} | ${stato}${mvpTag}</div>
                 </div>
                 <div class="match-actions">
                     <button class="btn-small btn-edit" onclick="editMatch(${partita.id})">Modifica</button>
@@ -430,134 +443,7 @@ async function cancellaPosizioniPartita() {
     showSuccess('Posizioni personalizzate rimosse');
 }
 
-// ===== PLAYOFF BRACKET ADMIN =====
-let bracketCache = {};
-
-async function initBracketAdmin() {
-    bracketCache = await loadBracketFromFirebase();
-    renderBracketAdmin();
-}
-
-function bracketTeams() {
-    function tp(girone, pos) {
-        const arr = classificheDB[girone] || [];
-        return [...arr].sort((a, b) => a.posizione - b.posizione)[pos - 1]?.squadra || null;
-    }
-    const d = bracketCache;
-    return {
-        qf2: { label: 'QF2 · 18:00', t1: tp('A', 2), t2: tp('B', 3) },
-        qf1: { label: 'QF1 · 18:30', t1: tp('B', 2), t2: tp('A', 3) },
-        sf1: { label: 'SF1 · 19:30', t1: tp('B', 1), t2: d.qf2_winner || null },
-        sf2: { label: 'SF2 · 19:00', t1: tp('A', 1), t2: d.qf1_winner || null },
-        p56: { label: '5°/6° Posto · 20:00', t1: d.qf1_loser || null, t2: d.qf2_loser || null },
-        p34: { label: '3°/4° Posto · 20:30', t1: d.sf1_loser || null, t2: d.sf2_loser || null },
-        fin: { label: 'Finale · 21:00', t1: d.sf1_winner || null, t2: d.sf2_winner || null },
-    };
-}
-
-function renderBracketAdmin() {
-    const container = document.getElementById('bracket-admin-container');
-    if (!container) return;
-    const teams = bracketTeams();
-    const d = bracketCache;
-    const order = ['qf2', 'qf1', 'sf1', 'sf2', 'p56', 'p34', 'fin'];
-
-    let html = '';
-    order.forEach(key => {
-        const m = teams[key];
-        const g1val = d[`${key}_g1`] !== undefined ? d[`${key}_g1`] : '';
-        const g2val = d[`${key}_g2`] !== undefined ? d[`${key}_g2`] : '';
-        const winner = key === 'fin' ? d.winner : d[`${key}_winner`];
-        const disabled = (!m.t1 || !m.t2) ? ' disabled' : '';
-        const t1name = escHtml(m.t1 || '(da definire)');
-        const t2name = escHtml(m.t2 || '(da definire)');
-        const winTag = winner
-            ? `<span style="color:var(--neon-green);font-size:0.8rem;">&#10003; Vin: ${escHtml(winner)}</span>`
-            : '';
-        const delBtn = winner
-            ? `<button class="btn-small btn-danger" onclick="deletePlayoffMatch('${key}')">&#x2715;</button>`
-            : '';
-
-        html += `
-            <div class="match-item">
-                <div class="match-info">
-                    <div class="match-meta" style="margin-bottom:0.4rem;">${m.label}</div>
-                    <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-                        <span style="flex:1;font-weight:600;font-size:0.85rem;">${t1name}</span>
-                        <input type="number" id="bg-${key}-g1" class="score-num-input"
-                               style="width:48px;font-size:1rem;" min="0" value="${g1val}"${disabled}>
-                        <span class="score-sep" style="font-size:1rem;">:</span>
-                        <input type="number" id="bg-${key}-g2" class="score-num-input"
-                               style="width:48px;font-size:1rem;" min="0" value="${g2val}"${disabled}>
-                        <span style="flex:1;font-weight:600;font-size:0.85rem;text-align:right;">${t2name}</span>
-                    </div>
-                    <div style="margin-top:0.35rem;">${winTag}</div>
-                </div>
-                <div class="match-actions" style="align-self:center;">
-                    <button class="btn-small btn-edit" onclick="savePlayoffMatch('${key}')"${disabled}>Salva</button>
-                    ${delBtn}
-                </div>
-            </div>`;
-    });
-
-    container.innerHTML = html || '<p style="color:var(--text-muted);">Nessuna partita</p>';
-}
-
-async function savePlayoffMatch(key) {
-    const teams = bracketTeams();
-    const m = teams[key];
-    if (!m.t1 || !m.t2) { showError('Squadre non ancora definite'); return; }
-
-    const g1 = parseInt(document.getElementById(`bg-${key}-g1`).value) || 0;
-    const g2 = parseInt(document.getElementById(`bg-${key}-g2`).value) || 0;
-    const winner = g1 > g2 ? m.t1 : g2 > g1 ? m.t2 : null;
-    const loser  = g1 > g2 ? m.t2 : g2 > g1 ? m.t1 : null;
-
-    bracketCache[`${key}_g1`] = g1;
-    bracketCache[`${key}_g2`] = g2;
-    if (key === 'fin') {
-        bracketCache.winner = winner;
-    } else {
-        if (winner) { bracketCache[`${key}_winner`] = winner; bracketCache[`${key}_loser`] = loser; }
-    }
-
-    await saveBracketToFirebase(bracketCache);
-    showSuccess(`${key.toUpperCase()} salvato: ${m.t1} ${g1}–${g2} ${m.t2}${winner ? ' | Vin: ' + winner : ''}`);
-    renderBracketAdmin();
-}
-
-async function deletePlayoffMatch(key) {
-    if (!confirm(`Cancellare il risultato di ${key.toUpperCase()}?`)) return;
-
-    delete bracketCache[`${key}_g1`];
-    delete bracketCache[`${key}_g2`];
-    if (key === 'fin') {
-        delete bracketCache.winner;
-    } else {
-        delete bracketCache[`${key}_winner`];
-        delete bracketCache[`${key}_loser`];
-    }
-
-    // Cancella a cascata i risultati dipendenti
-    if (key === 'qf2') { clearBracketMatch('sf1'); clearBracketMatch('fin'); clearBracketMatch('p34'); }
-    if (key === 'qf1') { clearBracketMatch('sf2'); clearBracketMatch('fin'); clearBracketMatch('p34'); }
-    if (key === 'sf1' || key === 'sf2') { clearBracketMatch('fin'); clearBracketMatch('p34'); }
-
-    await saveBracketToFirebase(bracketCache);
-    showSuccess(`Risultato ${key.toUpperCase()} cancellato`);
-    renderBracketAdmin();
-}
-
-function clearBracketMatch(key) {
-    delete bracketCache[`${key}_g1`];
-    delete bracketCache[`${key}_g2`];
-    delete bracketCache[`${key}_winner`];
-    delete bracketCache[`${key}_loser`];
-    if (key === 'fin') delete bracketCache.winner;
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
     await firebaseReady;
     initAdmin();
-    await initBracketAdmin();
 });

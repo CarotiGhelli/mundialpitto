@@ -73,8 +73,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.querySelector('.partita-header h1').innerHTML =
         `${partita.squadra1} <span class="score-highlight">${partita.risultato || '- - -'}</span> ${partita.squadra2}`;
-    document.querySelector('.girone-info').textContent =
-        `Girone ${partita.girone} – Giornata ${partita.giorno} – ${partita.orario}`;
+    document.querySelector('.girone-info').textContent = partita.playoffRound
+        ? `${partita.label || 'Playoff'} – ${partita.orario}`
+        : `Girone ${partita.girone} – Giornata ${partita.giorno} – ${partita.orario}`;
 
     if (squadra1) document.documentElement.style.setProperty('--team1-color', squadra1.colore);
     if (squadra2) document.documentElement.style.setProperty('--team2-color', squadra2.colore);
