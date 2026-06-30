@@ -17,7 +17,7 @@ function setRigori(round, dcrId) {
     const p = partiteDB.find(x => x.playoffRound === round);
     if (!p || !p.rigori) return;
     const el = document.getElementById(dcrId);
-    if (el) { el.textContent = `d.c.r. ${p.rigori}`; el.style.display = 'block'; }
+    if (el) { el.textContent = `rig. ${p.rigori}`; el.style.display = 'block'; }
 }
 
 function renderBracket() {
@@ -46,7 +46,7 @@ function renderBracket() {
     setGoals('p34', 'p34-g1',  'p34-g2');
     setGoals('p56', 'p56-g1',  'p56-g2');
 
-    // Rigori (d.c.r.)
+    // Rigori (rig.)
     setRigori('qf2', 'qf2-dcr');
     setRigori('qf1', 'qf1-dcr');
     setRigori('sf1', 'sf1-dcr');

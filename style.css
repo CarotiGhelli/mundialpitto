@@ -1484,6 +1484,12 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     margin-top: 3px;
 }
 
+.rigori-sopra {
+    text-align: center;
+    margin: 0 0 0.4rem;
+    font-size: 0.9rem;
+}
+
 .bracket-match-block:hover {
     border-color: rgba(0, 255, 136, 0.35);
 }
@@ -1565,17 +1571,9 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     flex: 1;
 }
 
-.connector.top-conn {
-    border-right: 2px solid rgba(0, 255, 136, 0.35);
-    border-bottom: 2px solid rgba(0, 255, 136, 0.35);
-    border-bottom-right-radius: 6px;
-}
+.connector.top-conn { }
 
-.connector.bottom-conn {
-    border-right: 2px solid rgba(0, 255, 136, 0.35);
-    border-top: 2px solid rgba(0, 255, 136, 0.35);
-    border-top-right-radius: 6px;
-}
+.connector.bottom-conn { }
 
 /* COLONNA FINALE */
 .bracket-col-finale {

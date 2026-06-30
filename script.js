@@ -341,47 +341,26 @@ function getScorerText(partita, squadra, side) {
     }).join('');
 }
 
-// Stato della vista attuale del widget ("marcatori" o "assist")
-let vistaAttuale = "marcatori"; 
-
-const configurazioneVista = {
-    marcatori: {
-        titolo: "CLASSIFICA MARCATORI",
-        proprieta: "marcatori"
-    },
-    assist: {
-        titolo: "CLASSIFICA ASSIST",
-        proprieta: "assist"
-    }
-};
-
 // Riferimenti agli elementi HTML reali del widget (dentro l'aside)
 const widgetTitle = document.getElementById('widget-title');
 const statList = document.getElementById('stat-list');
-const btnPrev = document.getElementById('btn-prev');
-const btnNext = document.getElementById('btn-next');
 
 // Funzione principale di rendering basata sul database unificato
-function renderLista(tipo) {
-    if (!statList || !widgetTitle) return;
-
-    const config = configurazioneVista[tipo];
-    widgetTitle.textContent = config.titolo;
-    
-    // Svuota i vecchi elementi orfani
+function renderLista() {
+    if (!statList) return;
     statList.innerHTML = '';
 
     // Ordina i giocatori clonando l'array per preservare il DB intatto
     const giocatoriOrdinati = [...giocatoriStatsDB]
-        .filter(g => g[config.proprieta] > 0) // Mostra solo chi ha fatto almeno un'azione rilevante
-        .sort((a, b) => b[config.proprieta] - a[config.proprieta]);
+        .filter(g => g.marcatori > 0)
+        .sort((a, b) => b.marcatori - a.marcatori);
 
     // Prendi fino a un massimo di 5 giocatori per la home page
     const topCinque = giocatoriOrdinati.slice(0, 5);
 
     topCinque.forEach((giocatore, index) => {
         const coloreNumeroUno = index === 0 ? 'style="color: var(--neon-green);"' : '';
-        const valoreStatistica = giocatore[config.proprieta];
+        const valoreStatistica = giocatore.marcatori;
 
         const itemHTML = `
             <div class="stat-item">
@@ -404,20 +383,8 @@ function renderLista(tipo) {
     }
 }
 
-// Funzione di switch bidirezionale
-function switchClassifica() {
-    vistaAttuale = (vistaAttuale === "marcatori") ? "assist" : "marcatori";
-    renderLista(vistaAttuale);
-}
-
-// Associazione degli eventi click ai pulsanti corretti
-if (btnPrev && btnNext) {
-    btnPrev.addEventListener('click', switchClassifica);
-    btnNext.addEventListener('click', switchClassifica);
-}
-
 // Avvio al caricamento della pagina
 document.addEventListener("DOMContentLoaded", async () => {
     await firebaseReady;
-    renderLista(vistaAttuale);
+    renderLista();
 });

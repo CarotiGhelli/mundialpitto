@@ -31,9 +31,7 @@
         <aside>
             <div class="stats-widget">
                 <div class="widget-header">
-                    <button class="arrow-btn" id="btn-prev">&#9664;</button>
                     <h3 class="widget-title" id="widget-title">CLASSIFICA MARCATORI</h3>
-                    <button class="arrow-btn" id="btn-next">&#9654;</button>
                 </div>
                 <div class="stat-list" id="stat-list"></div>
                 <a href="classifica.html" class="btn-vedi-tutti">Vedi Tutti</a>
@@ -89,7 +87,7 @@
                             <div class="score-center">
                                 <span class="match-time-label">${p.orario}</span>
                                 <div class="score-pill">${p.risultato}</div>
-                                ${p.rigori ? `<span class="rigori-badge">d.c.r. ${p.rigori}</span>` : ''}
+                                ${p.rigori ? `<span class="rigori-badge">rig. ${p.rigori}</span>` : ''}
                             </div>
                             <div class="team away">${b2}<span class="team-name">${p.squadra2}</span></div>
                         </div>

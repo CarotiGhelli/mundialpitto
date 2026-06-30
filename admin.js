@@ -13,7 +13,7 @@ function loadMatchesInSelect() {
     partiteDB.forEach(p => {
         const opt = document.createElement('option');
         opt.value = p.id;
-        const stato = p.risultato ? ` [${p.risultato}${p.rigori ? ` d.c.r. ${p.rigori}` : ''}]` : '';
+        const stato = p.risultato ? ` [${p.risultato}${p.rigori ? ` rig. ${p.rigori}` : ''}]` : '';
         const prefix = p.playoffRound
             ? `${p.label} ${p.orario}`
             : `G${p.giorno} ${p.orario} | Girone ${p.girone}`;
@@ -246,7 +246,7 @@ function displayMatches() {
     let html = '';
     partiteDB.forEach(partita => {
         const risDisplay = partita.risultato
-            ? `${partita.risultato}${partita.rigori ? ` (d.c.r. ${partita.rigori})` : ''}`
+            ? `${partita.risultato}${partita.rigori ? ` (rig. ${partita.rigori})` : ''}`
             : null;
         const stato = risDisplay
             ? `<strong style="color:var(--neon-green)">${risDisplay}</strong>`
