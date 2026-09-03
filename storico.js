@@ -56,7 +56,7 @@ function renderAlboOro() {
     const edCorrente = getEdizioneCorrente();
 
     const edizioni = [...storicoDB];
-    if (edCorrente.conclusa) edizioni.push(edCorrente);
+    if (edCorrente.conclusa) edizioni.push({ ...edCorrente, corrente: true });
     edizioni.sort((a, b) => b.anno - a.anno);
 
     if (edizioni.length === 0) {
@@ -81,6 +81,11 @@ function renderAlboOro() {
                         </div>
                         ${ed.capocannoniere ? `<div class="albo-oro-dettagli">Capocannoniere: <strong>${ed.capocannoniere.nome}</strong> (${ed.capocannoniere.marcatori}&#9917;)</div>` : ''}
                     </div>
+                    ${ed.corrente ? `
+                        <div class="albo-oro-actions">
+                            <a href="squadre.html" class="btn-roster">Squadre</a>
+                            <a href="calendario.html" class="btn-roster">Calendario</a>
+                        </div>` : ''}
                 </div>
             `).join('')}
         </div>`;

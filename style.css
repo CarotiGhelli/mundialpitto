@@ -1861,6 +1861,20 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 
 .albo-oro-dettagli strong { color: var(--text-main); }
 
+.albo-oro-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.albo-oro-actions .btn-roster {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    text-align: center;
+}
+
 @media (max-width: 768px) {
     .storico-container { padding: 0 0.75rem; margin: 1.25rem auto; }
     .edizione-corrente-card { padding: 1.5rem 1rem; }
