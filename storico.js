@@ -69,7 +69,15 @@ function renderAlboOro() {
 
     grid.innerHTML = `
         <div class="albo-oro-list">
-            ${edizioni.map(ed => `
+            ${edizioni.map(ed => {
+                // Se esiste una copia congelata in archivio, i bottoni puntano lì
+                // (restano corretti anche dopo che squadreDB/partiteDB verranno
+                // sovrascritti per una nuova edizione). Altrimenti, per l'edizione
+                // ancora in corso, si punta alle pagine live del sito.
+                const squadreHref = ed.archivioId ? `squadre-archivio.html?ed=${ed.archivioId}` : (ed.corrente ? 'squadre.html' : null);
+                const calendarioHref = ed.archivioId ? `calendario-archivio.html?ed=${ed.archivioId}` : (ed.corrente ? 'calendario.html' : null);
+
+                return `
                 <div class="girone-card albo-oro-item">
                     <div class="albo-oro-anno">${ed.nome}</div>
                     <div class="albo-oro-crest">${getBadgeStorico(ed.campione)}</div>
@@ -81,13 +89,13 @@ function renderAlboOro() {
                         </div>
                         ${ed.capocannoniere ? `<div class="albo-oro-dettagli">Capocannoniere: <strong>${ed.capocannoniere.nome}</strong> (${ed.capocannoniere.marcatori}&#9917;)</div>` : ''}
                     </div>
-                    ${ed.corrente ? `
+                    ${squadreHref ? `
                         <div class="albo-oro-actions">
-                            <a href="squadre.html" class="btn-roster">Squadre</a>
-                            <a href="calendario.html" class="btn-roster">Calendario</a>
+                            <a href="${squadreHref}" class="btn-roster">Squadre</a>
+                            <a href="${calendarioHref}" class="btn-roster">Calendario</a>
                         </div>` : ''}
-                </div>
-            `).join('')}
+                </div>`;
+            }).join('')}
         </div>`;
 }
 

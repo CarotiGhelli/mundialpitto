@@ -345,11 +345,16 @@ function getScorerText(partita, squadra, side) {
 const annoCorrente = 2026;
 const nomeEdizioneCorrente = 'Estate 2026';
 
+// Id dell'edizione corrente dentro archivioEdizioniDB (vedi archivio.js), se già
+// stata congelata in archivio. Va aggiornato quando si prepara una nuova edizione.
+const archivioIdEdizioneCorrente = 'estate-2026';
+
 // Albo d'oro: un oggetto per ogni edizione CONCLUSA in anni precedenti.
 // Quando un'edizione finisce, aggiungere qui uno snapshot e azzerare/aggiornare
 // squadreDB/partiteDB/giocatoriStatsDB/classificheDB per la nuova edizione.
 // Esempio: { anno: 2025, nome: 'Estate 2025', campione: 'Nome Squadra', finalista: 'Nome Squadra', terzo: 'Nome Squadra',
-//            capocannoniere: { nome: 'Nome Giocatore', squadra: 'Nome Squadra', gol: 5 }, squadrePartecipanti: 6 }
+//            capocannoniere: { nome: 'Nome Giocatore', squadra: 'Nome Squadra', gol: 5 }, squadrePartecipanti: 6,
+//            archivioId: 'estate-2025' }
 const storicoDB = [];
 
 // Calcola l'esito (vincitore/perdente) di una partita, considerando anche i rigori
@@ -374,6 +379,7 @@ function getEdizioneCorrente() {
     return {
         anno: annoCorrente,
         nome: nomeEdizioneCorrente,
+        archivioId: archivioIdEdizioneCorrente || null,
         conclusa: !!finale.vincitore,
         campione: finale.vincitore,
         finalista: finale.perdente,

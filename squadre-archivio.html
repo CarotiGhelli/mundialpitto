@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squadre Archivio - MundialPitto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:ital,wght@0,800;0,900;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="nav-brand">Torneo <span>MundialPitto</span></a>
+        <div class="nav-links">
+            <a href="index.html">Live &amp; Risultati</a>
+            <a href="squadre.html">Squadre</a>
+            <a href="calendario.html">Calendario</a>
+            <a href="classifica.html">Classifiche</a>
+            <a href="storico.html" class="active">Albo d'Oro</a>
+        </div>
+        <div class="nav-spacer"></div>
+    </nav>
+
+    <div class="squadre-container">
+
+        <a href="storico.html" class="archivio-back-link">&larr; Torna all'Albo d'Oro</a>
+
+        <header class="squadre-header">
+            <h1>LE SQUADRE &mdash; <span id="ed-nome"></span></h1>
+            <p>Le rose di questa edizione, congelate a fine torneo.</p>
+        </header>
+
+        <div class="teams-grid" id="teams-grid"></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 MundialPitto. Tutti i diritti riservati.</p>
+    </footer>
+
+    <script src="archivio.js"></script>
+    <script src="squadre-archivio.js"></script>
+</body>
+</html>

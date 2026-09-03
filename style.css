@@ -1882,3 +1882,51 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     .edizione-stats-row { gap: 1.2rem; }
     .albo-oro-item { flex-wrap: wrap; }
 }
+
+/* PAGINE ARCHIVIO (squadre-archivio.html, calendario-archivio.html) */
+.archivio-back-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.archivio-back-link:hover { color: var(--neon-green); }
+
+.archivio-team-card { cursor: pointer; }
+
+.archivio-roster-panel {
+    display: none;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-glass);
+    text-align: left;
+}
+
+.archivio-roster-panel.open { display: block; }
+
+.archivio-roster-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.archivio-roster-list li { font-size: 0.9rem; color: var(--text-main); }
+
+.ros-num {
+    display: inline-block;
+    min-width: 26px;
+    color: var(--neon-green);
+    font-weight: 800;
+    margin-right: 0.5rem;
+}
+
+.archivio-staff {
+    margin: 1rem 0 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
