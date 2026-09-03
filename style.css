@@ -1724,3 +1724,146 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     .trophy-name { font-size: 0.9rem; }
     .finale-center-wrapper { flex-direction: column; }
 }
+
+/* PAGINA STORICO */
+.storico-container {
+    max-width: 1000px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+}
+
+.edizione-corrente-card {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 255, 136, 0.03) 100%);
+    border: 2px solid var(--neon-green);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(0, 255, 136, 0.15);
+}
+
+.edizione-corrente-card.in-corso {
+    background: var(--bg-card);
+    border: 2px solid var(--border-glass);
+    box-shadow: none;
+}
+
+.storico-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--neon-green);
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 20px;
+    padding: 0.3rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.campione-crest {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1rem;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--bg-card-hover);
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
+}
+
+.edizione-anno-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: var(--text-main);
+    margin: 0.3rem 0;
+    letter-spacing: 0.5px;
+}
+
+.storico-sub {
+    color: var(--text-muted);
+    margin: 0.3rem 0;
+}
+
+.edizione-stats-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-glass);
+}
+
+.edizione-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 120px;
+}
+
+.edizione-stat-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+}
+
+.edizione-stat-value {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.albo-oro-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.albo-oro-item {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    text-align: left;
+}
+
+.albo-oro-anno {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: var(--neon-green);
+    min-width: 60px;
+}
+
+.albo-oro-crest {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--bg-card-hover);
+}
+
+.albo-oro-info { flex: 1; }
+
+.albo-oro-campione {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    margin-bottom: 0.2rem;
+}
+
+.albo-oro-dettagli {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.albo-oro-dettagli strong { color: var(--text-main); }
+
+@media (max-width: 768px) {
+    .storico-container { padding: 0 0.75rem; margin: 1.25rem auto; }
+    .edizione-corrente-card { padding: 1.5rem 1rem; }
+    .edizione-anno-title { font-size: 1.3rem; }
+    .edizione-stats-row { gap: 1.2rem; }
+    .albo-oro-item { flex-wrap: wrap; }
+}

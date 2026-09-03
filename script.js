@@ -341,6 +341,46 @@ function getScorerText(partita, squadra, side) {
     }).join('');
 }
 
+// Anno dell'edizione attualmente in corso
+const annoCorrente = 2026;
+
+// Albo d'oro: un oggetto per ogni edizione CONCLUSA in anni precedenti.
+// Quando un'edizione finisce, aggiungere qui uno snapshot e azzerare/aggiornare
+// squadreDB/partiteDB/giocatoriStatsDB/classificheDB per la nuova edizione.
+// Esempio: { anno: 2025, campione: 'Nome Squadra', finalista: 'Nome Squadra', terzo: 'Nome Squadra',
+//            capocannoniere: { nome: 'Nome Giocatore', squadra: 'Nome Squadra', gol: 5 }, squadrePartecipanti: 6 }
+const storicoDB = [];
+
+// Calcola l'esito (vincitore/perdente) di una partita, considerando anche i rigori
+function esitoPartita(p) {
+    if (!p || !p.risultato) return { vincitore: null, perdente: null };
+    const [g1, g2] = p.risultato.split(' - ').map(Number);
+    if (g1 > g2) return { vincitore: p.squadra1, perdente: p.squadra2 };
+    if (g2 > g1) return { vincitore: p.squadra2, perdente: p.squadra1 };
+    if (!p.rigori) return { vincitore: null, perdente: null };
+    const [r1, r2] = p.rigori.split(' - ').map(Number);
+    if (r1 > r2) return { vincitore: p.squadra1, perdente: p.squadra2 };
+    if (r2 > r1) return { vincitore: p.squadra2, perdente: p.squadra1 };
+    return { vincitore: null, perdente: null };
+}
+
+// Riepilogo dell'edizione in corso, calcolato dai dati live (usato dalla pagina Storico)
+function getEdizioneCorrente() {
+    const finale = esitoPartita(partiteDB.find(p => p.playoffRound === 'fin'));
+    const terzoPosto = esitoPartita(partiteDB.find(p => p.playoffRound === 'p34'));
+    const marcatori = [...giocatoriStatsDB].filter(g => g.marcatori > 0).sort((a, b) => b.marcatori - a.marcatori);
+
+    return {
+        anno: annoCorrente,
+        conclusa: !!finale.vincitore,
+        campione: finale.vincitore,
+        finalista: finale.perdente,
+        terzo: terzoPosto.vincitore,
+        capocannoniere: marcatori[0] || null,
+        squadrePartecipanti: squadreDB.length
+    };
+}
+
 // Riferimenti agli elementi HTML reali del widget (dentro l'aside)
 const widgetTitle = document.getElementById('widget-title');
 const statList = document.getElementById('stat-list');
