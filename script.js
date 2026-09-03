@@ -341,13 +341,14 @@ function getScorerText(partita, squadra, side) {
     }).join('');
 }
 
-// Anno dell'edizione attualmente in corso
+// Anno e nome dell'edizione attualmente in corso
 const annoCorrente = 2026;
+const nomeEdizioneCorrente = 'Estate 2026';
 
 // Albo d'oro: un oggetto per ogni edizione CONCLUSA in anni precedenti.
 // Quando un'edizione finisce, aggiungere qui uno snapshot e azzerare/aggiornare
 // squadreDB/partiteDB/giocatoriStatsDB/classificheDB per la nuova edizione.
-// Esempio: { anno: 2025, campione: 'Nome Squadra', finalista: 'Nome Squadra', terzo: 'Nome Squadra',
+// Esempio: { anno: 2025, nome: 'Estate 2025', campione: 'Nome Squadra', finalista: 'Nome Squadra', terzo: 'Nome Squadra',
 //            capocannoniere: { nome: 'Nome Giocatore', squadra: 'Nome Squadra', gol: 5 }, squadrePartecipanti: 6 }
 const storicoDB = [];
 
@@ -372,6 +373,7 @@ function getEdizioneCorrente() {
 
     return {
         anno: annoCorrente,
+        nome: nomeEdizioneCorrente,
         conclusa: !!finale.vincitore,
         campione: finale.vincitore,
         finalista: finale.perdente,

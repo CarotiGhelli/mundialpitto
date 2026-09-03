@@ -1830,9 +1830,10 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 .albo-oro-anno {
     font-family: 'Montserrat', sans-serif;
     font-weight: 900;
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     color: var(--neon-green);
-    min-width: 60px;
+    min-width: 100px;
+    line-height: 1.2;
 }
 
 .albo-oro-crest {

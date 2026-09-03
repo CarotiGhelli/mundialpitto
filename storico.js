@@ -19,7 +19,7 @@ function renderEdizioneCorrente() {
         box.innerHTML = `
             <div class="edizione-corrente-card in-corso">
                 <div class="trophy-icon" style="font-size:2.2rem;">&#9203;</div>
-                <h2 class="edizione-anno-title">MUNDIALPITTO ${ed.anno} &mdash; IN CORSO</h2>
+                <h2 class="edizione-anno-title">MUNDIALPITTO ${ed.nome} &mdash; IN CORSO</h2>
                 <p class="storico-sub">Il campione di quest'edizione non è ancora stato incoronato.</p>
                 ${ed.capocannoniere ? `<p class="storico-sub">Capocannoniere al momento: <strong>${ed.capocannoniere.nome}</strong> (${ed.capocannoniere.squadra}) con ${ed.capocannoniere.marcatori} gol</p>` : ''}
                 <a href="classifica.html" class="btn-playoff" style="margin-top:1rem;">Vedi la Classifica &rarr;</a>
@@ -30,10 +30,10 @@ function renderEdizioneCorrente() {
     box.innerHTML = `
         <div class="edizione-corrente-card">
             <div class="trophy-icon" style="font-size:2.2rem;">&#127942;</div>
-            <div class="storico-badge">EDIZIONE ${ed.anno}</div>
+            <div class="storico-badge">EDIZIONE ${ed.nome.toUpperCase()}</div>
             <div class="campione-crest">${getBadgeStorico(ed.campione)}</div>
             <h2 class="edizione-anno-title">${ed.campione}</h2>
-            <p class="storico-sub">Campione del MundialPitto ${ed.anno}</p>
+            <p class="storico-sub">Campione del MundialPitto ${ed.nome}</p>
             <div class="edizione-stats-row">
                 <div class="edizione-stat">
                     <span class="edizione-stat-label">Finalista</span>
@@ -71,7 +71,7 @@ function renderAlboOro() {
         <div class="albo-oro-list">
             ${edizioni.map(ed => `
                 <div class="girone-card albo-oro-item">
-                    <div class="albo-oro-anno">${ed.anno}</div>
+                    <div class="albo-oro-anno">${ed.nome}</div>
                     <div class="albo-oro-crest">${getBadgeStorico(ed.campione)}</div>
                     <div class="albo-oro-info">
                         <div class="albo-oro-campione">${ed.campione}</div>
