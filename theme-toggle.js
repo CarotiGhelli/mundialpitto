@@ -1,25 +1,31 @@
-// Toggle client-side tra lo stile attuale (carta/caldo) e lo stile precedente
-// al restyling (dark/neon, salvato dal tag git "backup"). Puramente visivo:
-// cambia solo quale foglio di stile e' collegato, nessun dato viene toccato.
+// Toggle client-side tra 3 stili visivi: quello attuale (carta/caldo),
+// quello precedente al restyling (dark/neon, dal tag git "backup") e una
+// prova ispirata al sito della Premier League (viola/magenta). Puramente
+// visivo: cambia solo quale foglio di stile e' collegato, nessun dato viene toccato.
+const MP_THEMES = [
+    { key: 'new', href: 'style.css',    label: 'Stile: Nuovo' },
+    { key: 'old', href: 'style-old.css', label: 'Stile: Precedente' },
+    { key: 'pl',  href: 'style-pl.css',  label: 'Stile: Premier League' }
+];
+
+function mpUpdateButtonLabel(key) {
+    const btn = document.getElementById('theme-toggle-btn');
+    if (!btn) return;
+    const theme = MP_THEMES.find(t => t.key === key) || MP_THEMES[0];
+    btn.textContent = theme.label;
+}
+
 function mpToggleTheme() {
     const link = document.getElementById('main-style');
-    const btn = document.getElementById('theme-toggle-btn');
-    const isOld = link.getAttribute('href').indexOf('style-old.css') !== -1;
+    const current = localStorage.getItem('mpTheme') || 'new';
+    const idx = MP_THEMES.findIndex(t => t.key === current);
+    const next = MP_THEMES[(idx + 1) % MP_THEMES.length];
 
-    if (isOld) {
-        link.setAttribute('href', 'style.css');
-        localStorage.setItem('mpTheme', 'new');
-        if (btn) btn.textContent = 'Stile precedente';
-    } else {
-        link.setAttribute('href', 'style-old.css');
-        localStorage.setItem('mpTheme', 'old');
-        if (btn) btn.textContent = 'Stile nuovo';
-    }
+    link.setAttribute('href', next.href);
+    localStorage.setItem('mpTheme', next.key);
+    mpUpdateButtonLabel(next.key);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('theme-toggle-btn');
-    if (!btn) return;
-    const isOld = localStorage.getItem('mpTheme') === 'old';
-    btn.textContent = isOld ? 'Stile nuovo' : 'Stile precedente';
+    mpUpdateButtonLabel(localStorage.getItem('mpTheme') || 'new');
 });
