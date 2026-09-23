@@ -1,11 +1,15 @@
 :root {
-    --bg-body: #07090e;
-    --bg-card: #111622;
-    --bg-card-hover: #181f30;
-    --neon-green: #00ff88;
-    --text-main: #ffffff;
-    --text-muted: #64748b;
-    --border-glass: rgba(255, 255, 255, 0.07);
+    --bg-body: #f2e8d5;
+    --bg-card: #faf3e4;
+    --bg-card-hover: #f1e4c9;
+    --ink: #2b211b;
+    --accent: #c1502e;
+    --accent-dark: #96391f;
+    --senape: #c99a2e;
+    --senape-dark: #96721c;
+    --text-main: var(--ink);
+    --text-muted: #8a7863;
+    --border: rgba(43, 33, 27, 0.16);
 }
 
 * { box-sizing: border-box; }
@@ -16,6 +20,11 @@ html {
 
 body {
     background-color: var(--bg-body);
+    background-image:
+        radial-gradient(rgba(43, 33, 27, 0.05) 1px, transparent 1px),
+        radial-gradient(rgba(43, 33, 27, 0.04) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    background-position: 0 0, 2px 3px;
     color: var(--text-main);
     font-family: 'Inter', sans-serif;
     margin: 0;
@@ -26,7 +35,7 @@ body {
     overflow-x: hidden;
 }
 
-/* NAVBAR UNIFICATA, CENTRATA E ALLINEATA AI COLORI CARD */
+/* NAVBAR: carta piena, niente vetro/sfocatura */
 nav {
     display: flex;
     justify-content: space-between;
@@ -34,16 +43,13 @@ nav {
     padding: 1rem 2rem;
     position: sticky;
     top: 0;
-    /* AGGIORNATO: Utilizza la base cromatica di var(--bg-card) con una leggera trasparenza per l'effetto sfocatura */
-    background: rgba(17, 22, 34, 0.92); 
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px); /* Supporto per Safari */
+    background: var(--bg-card);
     z-index: 100;
-    border-bottom: 1px solid var(--border-glass);
+    border-bottom: 2px solid var(--ink);
 }
 
 .nav-brand {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.5rem;
     font-weight: 900;
     color: var(--text-main);
@@ -52,7 +58,7 @@ nav {
     letter-spacing: -0.5px;
     flex: 1;
 }
-.nav-brand span { color: var(--neon-green); }
+.nav-brand span { color: var(--accent); }
 
 .nav-links { 
     display: flex; 
@@ -73,7 +79,7 @@ nav {
 .nav-links a:hover, .nav-links a.active {
     color: var(--text-main);
     background: var(--bg-card);
-    border: 1px solid var(--border-glass);
+    border: 1px solid var(--border);
 }
 
 .nav-spacer { flex: 1; }
@@ -101,7 +107,7 @@ nav.nav-centered .nav-links {
 
 /* TITOLO SEZIONE HOME */
 .section-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.1rem;
     font-weight: 900;
     color: var(--text-main);
@@ -113,17 +119,19 @@ nav.nav-centered .nav-links {
     align-items: center;
     gap: 0.5rem;
 }
-.section-title .dot { color: var(--neon-green); }
+.section-title .dot { color: var(--accent); }
 
 /* MATCH CARDS AGGIORNATE (HOME & CALENDARIO) */
 .match-card {
-    background: var(--bg-card); border: 1px solid var(--border-glass);
-    border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px 17px 15px 18px; padding: 1.5rem; margin-bottom: 1rem;
     display: block; text-decoration: none; color: inherit;
     transition: transform 0.2s, border-color 0.2s;
 }
+.match-card:nth-child(odd) { transform: rotate(-0.35deg); }
+.match-card:nth-child(even) { transform: rotate(0.3deg); }
 .match-card:hover {
-    transform: translateY(-3px); border-color: rgba(0, 255, 136, 0.4);
+    transform: translateY(-3px) rotate(0deg); border-color: rgba(193, 80, 46, 0.5);
 }
 /* Layout simmetrico: griglia 3 colonne — squadra | score-center | squadra */
 .match-row {
@@ -136,7 +144,7 @@ nav.nav-centered .nav-links {
 /* .team.away non usa row-reverse: il badge è il primo figlio HTML
    quindi è sempre adiacente al score-center, indipendentemente dalla lunghezza del nome */
 .team-name {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-weight: 800;
     font-size: 1rem;
     flex: 1;
@@ -157,7 +165,7 @@ nav.nav-centered .nav-links {
 .match-time-label {
     font-size: 0.68rem;
     font-weight: 700;
-    color: var(--neon-green);
+    color: var(--accent);
     opacity: 0.75;
     letter-spacing: 0.5px;
     white-space: nowrap;
@@ -170,7 +178,7 @@ nav.nav-centered .nav-links {
     gap: 1rem;
     margin-top: 0.9rem;
     padding-top: 0.9rem;
-    border-top: 1px solid var(--border-glass);
+    border-top: 1px solid var(--border);
     font-size: 0.82rem;
     color: var(--text-muted);
 }
@@ -182,31 +190,36 @@ nav.nav-centered .nav-links {
 
 /* Crests / Scudetti quadrati */
 .team-badge {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-glass);
+    background: rgba(43, 33, 27, 0.06);
+    border: 1px solid var(--border);
     border-radius: 8px;
     width: 42px;
     height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-weight: 900;
     font-size: 0.85rem;
-    color: #fff;
+    color: var(--ink);
 }
 
+/* Timbro punteggio, stile marcatore a inchiostro */
 .score-pill {
-    background: #07090e; 
-    border: 1px solid rgba(0, 255, 136, 0.5);
-    box-shadow: 0 0 12px rgba(0, 255, 136, 0.15);
-    padding: 0.5rem 1.2rem; border-radius: 20px; font-family: 'Montserrat', sans-serif;
-    font-weight: 900; font-size: 1.4rem; color: var(--neon-green);
+    background: var(--ink);
+    color: var(--bg-card);
+    border: 1.5px solid var(--ink);
+    box-shadow: none;
+    padding: 0.45rem 1.1rem;
+    border-radius: 7px 11px 8px 10px;
+    font-family: 'Anton', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
 }
 
 /* Sezione Marcatori Espansa dentro la card */
 .match-divider {
-    border-top: 1px solid var(--border-glass);
+    border-top: 1px solid var(--border);
     margin: 1.2rem 0 0.8rem 0;
 }
 .scorers-row {
@@ -220,34 +233,34 @@ nav.nav-centered .nav-links {
 
 /* WIDGET SIDEBAR */
 .stats-widget {
-    background: var(--bg-card); border: 1px solid var(--border-glass);
+    background: var(--bg-card); border: 1px solid var(--border);
     border-radius: 16px; padding: 1.5rem; position: relative;
 }
 .widget-header {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem;
+    margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;
 }
 .widget-title {
-    font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 800; margin: 0; text-align: center; flex: 1;
+    font-family: 'Anton', sans-serif; font-size: 1.05rem; font-weight: 800; margin: 0; text-align: center; flex: 1;
 }
 .arrow-btn {
     background: none; border: none; color: var(--text-muted);
     font-size: 1.2rem; cursor: pointer; transition: color 0.2s; padding: 0 0.5rem;
 }
-.arrow-btn:hover { color: var(--neon-green); }
+.arrow-btn:hover { color: var(--accent); }
 
 .stat-item {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0.8rem 0; border-bottom: 1px solid var(--border-glass);
+    padding: 0.8rem 0; border-bottom: 1px solid var(--border);
 }
-.pos-number { font-family: 'Montserrat', sans-serif; font-weight: 900; width: 20px; color: var(--text-muted); }
+.pos-number { font-family: 'Anton', sans-serif; font-weight: 900; width: 20px; color: var(--text-muted); }
 .p-name { font-weight: 600; font-size: 0.95rem; display: block; }
 .p-team { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;}
-.stat-value { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.1rem; background: #1e293b; padding: 0.2rem 0.6rem; border-radius: 6px; }
+.stat-value { font-family: 'Anton', sans-serif; font-weight: 900; font-size: 1.1rem; background: rgba(43, 33, 27, 0.08); color: var(--ink); padding: 0.2rem 0.6rem; border-radius: 6px; }
 
 .btn-vedi-tutti {
     display: block; text-align: center; margin-top: 1.5rem; padding: 0.8rem;
-    background: rgba(0, 255, 136, 0.1); color: var(--neon-green);
+    background: rgba(193, 80, 46, 0.1); color: var(--accent);
     text-decoration: none; font-weight: 600; border-radius: 8px; border: 1px solid rgba(0,255,136,0.2);
 }
 
@@ -265,23 +278,27 @@ nav.nav-centered .nav-links {
     }
 }
 .girone-card {
-    background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 16px; padding: 1.5rem;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px 18px 15px 17px; padding: 1.5rem;
 }
 .girone-title {
-    font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.3rem; color: var(--neon-green);
-    margin-top: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.8rem; letter-spacing: 1px;
+    font-family: 'Anton', sans-serif; font-weight: 900; font-size: 1.3rem; color: var(--accent);
+    margin-top: 0; margin-bottom: 1.5rem; padding-bottom: 0.8rem; letter-spacing: 1px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='8' viewBox='0 0 24 8'%3E%3Cpath d='M0 4 Q6 0 12 4 T24 4' stroke='%23c1502e' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: bottom;
+    background-size: 24px 8px;
 }
 .classifica-table { width: 100%; border-collapse: collapse; text-align: left; }
 .classifica-table th {
-    color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; padding: 0.8rem 0.5rem; border-bottom: 2px solid var(--border-glass);
+    color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; padding: 0.8rem 0.5rem; border-bottom: 2px solid var(--border);
 }
-.classifica-table td { padding: 1rem 0.5rem; border-bottom: 1px solid var(--border-glass); font-size: 0.95rem; }
+.classifica-table td { padding: 1rem 0.5rem; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
 .classifica-table tr:last-child td { border-bottom: none; }
-.classifica-table .col-pos { width: 40px; font-weight: 900; font-family: 'Montserrat', sans-serif; }
+.classifica-table .col-pos { width: 40px; font-weight: 900; font-family: 'Anton', sans-serif; }
 .classifica-table .col-team { font-weight: 600; }
-.classifica-table .col-highlight { font-weight: 900; color: var(--text-main); font-family: 'Montserrat', sans-serif;}
+.classifica-table .col-highlight { font-weight: 900; color: var(--text-main); font-family: 'Anton', sans-serif;}
 .classifica-table .col-data { text-align: center; color: var(--text-muted); width: 45px; }
-.classifica-table tr:nth-child(1) .col-pos { color: var(--neon-green); }
+.classifica-table tr:nth-child(1) .col-pos { color: var(--accent); }
 
 /* PAGE CONTAINERS */
 .calendario-page-container,
@@ -297,7 +314,7 @@ nav.nav-centered .nav-links {
 }
 
 .page-header h1 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 2.5rem;
     font-weight: 900;
     margin: 0 0 0.5rem 0;
@@ -311,11 +328,11 @@ nav.nav-centered .nav-links {
 
 .btn-playoff {
     display: inline-block;
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 255, 136, 0.05) 100%);
-    color: var(--neon-green);
+    background: linear-gradient(135deg, rgba(193, 80, 46, 0.2) 0%, rgba(193, 80, 46, 0.05) 100%);
+    color: var(--accent);
     text-decoration: none;
     padding: 0.9rem 2rem;
-    border: 2px solid rgba(0, 255, 136, 0.4);
+    border: 2px solid rgba(193, 80, 46, 0.4);
     border-radius: 10px;
     font-weight: 600;
     font-size: 0.95rem;
@@ -325,9 +342,9 @@ nav.nav-centered .nav-links {
 }
 
 .btn-playoff:hover {
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 136, 0.1) 100%);
-    border-color: var(--neon-green);
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    background: linear-gradient(135deg, rgba(193, 80, 46, 0.3) 0%, rgba(193, 80, 46, 0.1) 100%);
+    border-color: var(--accent);
+    box-shadow: none;
     transform: translateY(-2px);
 }
 
@@ -335,24 +352,29 @@ nav.nav-centered .nav-links {
 .calendario-container { max-width: 900px; margin: 0 auto; }
 .giornata-box { margin-bottom: 3rem; }
 .giornata-header {
-    display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-glass); padding-bottom: 0.5rem; margin-bottom: 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 0.6rem; margin-bottom: 1.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='8' viewBox='0 0 24 8'%3E%3Cpath d='M0 4 Q6 0 12 4 T24 4' stroke='%232b211b' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: bottom;
+    background-size: 24px 8px;
 }
-.giornata-header h2 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.4rem; margin: 0; }
+.giornata-header h2 { font-family: 'Anton', sans-serif; font-weight: 900; font-size: 1.4rem; margin: 0; }
 .giornata-header .riposo-tag {
-    font-size: 0.8rem; background: rgba(255, 255, 255, 0.05); padding: 0.3rem 0.8rem; border-radius: 20px; color: var(--text-muted); border: 1px solid var(--border-glass);
+    font-size: 0.8rem; background: rgba(43, 33, 27, 0.06); padding: 0.3rem 0.8rem; border-radius: 20px; color: var(--text-muted); border: 1px solid var(--border);
 }
 .cal-girone-divider {
-    font-size: 0.75rem; color: var(--neon-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 1rem 0 0.5rem 0;
+    font-size: 0.75rem; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 1rem 0 0.5rem 0;
 }
 
 .match-time {
-    background: rgba(0, 255, 136, 0.1);
-    border: 1px solid rgba(0, 255, 136, 0.3);
+    background: rgba(193, 80, 46, 0.1);
+    border: 1px solid rgba(193, 80, 46, 0.3);
     padding: 0.5rem 1rem;
     border-radius: 8px;
     font-weight: 600;
     font-size: 0.9rem;
-    color: var(--neon-green);
+    color: var(--accent);
     white-space: nowrap;
 }
 
@@ -360,16 +382,16 @@ nav.nav-centered .nav-links {
     text-align: center;
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid var(--border-glass);
+    border-top: 1px solid var(--border);
 }
 
 .btn-go-playoff {
     display: inline-block;
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 255, 136, 0.05) 100%);
-    color: var(--neon-green);
+    background: linear-gradient(135deg, rgba(193, 80, 46, 0.2) 0%, rgba(193, 80, 46, 0.05) 100%);
+    color: var(--accent);
     text-decoration: none;
     padding: 1rem 2rem;
-    border: 2px solid rgba(0, 255, 136, 0.4);
+    border: 2px solid rgba(193, 80, 46, 0.4);
     border-radius: 10px;
     font-weight: 600;
     font-size: 1rem;
@@ -377,9 +399,9 @@ nav.nav-centered .nav-links {
 }
 
 .btn-go-playoff:hover {
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 136, 0.1) 100%);
-    border-color: var(--neon-green);
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    background: linear-gradient(135deg, rgba(193, 80, 46, 0.3) 0%, rgba(193, 80, 46, 0.1) 100%);
+    border-color: var(--accent);
+    box-shadow: none;
     transform: translateY(-2px);
 }
 
@@ -396,7 +418,7 @@ nav.nav-centered .nav-links {
 }
 
 .partita-header h1 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 2rem;
     font-weight: 900;
     margin: 0 0 0.5rem 0;
@@ -404,7 +426,7 @@ nav.nav-centered .nav-links {
 }
 
 .score-highlight {
-    color: var(--neon-green);
+    color: var(--accent);
 }
 
 .girone-info {
@@ -416,13 +438,13 @@ nav.nav-centered .nav-links {
 /* PAGINA PARTITA - TERRENO DI GIOCO */
 .pitch-container {
     background: linear-gradient(135deg, #1a4d2e 0%, #2d6a4f 100%);
-    border: 3px solid var(--neon-green);
+    border: 3px solid var(--accent);
     border-radius: 12px;
     aspect-ratio: 2 / 1;
     position: relative;
     margin: 2.5rem 0;
     overflow: hidden;
-    box-shadow: 0 0 30px rgba(0, 255, 136, 0.15);
+    box-shadow: none;
 }
 
 .pitch-line {
@@ -476,7 +498,7 @@ nav.nav-centered .nav-links {
     justify-content: center;
     font-weight: 900;
     font-size: 0.9rem;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     border: 2px solid rgba(255, 255, 255, 0.3);
     cursor: pointer;
     transition: all 0.2s;
@@ -514,19 +536,19 @@ nav.nav-centered .nav-links {
 
 .team-list {
     background: var(--bg-card);
-    border: 1px solid var(--border-glass);
+    border: 1px solid var(--border);
     border-radius: 12px;
     padding: 1.5rem;
 }
 
 .team-list h3 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.1rem;
     font-weight: 900;
     margin-top: 0;
     margin-bottom: 1.5rem;
     color: var(--text-main);
-    border-bottom: 2px solid var(--neon-green);
+    border-bottom: 2px solid var(--accent);
     padding-bottom: 0.8rem;
 }
 
@@ -542,21 +564,21 @@ nav.nav-centered .nav-links {
     font-size: 0.95rem;
 }
 .pr-name { font-weight: 600; }
-.pr-g, .pr-a { white-space: nowrap; text-align: right; font-size: 0.82rem; color: var(--neon-green); font-weight: 700; }
-.player-sep { grid-column: 1 / -1; height: 1px; background: var(--border-glass); }
+.pr-g, .pr-a { white-space: nowrap; text-align: right; font-size: 0.82rem; color: var(--accent); font-weight: 700; }
+.player-sep { grid-column: 1 / -1; height: 1px; background: var(--border); }
 
 .player-mvp-tag { font-size: 0.88rem; margin-left: 0.25rem; }
 
 /* MVP box in partita.html */
 .mvp-box {
-    background: linear-gradient(135deg, rgba(255,215,0,0.15) 0%, rgba(255,165,0,0.08) 100%);
-    border: 2px solid rgba(255,215,0,0.5);
-    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(201,154,46,0.18) 0%, rgba(201,154,46,0.06) 100%);
+    border: 2px solid rgba(201,154,46,0.55);
+    border-radius: 10px 14px 11px 13px;
     padding: 1rem 1.5rem;
     text-align: center;
     margin: 1.5rem 0;
-    color: #ffd700;
-    font-family: 'Montserrat', sans-serif;
+    color: var(--senape-dark);
+    font-family: 'Anton', sans-serif;
     font-weight: 800;
     font-size: 1.1rem;
     letter-spacing: 1px;
@@ -574,11 +596,11 @@ nav.nav-centered .nav-links {
 .mvp-card-row {
     text-align: center;
     font-size: 0.82rem;
-    color: #ffd700;
+    color: var(--senape-dark);
     font-weight: 700;
     margin-top: 0.5rem;
     padding-top: 0.5rem;
-    border-top: 1px solid rgba(255,215,0,0.25);
+    border-top: 1px solid rgba(201,154,46,0.3);
 }
 
 /* Mini pitch for admin formation editor */
@@ -610,7 +632,7 @@ nav.nav-centered .nav-links {
     justify-content: center;
     font-size: 0.5rem;
     font-weight: 900;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     cursor: grab;
     user-select: none;
     border: 2px solid rgba(255,255,255,0.7);
@@ -635,7 +657,7 @@ nav.nav-centered .nav-links {
 }
 
 .squadre-header h1 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 2.5rem;
     font-weight: 900;
     margin: 0 0 0.5rem 0;
@@ -663,8 +685,8 @@ nav.nav-centered .nav-links {
 
 .team-showcase-card {
     background: var(--bg-card);
-    border: 2px solid var(--border-glass);
-    border-radius: 20px;
+    border: 2px solid var(--border);
+    border-radius: 16px 22px 18px 20px;
     padding: 2.5rem 2rem;
     text-align: center;
     cursor: pointer;
@@ -678,6 +700,9 @@ nav.nav-centered .nav-links {
     min-height: 380px;
 }
 
+.team-showcase-card:nth-child(odd) { transform: rotate(-0.5deg); }
+.team-showcase-card:nth-child(even) { transform: rotate(0.45deg); }
+
 .team-showcase-card::before {
     content: '';
     position: absolute;
@@ -685,15 +710,15 @@ nav.nav-centered .nav-links {
     left: 0;
     right: 0;
     height: 5px;
-    background: linear-gradient(90deg, var(--neon-green), transparent);
+    background: linear-gradient(90deg, var(--accent), transparent);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
 .team-showcase-card:hover {
-    transform: translateY(-12px);
-    border-color: var(--neon-green);
-    box-shadow: 0 20px 50px rgba(0, 255, 136, 0.25);
+    transform: translateY(-10px) rotate(0deg);
+    border-color: var(--accent);
+    box-shadow: 0 16px 34px rgba(43, 33, 27, 0.18);
 }
 
 .team-showcase-card:hover::before {
@@ -713,7 +738,7 @@ nav.nav-centered .nav-links {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 2rem;
     font-weight: 900;
     color: #fff;
@@ -754,11 +779,11 @@ nav.nav-centered .nav-links {
 
 .team-showcase-card:hover .showcase-crest {
     transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(0, 255, 136, 0.3);
+    box-shadow: 0 8px 20px rgba(193, 80, 46, 0.3);
 }
 
 .showcase-name {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.6rem;
     font-weight: 900;
     color: var(--text-main);
@@ -777,11 +802,11 @@ nav.nav-centered .nav-links {
 
 .btn-roster {
     display: inline-block;
-    background: rgba(0, 255, 136, 0.1);
-    color: var(--neon-green);
+    background: rgba(193, 80, 46, 0.1);
+    color: var(--accent);
     text-decoration: none;
     padding: 0.8rem 1.5rem;
-    border: 1px solid rgba(0, 255, 136, 0.3);
+    border: 1px solid rgba(193, 80, 46, 0.3);
     border-radius: 8px;
     font-weight: 600;
     font-size: 0.95rem;
@@ -789,9 +814,9 @@ nav.nav-centered .nav-links {
 }
 
 .btn-roster:hover {
-    background: rgba(0, 255, 136, 0.2);
-    border-color: var(--neon-green);
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+    background: rgba(193, 80, 46, 0.2);
+    border-color: var(--accent);
+    box-shadow: none;
     transform: translateY(-2px);
 }
 
@@ -804,8 +829,8 @@ nav.nav-centered .nav-links {
 }
 
 .squadra-hero {
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(74, 144, 226, 0.1) 100%);
-    border: 2px solid var(--border-glass);
+    background: linear-gradient(135deg, rgba(193, 80, 46, 0.12) 0%, rgba(201, 154, 46, 0.12) 100%);
+    border: 2px solid var(--border);
     border-radius: 20px;
     padding: 3rem 2rem;
     text-align: center;
@@ -821,7 +846,7 @@ nav.nav-centered .nav-links {
     right: -50%;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(193, 80, 46, 0.1) 0%, transparent 70%);
     pointer-events: none;
 }
 
@@ -838,16 +863,16 @@ nav.nav-centered .nav-links {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 2.2rem;
     font-weight: 900;
     color: #fff;
-    border: 3px solid var(--neon-green);
-    box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+    border: 3px solid var(--accent);
+    box-shadow: none;
 }
 
 .squadra-hero h1 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 3rem;
     font-weight: 900;
     margin: 0 0 0.5rem 0;
@@ -864,19 +889,19 @@ nav.nav-centered .nav-links {
 
 .btn-back {
     display: inline-block;
-    background: rgba(0, 255, 136, 0.1);
-    color: var(--neon-green);
+    background: rgba(193, 80, 46, 0.1);
+    color: var(--accent);
     text-decoration: none;
     padding: 0.8rem 1.5rem;
-    border: 1px solid rgba(0, 255, 136, 0.3);
+    border: 1px solid rgba(193, 80, 46, 0.3);
     border-radius: 8px;
     font-weight: 600;
     transition: all 0.2s;
 }
 
 .btn-back:hover {
-    background: rgba(0, 255, 136, 0.2);
-    border-color: var(--neon-green);
+    background: rgba(193, 80, 46, 0.2);
+    border-color: var(--accent);
     transform: translateX(-4px);
 }
 
@@ -896,20 +921,20 @@ nav.nav-centered .nav-links {
 
 .info-card {
     background: var(--bg-card);
-    border: 1px solid var(--border-glass);
-    border-radius: 16px;
+    border: 1px solid var(--border);
+    border-radius: 13px 17px 14px 18px;
     padding: 2rem;
 }
 
 .info-card h3 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.1rem;
     font-weight: 900;
-    color: var(--neon-green);
+    color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 1.5px;
     margin: 0 0 1.5rem 0;
-    border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+    border-bottom: 2px solid rgba(193, 80, 46, 0.3);
     padding-bottom: 1rem;
 }
 
@@ -918,7 +943,7 @@ nav.nav-centered .nav-links {
     justify-content: space-between;
     align-items: center;
     padding: 0.8rem 0;
-    border-bottom: 1px solid var(--border-glass);
+    border-bottom: 1px solid var(--border);
 }
 
 .dirigenza-item:last-child {
@@ -940,7 +965,7 @@ nav.nav-centered .nav-links {
     justify-content: space-between;
     align-items: center;
     padding: 0.8rem 0;
-    border-bottom: 1px solid var(--border-glass);
+    border-bottom: 1px solid var(--border);
 }
 
 .stat-row:last-child {
@@ -948,10 +973,10 @@ nav.nav-centered .nav-links {
 }
 
 .stat-row .value {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.3rem;
     font-weight: 900;
-    color: var(--neon-green);
+    color: var(--accent);
 }
 
 /* ROSA DELLA SQUADRA */
@@ -960,7 +985,7 @@ nav.nav-centered .nav-links {
 }
 
 .section-heading {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.3rem;
     font-weight: 900;
     color: var(--text-main);
@@ -968,7 +993,7 @@ nav.nav-centered .nav-links {
     letter-spacing: 1px;
     margin: 0 0 2rem 0;
     padding-bottom: 1rem;
-    border-bottom: 2px solid var(--neon-green);
+    border-bottom: 2px solid var(--accent);
 }
 
 .roster-grid {
@@ -985,8 +1010,8 @@ nav.nav-centered .nav-links {
 
 .player-card {
     background: var(--bg-card);
-    border: 2px solid var(--border-glass);
-    border-radius: 16px;
+    border: 2px solid var(--border);
+    border-radius: 13px 17px 14px 18px;
     padding: 2rem;
     display: flex;
     flex-direction: column;
@@ -999,24 +1024,24 @@ nav.nav-centered .nav-links {
 
 .player-card:hover {
     background: var(--bg-card-hover);
-    border-color: var(--neon-green);
+    border-color: var(--accent);
     transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(0, 255, 136, 0.2);
+    box-shadow: 0 12px 30px rgba(193, 80, 46, 0.2);
 }
 
 .player-number {
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 255, 136, 0.05) 100%);
-    border: 2px solid rgba(0, 255, 136, 0.4);
+    background: linear-gradient(135deg, rgba(193, 80, 46, 0.2) 0%, rgba(193, 80, 46, 0.05) 100%);
+    border: 2px solid rgba(193, 80, 46, 0.4);
     width: 80px;
     height: 80px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 2.2rem;
     font-weight: 900;
-    color: var(--neon-green);
+    color: var(--accent);
     flex-shrink: 0;
 }
 
@@ -1050,9 +1075,9 @@ nav.nav-centered .nav-links {
 }
 
 .captain-badge {
-    background: rgba(0, 255, 136, 0.25);
-    border: 1.5px solid var(--neon-green);
-    color: var(--neon-green);
+    background: rgba(193, 80, 46, 0.25);
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
     padding: 0.2rem 0.6rem;
     border-radius: 6px;
     font-size: 0.8rem;
@@ -1089,8 +1114,8 @@ nav.nav-centered .nav-links {
     gap: 2rem;
     margin-top: 2rem;
     padding: 2rem;
-    background: rgba(0, 255, 136, 0.03);
-    border: 1px solid var(--border-glass);
+    background: rgba(193, 80, 46, 0.03);
+    border: 1px solid var(--border);
     border-radius: 20px;
     overflow-x: auto;
 }
@@ -1114,10 +1139,10 @@ nav.nav-centered .nav-links {
 }
 
 .bracket-round h3 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.2rem;
     font-weight: 900;
-    color: var(--neon-green);
+    color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 1.5px;
     margin: 0 0 1rem 0;
@@ -1132,7 +1157,7 @@ nav.nav-centered .nav-links {
 
 .match-slot {
     background: var(--bg-card);
-    border: 2px solid var(--border-glass);
+    border: 2px solid var(--border);
     border-radius: 12px;
     padding: 1.5rem;
     display: flex;
@@ -1145,9 +1170,9 @@ nav.nav-centered .nav-links {
     flex-direction: column;
     gap: 0.3rem;
     padding: 0.8rem;
-    background: rgba(0, 255, 136, 0.05);
+    background: rgba(193, 80, 46, 0.05);
     border-radius: 8px;
-    border-left: 3px solid var(--neon-green);
+    border-left: 3px solid var(--accent);
 }
 
 .slot-label {
@@ -1177,9 +1202,9 @@ nav.nav-centered .nav-links {
 
 .result-input {
     background: var(--bg-card);
-    border: 2px solid rgba(0, 255, 136, 0.3);
+    border: 2px solid rgba(193, 80, 46, 0.3);
     color: var(--text-main);
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     padding: 0.8rem 1rem;
     border-radius: 8px;
     text-align: center;
@@ -1192,8 +1217,8 @@ nav.nav-centered .nav-links {
 
 .result-input:focus {
     outline: none;
-    border-color: var(--neon-green);
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+    border-color: var(--accent);
+    box-shadow: none;
 }
 
 .finale {
@@ -1217,19 +1242,19 @@ nav.nav-centered .nav-links {
 }
 
 .winner-box {
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 255, 136, 0.05) 100%);
-    border: 3px solid var(--neon-green);
+    background: linear-gradient(135deg, rgba(193, 80, 46, 0.2) 0%, rgba(193, 80, 46, 0.05) 100%);
+    border: 3px solid var(--accent);
     border-radius: 16px;
     padding: 2rem;
     text-align: center;
-    box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+    box-shadow: none;
 }
 
 .winner-name {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 2rem;
     font-weight: 900;
-    color: var(--neon-green);
+    color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -1249,12 +1274,12 @@ nav.nav-centered .nav-links {
     text-align: center;
     padding: 3rem 1.5rem;
     background: var(--bg-card);
-    border: 1px solid var(--border-glass);
+    border: 1px solid var(--border);
     border-radius: 16px;
     margin-top: 1rem;
 }
 .no-results-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
-.no-results-title { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.2rem; margin: 0 0 0.4rem; }
+.no-results-title { font-family: 'Anton', sans-serif; font-weight: 900; font-size: 1.2rem; margin: 0 0 0.4rem; }
 .no-results-sub { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
 
 /* RESPONSIVE */
@@ -1274,7 +1299,7 @@ nav.nav-centered .nav-links {
 /* FOOTER */
 footer {
     background: rgba(17, 22, 34, 0.5);
-    border-top: 1px solid var(--border-glass);
+    border-top: 1px solid var(--border);
     padding: 2rem 1.5rem;
     margin-top: auto;
     text-align: center;
@@ -1326,7 +1351,7 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 }
 
 .breadcrumb a {
-    color: var(--neon-green);
+    color: var(--accent);
     text-decoration: none;
     transition: color 0.2s;
 }
@@ -1372,13 +1397,13 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     justify-content: flex-end;
     margin-top: 0.8rem;
     padding-top: 0.8rem;
-    border-top: 1px solid var(--border-glass);
+    border-top: 1px solid var(--border);
 }
 
 .match-time-pill {
-    background: rgba(0, 255, 136, 0.08);
-    border: 1px solid rgba(0, 255, 136, 0.25);
-    color: var(--neon-green);
+    background: rgba(193, 80, 46, 0.08);
+    border: 1px solid rgba(193, 80, 46, 0.25);
+    color: var(--accent);
     padding: 0.3rem 0.8rem;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -1395,7 +1420,7 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 
 /* CLASSIFICA - intestazione sezione */
 .classifica-section-label {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.3rem;
     font-weight: 900;
     color: var(--text-main);
@@ -1403,7 +1428,10 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     letter-spacing: 2px;
     margin: 2rem 0 0 0;
     padding-bottom: 0.8rem;
-    border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='8' viewBox='0 0 24 8'%3E%3Cpath d='M0 4 Q6 0 12 4 T24 4' stroke='%23c1502e' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: bottom;
+    background-size: 24px 8px;
 }
 
 /* PLAYOFF - pagina contenitore */
@@ -1420,8 +1448,8 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     align-items: stretch;
     overflow-x: auto;
     padding: 2rem;
-    background: rgba(0, 255, 136, 0.02);
-    border: 1px solid var(--border-glass);
+    background: rgba(193, 80, 46, 0.02);
+    border: 1px solid var(--border);
     border-radius: 20px;
     min-height: 380px;
     gap: 0;
@@ -1435,22 +1463,22 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 }
 
 .bracket-col-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 0.8rem;
     font-weight: 900;
-    color: var(--neon-green);
+    color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 1.5px;
     text-align: center;
     padding-bottom: 0.9rem;
     margin-bottom: 1.2rem;
-    border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+    border-bottom: 1px solid rgba(193, 80, 46, 0.3);
     white-space: nowrap;
 }
 
 .bracket-match-block {
     background: var(--bg-card);
-    border: 1.5px solid var(--border-glass);
+    border: 1.5px solid var(--border);
     border-radius: 10px;
     overflow: hidden;
     flex-shrink: 0;
@@ -1463,10 +1491,10 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.06em;
-    color: #f0c040;
+    color: var(--senape-dark);
     padding: 3px 0 5px;
-    border-top: 1px solid rgba(240, 192, 64, 0.2);
-    background: rgba(240, 192, 64, 0.05);
+    border-top: 1px solid rgba(150, 114, 28, 0.2);
+    background: rgba(150, 114, 28, 0.05);
 }
 
 .rigori-badge {
@@ -1474,9 +1502,9 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.05em;
-    color: #f0c040;
-    background: rgba(240, 192, 64, 0.1);
-    border: 1px solid rgba(240, 192, 64, 0.35);
+    color: var(--senape-dark);
+    background: rgba(150, 114, 28, 0.1);
+    border: 1px solid rgba(150, 114, 28, 0.35);
     border-radius: 4px;
     padding: 1px 6px;
     white-space: nowrap;
@@ -1491,7 +1519,7 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 }
 
 .bracket-match-block:hover {
-    border-color: rgba(0, 255, 136, 0.35);
+    border-color: rgba(193, 80, 46, 0.35);
 }
 
 .bracket-slot {
@@ -1502,7 +1530,7 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 }
 
 .bracket-slot.top {
-    border-bottom: 1px solid var(--border-glass);
+    border-bottom: 1px solid var(--border);
 }
 
 .bracket-seed {
@@ -1520,7 +1548,7 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 }
 
 .bracket-team {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 0.88rem;
     font-weight: 800;
     color: var(--text-main);
@@ -1530,10 +1558,10 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 }
 
 .bracket-goals {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1rem;
     font-weight: 900;
-    color: var(--neon-green);
+    color: var(--accent);
     flex-shrink: 0;
     min-width: 1.5rem;
     text-align: right;
@@ -1547,7 +1575,7 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 .bracket-vs {
     text-align: center;
     padding: 0.25rem;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(43, 33, 27, 0.06);
     color: var(--text-muted);
     font-size: 0.7rem;
     font-weight: 700;
@@ -1589,23 +1617,23 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 }
 
 .finale-block {
-    border-color: rgba(0, 255, 136, 0.3);
+    border-color: rgba(193, 80, 46, 0.3);
 }
 
 /* TROFEO VINCITORE */
 .winner-trophy {
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 255, 136, 0.04) 100%);
-    border: 2px solid rgba(0, 255, 136, 0.4);
+    background: linear-gradient(135deg, rgba(193, 80, 46, 0.15) 0%, rgba(193, 80, 46, 0.04) 100%);
+    border: 2px solid rgba(193, 80, 46, 0.4);
     border-radius: 12px;
     padding: 1.2rem;
     text-align: center;
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.12);
+    box-shadow: none;
     transition: all 0.3s;
 }
 
 .winner-trophy.winner-known {
-    border-color: var(--neon-green);
-    box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+    border-color: var(--accent);
+    box-shadow: none;
 }
 
 .trophy-icon { font-size: 1.8rem; margin-bottom: 0.3rem; }
@@ -1619,10 +1647,10 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 }
 
 .trophy-name {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-size: 1.2rem;
     font-weight: 900;
-    color: var(--neon-green);
+    color: var(--accent);
 }
 
 /* PARTITE PER IL PIAZZAMENTO */
@@ -1635,13 +1663,13 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 
 .placement-card {
     background: var(--bg-card);
-    border: 1px solid var(--border-glass);
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 1.5rem;
 }
 
 .placement-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-weight: 900;
     font-size: 1.05rem;
     color: var(--text-main);
@@ -1733,17 +1761,17 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 }
 
 .edizione-corrente-card {
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 255, 136, 0.03) 100%);
-    border: 2px solid var(--neon-green);
+    background: linear-gradient(135deg, rgba(193, 80, 46, 0.15) 0%, rgba(193, 80, 46, 0.03) 100%);
+    border: 2px solid var(--accent);
     border-radius: 20px;
     padding: 2.5rem 2rem;
     text-align: center;
-    box-shadow: 0 0 40px rgba(0, 255, 136, 0.15);
+    box-shadow: none;
 }
 
 .edizione-corrente-card.in-corso {
     background: var(--bg-card);
-    border: 2px solid var(--border-glass);
+    border: 2px solid var(--border);
     box-shadow: none;
 }
 
@@ -1752,9 +1780,9 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 2px;
-    color: var(--neon-green);
-    background: rgba(0, 255, 136, 0.1);
-    border: 1px solid rgba(0, 255, 136, 0.3);
+    color: var(--accent);
+    background: rgba(193, 80, 46, 0.1);
+    border: 1px solid rgba(193, 80, 46, 0.3);
     border-radius: 20px;
     padding: 0.3rem 1rem;
     margin-bottom: 1rem;
@@ -1767,11 +1795,11 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     border-radius: 14px;
     overflow: hidden;
     background: var(--bg-card-hover);
-    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
+    box-shadow: 0 4px 15px rgba(193, 80, 46, 0.2);
 }
 
 .edizione-anno-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-weight: 900;
     font-size: 1.8rem;
     color: var(--text-main);
@@ -1791,7 +1819,7 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     gap: 2rem;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 1px solid var(--border-glass);
+    border-top: 1px solid var(--border);
 }
 
 .edizione-stat {
@@ -1828,10 +1856,10 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 }
 
 .albo-oro-anno {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Anton', sans-serif;
     font-weight: 900;
     font-size: 1.1rem;
-    color: var(--neon-green);
+    color: var(--accent);
     min-width: 100px;
     line-height: 1.2;
 }
@@ -1892,7 +1920,7 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     font-size: 0.9rem;
 }
 
-.archivio-back-link:hover { color: var(--neon-green); }
+.archivio-back-link:hover { color: var(--accent); }
 
 .archivio-team-card { cursor: pointer; }
 
@@ -1900,7 +1928,7 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     display: none;
     margin-top: 1.5rem;
     padding-top: 1.5rem;
-    border-top: 1px solid var(--border-glass);
+    border-top: 1px solid var(--border);
     text-align: left;
 }
 
@@ -1920,7 +1948,7 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 .ros-num {
     display: inline-block;
     min-width: 26px;
-    color: var(--neon-green);
+    color: var(--accent);
     font-weight: 800;
     margin-right: 0.5rem;
 }
