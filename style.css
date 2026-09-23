@@ -1305,7 +1305,7 @@ nav.nav-centered .nav-links {
 
 /* FOOTER */
 footer {
-    background: rgba(17, 22, 34, 0.5);
+    background: rgba(43, 33, 27, 0.05);
     border-top: 1px solid var(--border);
     padding: 2rem 1.5rem;
     margin-top: auto;

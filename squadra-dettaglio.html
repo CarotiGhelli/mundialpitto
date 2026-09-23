@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Squadra - MundialPitto</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Anton&family=Montserrat:ital,wght@0,800;0,900;1,900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Anton&family=Montserrat:ital,wght@0,800;0,900;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" id="main-style">
-    <script>(function(){var t=localStorage.getItem('mpTheme');var l=document.getElementById('main-style');if(t==='old')l.setAttribute('href','style-old.css');else if(t==='pl')l.setAttribute('href','style-pl.css');})();</script>
+    <script>if(localStorage.getItem('mpTheme')==='old'){document.getElementById('main-style').setAttribute('href','style-old.css');}</script>
 </head>
 <body>
 
@@ -20,7 +20,7 @@
             <a href="storico.html">Albo d'Oro</a>
         </div>
         <div class="nav-spacer">
-            <button id="theme-toggle-btn" class="btn-roster theme-toggle-btn" onclick="mpToggleTheme()" type="button">Stile: Nuovo</button>
+            <button id="theme-toggle-btn" class="btn-roster theme-toggle-btn" onclick="mpToggleTheme()" type="button">Stile precedente</button>
         </div>
     </nav>
 
