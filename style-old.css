@@ -76,7 +76,13 @@ nav {
     border: 1px solid var(--border-glass);
 }
 
-.nav-spacer { flex: 1; }
+.nav-spacer { flex: 1; display: flex; justify-content: flex-end; align-items: center; }
+
+.theme-toggle-btn {
+    font: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+}
 
 nav.nav-centered {
     flex-wrap: wrap;
@@ -1265,6 +1271,7 @@ nav.nav-centered .nav-links {
 @media (max-width: 850px) {
     nav { flex-direction: column; gap: 0.75rem; text-align: center; padding: 0.75rem 1rem; }
     .nav-brand, .nav-spacer { flex: none; }
+    .nav-spacer { justify-content: center; width: 100%; }
     .nav-links { flex-wrap: wrap; justify-content: center; }
     .nav-links a { font-size: 0.82rem; }
     .match-details-grid { grid-template-columns: 1fr; }
