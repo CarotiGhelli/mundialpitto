@@ -90,21 +90,6 @@ nav {
     white-space: nowrap;
 }
 
-nav.nav-centered {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-}
-
-nav.nav-centered .nav-brand {
-    flex-basis: 100%;
-    margin-bottom: 0.5rem;
-}
-
-nav.nav-centered .nav-links {
-    flex-basis: auto;
-}
-
 /* GRIGLIA E CONTENITORI GENERALI */
 .master-container {
     max-width: 1600px; margin: 2rem auto; padding: 0 2rem;
@@ -223,19 +208,6 @@ nav.nav-centered .nav-links {
     font-size: 1.4rem;
 }
 
-/* Sezione Marcatori Espansa dentro la card */
-.match-divider {
-    border-top: 1px solid var(--border);
-    margin: 1.2rem 0 0.8rem 0;
-}
-.scorers-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-.scorers { display: flex; align-items: center; gap: 0.4rem; }
-.scorers.away { text-align: right; flex-direction: row-reverse; }
 
 /* WIDGET SIDEBAR */
 .stats-widget {
@@ -249,11 +221,6 @@ nav.nav-centered .nav-links {
 .widget-title {
     font-family: 'Anton', sans-serif; font-size: 1.05rem; font-weight: 800; margin: 0; text-align: center; flex: 1;
 }
-.arrow-btn {
-    background: none; border: none; color: var(--text-muted);
-    font-size: 1.2rem; cursor: pointer; transition: color 0.2s; padding: 0 0.5rem;
-}
-.arrow-btn:hover { color: var(--accent); }
 
 .stat-item {
     display: flex; align-items: center; justify-content: space-between;
@@ -371,17 +338,6 @@ nav.nav-centered .nav-links {
 }
 .cal-girone-divider {
     font-size: 0.75rem; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 1rem 0 0.5rem 0;
-}
-
-.match-time {
-    background: rgba(193, 80, 46, 0.1);
-    border: 1px solid rgba(193, 80, 46, 0.3);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--accent);
-    white-space: nowrap;
 }
 
 .giornata-box-footer {
@@ -1090,14 +1046,6 @@ nav.nav-centered .nav-links {
     font-weight: 900;
 }
 
-.player-role {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-}
-
 .roster-empty {
     grid-column: 1 / -1;
     text-align: center;
@@ -1107,133 +1055,10 @@ nav.nav-centered .nav-links {
 }
 
 /* PAGINA PLAYOFF */
-.playoff-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-    flex: 1;
-}
-
-.tournament-bracket {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    margin-top: 2rem;
-    padding: 2rem;
-    background: rgba(193, 80, 46, 0.03);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    overflow-x: auto;
-}
-
-@media (max-width: 1200px) {
-    .tournament-bracket {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .tournament-bracket {
-        grid-template-columns: 1fr;
-    }
-}
-
-.bracket-round {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.bracket-round h3 {
-    font-family: 'Anton', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 900;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin: 0 0 1rem 0;
-    text-align: center;
-}
-
-.bracket-match {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-}
-
-.match-slot {
-    background: var(--bg-card);
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.team-slot {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    padding: 0.8rem;
-    background: rgba(193, 80, 46, 0.05);
-    border-radius: 8px;
-    border-left: 3px solid var(--accent);
-}
-
-.slot-label {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.slot-name {
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--text-main);
-}
-
-.vs-divider {
-    text-align: center;
-    color: var(--text-muted);
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.match-result {
-    display: flex;
-    justify-content: center;
-}
-
-.result-input {
-    background: var(--bg-card);
-    border: 2px solid rgba(193, 80, 46, 0.3);
-    color: var(--text-main);
-    font-family: 'Anton', sans-serif;
-    padding: 0.8rem 1rem;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: 600;
-    font-size: 1.1rem;
-    width: 100%;
-    max-width: 150px;
-    transition: all 0.2s;
-}
-
-.result-input:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: none;
-}
 
 .finale {
     grid-column: 2 / 4;
     justify-self: center;
-}
-
-.finale-match {
-    min-width: 100%;
 }
 
 .vincitore {
@@ -1367,15 +1192,6 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
     color: var(--text-main);
 }
 
-.breadcrumb-separator {
-    color: var(--text-muted);
-}
-
-.breadcrumb-current {
-    color: var(--text-main);
-    font-weight: 600;
-}
-
 @media (max-width: 600px) {
     .pitch-container {
         aspect-ratio: 1.2 / 1;
@@ -1399,23 +1215,6 @@ main, .master-container, .squadra-detail-container, .squadre-container, .calenda
 }
 
 /* CALENDARIO - orario a destra */
-.match-card-footer {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 0.8rem;
-    padding-top: 0.8rem;
-    border-top: 1px solid var(--border);
-}
-
-.match-time-pill {
-    background: rgba(193, 80, 46, 0.08);
-    border: 1px solid rgba(193, 80, 46, 0.25);
-    color: var(--accent);
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
 
 .team-badge-img {
     width: 42px;
