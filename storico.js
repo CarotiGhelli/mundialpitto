@@ -11,6 +11,28 @@ function getBadgeStorico(nomeSquadra) {
     return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-card-hover);font-size:1.5rem;">&#127942;</div>`;
 }
 
+// Capocannonieri di un'edizione: piu' voci se pari merito. Accetta anche il
+// vecchio formato a singolo oggetto (capocannoniere) con campo gol o marcatori.
+function getCapocannonieri(ed) {
+    if (ed.capocannonieri && ed.capocannonieri.length) return ed.capocannonieri;
+    if (ed.capocannoniere) {
+        const c = ed.capocannoniere;
+        return [{ nome: c.nome, squadra: c.squadra, gol: c.gol !== undefined ? c.gol : c.marcatori }];
+    }
+    return [];
+}
+
+function capocannonieriHtml(ed, conSquadra) {
+    const lista = getCapocannonieri(ed);
+    if (lista.length === 0) return '';
+    const nomi = lista.map(c => `<strong>${c.nome}</strong>${conSquadra ? ` (${c.squadra})` : ''}`).join(' &middot; ');
+    return `${nomi} (${lista[0].gol}&#9917;)`;
+}
+
+function capocannonieriLabel(ed) {
+    return getCapocannonieri(ed).length > 1 ? 'Capocannonieri' : 'Capocannoniere';
+}
+
 function renderEdizioneCorrente() {
     const box = document.getElementById('edizione-corrente-box');
     const ed = getEdizioneCorrente();
@@ -21,7 +43,7 @@ function renderEdizioneCorrente() {
                 <div class="trophy-icon" style="font-size:2.2rem;">&#9203;</div>
                 <h2 class="edizione-anno-title">MUNDIALPITTO ${ed.nome} &mdash; IN CORSO</h2>
                 <p class="storico-sub">Il campione di quest'edizione non è ancora stato incoronato.</p>
-                ${ed.capocannoniere ? `<p class="storico-sub">Capocannoniere al momento: <strong>${ed.capocannoniere.nome}</strong> (${ed.capocannoniere.squadra}) con ${ed.capocannoniere.marcatori} gol</p>` : ''}
+                ${getCapocannonieri(ed).length ? `<p class="storico-sub">${capocannonieriLabel(ed)} al momento: ${capocannonieriHtml(ed, true)}</p>` : ''}
                 <a href="classifica.html" class="btn-playoff" style="margin-top:1rem;">Vedi la Classifica &rarr;</a>
             </div>`;
         return;
@@ -44,8 +66,8 @@ function renderEdizioneCorrente() {
                     <span class="edizione-stat-value">${ed.terzo || '—'}</span>
                 </div>
                 <div class="edizione-stat">
-                    <span class="edizione-stat-label">Capocannoniere</span>
-                    <span class="edizione-stat-value">${ed.capocannoniere ? `${ed.capocannoniere.nome} (${ed.capocannoniere.marcatori}&#9917;)` : '—'}</span>
+                    <span class="edizione-stat-label">${capocannonieriLabel(ed)}</span>
+                    <span class="edizione-stat-value">${getCapocannonieri(ed).length ? capocannonieriHtml(ed, false).replace(/<\/?strong>/g, '') : '—'}</span>
                 </div>
             </div>
         </div>`;
@@ -87,7 +109,7 @@ function renderAlboOro() {
                             Finalista: <strong>${ed.finalista || '—'}</strong>
                             ${ed.terzo ? ` &bull; 3&deg;: <strong>${ed.terzo}</strong>` : ''}
                         </div>
-                        ${ed.capocannoniere ? `<div class="albo-oro-dettagli">Capocannoniere: <strong>${ed.capocannoniere.nome}</strong> (${ed.capocannoniere.marcatori}&#9917;)</div>` : ''}
+                        ${getCapocannonieri(ed).length ? `<div class="albo-oro-dettagli">${capocannonieriLabel(ed)}: ${capocannonieriHtml(ed, false)}</div>` : ''}
                     </div>
                     ${squadreHref ? `
                         <div class="albo-oro-actions">

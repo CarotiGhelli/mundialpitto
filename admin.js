@@ -168,6 +168,14 @@ function saveAll() {
     saveDataToFirebase();
 
     showSuccess(`Salvato: ${partita.squadra1} ${g1}-${g2} ${partita.squadra2}`);
+
+    // Avviso (non blocca): i gol dei marcatori non sommano al risultato
+    const elencati1 = newMarcatori.filter(m => m.squadra === partita.squadra1).reduce((s, m) => s + m.gol, 0);
+    const elencati2 = newMarcatori.filter(m => m.squadra === partita.squadra2).reduce((s, m) => s + m.gol, 0);
+    if (elencati1 !== g1 || elencati2 !== g2) {
+        showWarning(`Gol dei marcatori non tornano col risultato: ${partita.squadra1} ${elencati1}/${g1}, ${partita.squadra2} ${elencati2}/${g2}. Salvato comunque (autogol o marcatori ignoti?).`);
+    }
+
     loadMatchesInSelect();
     displayMatches();
 }
@@ -283,6 +291,13 @@ function showSuccess(msg) {
     el.textContent = '✅ ' + msg;
     el.style.display = 'block';
     setTimeout(() => el.style.display = 'none', 3500);
+}
+
+function showWarning(msg) {
+    const el = document.getElementById('warning-msg');
+    el.textContent = '⚠️ ' + msg;
+    el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 9000);
 }
 
 function showError(msg) {

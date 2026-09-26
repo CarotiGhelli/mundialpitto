@@ -388,7 +388,7 @@ const archivioIdEdizioneCorrente = 'estate-2026';
 // Quando un'edizione finisce, aggiungere qui uno snapshot e azzerare/aggiornare
 // squadreDB/partiteDB/giocatoriStatsDB/classificheDB per la nuova edizione.
 // Esempio: { anno: 2025, nome: 'Estate 2025', campione: 'Nome Squadra', finalista: 'Nome Squadra', terzo: 'Nome Squadra',
-//            capocannoniere: { nome: 'Nome Giocatore', squadra: 'Nome Squadra', gol: 5 }, squadrePartecipanti: 6,
+//            capocannonieri: [{ nome: 'Nome Giocatore', squadra: 'Nome Squadra', gol: 5 }] (piu' voci se pari merito), squadrePartecipanti: 6,
 //            archivioId: 'estate-2025' }
 const storicoDB = [];
 
@@ -419,7 +419,10 @@ function getEdizioneCorrente() {
         campione: finale.vincitore,
         finalista: finale.perdente,
         terzo: terzoPosto.vincitore,
-        capocannoniere: marcatori[0] || null,
+        // Tutti i giocatori a pari merito al primo posto (non ne sceglie uno arbitrario)
+        capocannonieri: marcatori
+            .filter(g => g.marcatori === (marcatori[0] || {}).marcatori)
+            .map(g => ({ nome: g.nome, squadra: g.squadra, gol: g.marcatori })),
         squadrePartecipanti: squadreDB.length
     };
 }
