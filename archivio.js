@@ -14,6 +14,11 @@
 //    cosi' l'Albo d'Oro potra' linkare Squadre/Calendario alla versione archiviata.
 // 3. Sovrascrivere squadreDB/partiteDB/giocatoriStatsDB/classificheDB in script.js
 //    con i dati della nuova edizione e aggiornare annoCorrente/nomeEdizioneCorrente.
+// 4. In script.js cambiare FIREBASE_PATH in un ramo NUOVO dentro 'mundialPitto',
+//    es. 'mundialPitto/edizioni/inverno-2026' (fuori da 'mundialPitto' le regole del
+//    database negano l'accesso). I risultati della vecchia edizione restano intatti.
+//    Aggiornare anche archivioIdEdizioneCorrente (o metterlo a '' finche' la nuova
+//    edizione non e' archiviata).
 const archivioEdizioniDB = [
     {
         "id": "estate-2026",

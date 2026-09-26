@@ -476,7 +476,7 @@ async function salvaPosizioniPartita() {
 async function cancellaPosizioniPartita() {
     if (!currentMatchId) return;
     if (!confirm('Rimuovere le posizioni personalizzate per questa partita?')) return;
-    await firebaseDB.ref(`mundialPitto/posizioniPartita/${currentMatchId}`).remove();
+    await firebaseDB.ref(`${FIREBASE_PATH}/posizioniPartita/${currentMatchId}`).remove();
     document.getElementById('posizioni-partita-editor').style.display = 'none';
     showSuccess('Posizioni personalizzate rimosse');
 }

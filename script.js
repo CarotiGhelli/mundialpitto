@@ -214,6 +214,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const firebaseDB = firebase.database();
 
+// Percorso Firebase dei dati dell'edizione corrente. Per una nuova edizione
+// cambiare SOLO questo valore, es. 'mundialPitto/edizioni/inverno-2026': i
+// risultati della nuova edizione finiscono in un ramo separato e quelli vecchi
+// restano intatti. Deve stare DENTRO 'mundialPitto': le regole del database
+// negano l'accesso ad altri rami (verificato: 'edizioni/...' -> permission_denied).
+// 'mundialPitto' = edizione Estate 2026 (dati originali, mai spostati).
+const FIREBASE_PATH = 'mundialPitto';
+
 // Promise globale che si risolve quando Firebase ha caricato i dati
 let _firebaseReadyResolve;
 const firebaseReady = new Promise(resolve => { _firebaseReadyResolve = resolve; });
@@ -233,6 +241,7 @@ function _applyFirebaseData(data) {
         });
     }
     if (data.giocatoriStats) {
+        giocatoriStatsDB.forEach(g => { g.marcatori = 0; g.assist = 0; });
         const stats = Array.isArray(data.giocatoriStats)
             ? data.giocatoriStats : Object.values(data.giocatoriStats);
         stats.forEach(saved => {
@@ -263,44 +272,74 @@ function _applyFirebaseData(data) {
 
 // Cache locale dell'ultimo dato ricevuto: le pagine si disegnano subito da qui e
 // Firebase aggiorna in background. Non usata in admin (si modificano dati veri).
-const _CACHE_KEY = 'mpDataCache_v1';
+// La chiave include il percorso: ogni edizione ha la sua cache.
+const _CACHE_KEY = 'mpDataCache_v1:' + FIREBASE_PATH;
 const _USE_CACHE = !/admin\.html$/.test(location.pathname);
 let _cachedRaw = null;
+try { localStorage.removeItem('mpDataCache_v1'); } catch (e) {}
 if (_USE_CACHE) {
     try { _cachedRaw = localStorage.getItem(_CACHE_KEY); } catch (e) { _cachedRaw = null; }
 }
+let _lastRaw = null; // dato attualmente applicato alle strutture in memoria
 if (_cachedRaw) {
     try {
         _applyFirebaseData(JSON.parse(_cachedRaw));
+        _lastRaw = _cachedRaw;
         _firebaseReadyResolve();
     } catch (e) { _cachedRaw = null; }
 } else if (document.body) {
     document.body.classList.add('mp-loading');
 }
 
-// Carica i dati una volta all'avvio e risolve firebaseReady
-firebaseDB.ref('mundialPitto').once('value', snapshot => {
-    let raw = null;
-    if (snapshot.exists()) {
-        raw = JSON.stringify(snapshot.val());
-        _applyFirebaseData(snapshot.val());
-        if (_USE_CACHE) {
-            try { localStorage.setItem(_CACHE_KEY, raw); } catch (e) {}
-        }
+// Applica un dato arrivato da Firebase. Ritorna true solo se e' DIVERSO da
+// quello gia' mostrato (cosi' la pagina sa che deve ridisegnarsi).
+function _ingest(value) {
+    const raw = JSON.stringify(value);
+    if (raw === _lastRaw) return false;
+    const eraGiaMostrato = _lastRaw !== null;
+    _applyFirebaseData(value);
+    _lastRaw = raw;
+    if (_USE_CACHE) {
+        try { localStorage.setItem(_CACHE_KEY, raw); } catch (e) {}
     }
+    return eraGiaMostrato;
+}
+
+// Dato nuovo dopo il primo disegno: le pagine "live" si ridisegnano da sole,
+// le altre si ricaricano una volta (con protezione anti-loop).
+function _datoCambiato() {
+    if (window.mpLiveCallback) { window.mpLiveCallback(); return; }
+    let last = 0;
+    try { last = Number(sessionStorage.getItem('mpReloadedAt')) || 0; } catch (e) {}
+    if (Date.now() - last > 10000) {
+        try { sessionStorage.setItem('mpReloadedAt', String(Date.now())); } catch (e) {}
+        location.reload();
+    }
+}
+
+// Carica i dati una volta all'avvio e risolve firebaseReady
+firebaseDB.ref(FIREBASE_PATH).once('value', snapshot => {
+    const cambiato = snapshot.exists() ? _ingest(snapshot.val()) : false;
     _firebaseReadyResolve();
     if (document.body) document.body.classList.remove('mp-loading');
-
-    // Il dato in cache era vecchio: ricarico una volta per mostrare quello nuovo
-    if (_cachedRaw && raw && raw !== _cachedRaw) {
-        let last = 0;
-        try { last = Number(sessionStorage.getItem('mpReloadedAt')) || 0; } catch (e) {}
-        if (Date.now() - last > 10000) {
-            try { sessionStorage.setItem('mpReloadedAt', String(Date.now())); } catch (e) {}
-            location.reload();
-        }
-    }
+    if (cambiato) _datoCambiato();
+}, error => {
+    // Es. permission_denied: si mostra la pagina con i dati statici invece di
+    // restare bloccati per sempre sulla barra di caricamento.
+    console.error('Firebase non raggiungibile su', FIREBASE_PATH, error && error.message);
+    _firebaseReadyResolve();
+    if (document.body) document.body.classList.remove('mp-loading');
 });
+
+// Aggiornamento live: da chiamare solo nelle pagine che devono ridisegnarsi da sole
+// (Home, Partita). Tiene aperta una connessione per visitatore. Mai in admin.
+function mpEnableLive(onUpdate) {
+    if (!_USE_CACHE) return;
+    window.mpLiveCallback = onUpdate;
+    firebaseDB.ref(FIREBASE_PATH).on('value', snapshot => {
+        if (snapshot.exists() && _ingest(snapshot.val())) onUpdate();
+    }, error => console.error('Aggiornamento live non disponibile:', error && error.message));
+}
 
 // Salva tutti i dati dinamici su Firebase
 function saveDataToFirebase() {
@@ -313,7 +352,7 @@ function saveDataToFirebase() {
         const key = g.nome.replace(/[.#$[\]/]/g, '_');
         statsDaSalvare[key] = { nome: g.nome, squadra: g.squadra, marcatori: g.marcatori || 0, assist: g.assist || 0 };
     });
-    return firebaseDB.ref('mundialPitto').update({
+    return firebaseDB.ref(FIREBASE_PATH).update({
         partite: partiteDaSalvare,
         giocatoriStats: statsDaSalvare,
         classifiche: classificheDB
@@ -327,33 +366,33 @@ const DEFAULT_FORMATION = {
 };
 
 function saveFormazioniToFirebase(squadraId, data) {
-    return firebaseDB.ref(`mundialPitto/formazioni/${squadraId}`).set(data);
+    return firebaseDB.ref(`${FIREBASE_PATH}/formazioni/${squadraId}`).set(data);
 }
 function loadFormazioniFromFirebase(squadraId) {
     return new Promise(resolve => {
-        firebaseDB.ref(`mundialPitto/formazioni/${squadraId}`).once('value', snap => {
+        firebaseDB.ref(`${FIREBASE_PATH}/formazioni/${squadraId}`).once('value', snap => {
             resolve(snap.exists() ? snap.val() : null);
         });
     });
 }
 function savePosizioniPartitaToFirebase(partitaId, data) {
-    return firebaseDB.ref(`mundialPitto/posizioniPartita/${partitaId}`).set(data);
+    return firebaseDB.ref(`${FIREBASE_PATH}/posizioniPartita/${partitaId}`).set(data);
 }
 function loadPosizioniPartitaFromFirebase(partitaId) {
     return new Promise(resolve => {
-        firebaseDB.ref(`mundialPitto/posizioniPartita/${partitaId}`).once('value', snap => {
+        firebaseDB.ref(`${FIREBASE_PATH}/posizioniPartita/${partitaId}`).once('value', snap => {
             resolve(snap.exists() ? snap.val() : null);
         });
     });
 }
 
 function saveBracketToFirebase(bracketData) {
-    return firebaseDB.ref('mundialPitto/bracket').set(bracketData);
+    return firebaseDB.ref(`${FIREBASE_PATH}/bracket`).set(bracketData);
 }
 
 function loadBracketFromFirebase() {
     return new Promise(resolve => {
-        firebaseDB.ref('mundialPitto/bracket').once('value', snap => {
+        firebaseDB.ref(`${FIREBASE_PATH}/bracket`).once('value', snap => {
             resolve(snap.exists() ? snap.val() : {});
         });
     });

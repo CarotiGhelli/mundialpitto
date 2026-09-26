@@ -122,6 +122,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
+            mpEnableLive(() => { renderRisultati(); renderLista(); });
             await firebaseReady;
             renderRisultati();
         });

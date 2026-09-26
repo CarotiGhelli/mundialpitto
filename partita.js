@@ -55,9 +55,8 @@ function renderDots(positions) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    await firebaseReady;
-
+// Idempotente: puo' essere richiamata a ogni aggiornamento live dei dati.
+async function renderPartita() {
     const params  = new URLSearchParams(window.location.search);
     const id      = parseInt(params.get('id')) || 1;
     const partita = partiteDB.find(p => p.id === id);
@@ -72,9 +71,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const squadra2 = squadreDB.find(s => s.nome === partita.squadra2);
 
     const rigoriEl = document.getElementById('partita-rigori');
-    if (rigoriEl && partita.rigori && partita.risultato) {
-        rigoriEl.innerHTML = `<span class="rigori-badge">rig. ${partita.rigori}</span>`;
-        rigoriEl.style.display = 'block';
+    if (rigoriEl) {
+        if (partita.rigori && partita.risultato) {
+            rigoriEl.innerHTML = `<span class="rigori-badge">rig. ${partita.rigori}</span>`;
+            rigoriEl.style.display = 'block';
+        } else {
+            rigoriEl.innerHTML = '';
+            rigoriEl.style.display = 'none';
+        }
     }
     document.querySelector('.partita-header h1').innerHTML =
         `${partita.squadra1} <span class="score-highlight">${partita.risultato || '- - -'}</span> ${partita.squadra2}`;
@@ -103,4 +107,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (_) {
         renderDots({});
     }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Prima di qualsiasi await: un dato nuovo in arrivo durante il primo disegno
+    // deve ridisegnare la pagina, non ricaricarla.
+    mpEnableLive(renderPartita);
+    await firebaseReady;
+    await renderPartita();
 });
