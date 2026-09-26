@@ -261,10 +261,45 @@ function _applyFirebaseData(data) {
     applyPlayoffTeams();
 }
 
+// Cache locale dell'ultimo dato ricevuto: le pagine si disegnano subito da qui e
+// Firebase aggiorna in background. Non usata in admin (si modificano dati veri).
+const _CACHE_KEY = 'mpDataCache_v1';
+const _USE_CACHE = !/admin\.html$/.test(location.pathname);
+let _cachedRaw = null;
+if (_USE_CACHE) {
+    try { _cachedRaw = localStorage.getItem(_CACHE_KEY); } catch (e) { _cachedRaw = null; }
+}
+if (_cachedRaw) {
+    try {
+        _applyFirebaseData(JSON.parse(_cachedRaw));
+        _firebaseReadyResolve();
+    } catch (e) { _cachedRaw = null; }
+} else if (document.body) {
+    document.body.classList.add('mp-loading');
+}
+
 // Carica i dati una volta all'avvio e risolve firebaseReady
 firebaseDB.ref('mundialPitto').once('value', snapshot => {
-    if (snapshot.exists()) _applyFirebaseData(snapshot.val());
+    let raw = null;
+    if (snapshot.exists()) {
+        raw = JSON.stringify(snapshot.val());
+        _applyFirebaseData(snapshot.val());
+        if (_USE_CACHE) {
+            try { localStorage.setItem(_CACHE_KEY, raw); } catch (e) {}
+        }
+    }
     _firebaseReadyResolve();
+    if (document.body) document.body.classList.remove('mp-loading');
+
+    // Il dato in cache era vecchio: ricarico una volta per mostrare quello nuovo
+    if (_cachedRaw && raw && raw !== _cachedRaw) {
+        let last = 0;
+        try { last = Number(sessionStorage.getItem('mpReloadedAt')) || 0; } catch (e) {}
+        if (Date.now() - last > 10000) {
+            try { sessionStorage.setItem('mpReloadedAt', String(Date.now())); } catch (e) {}
+            location.reload();
+        }
+    }
 });
 
 // Salva tutti i dati dinamici su Firebase
