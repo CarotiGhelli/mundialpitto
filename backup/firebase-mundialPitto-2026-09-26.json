@@ -1,0 +1,830 @@
+{
+  "classifiche": {
+    "A": [
+      {
+        "gf": 5,
+        "giocate": 2,
+        "gs": 1,
+        "pareggiate": 0,
+        "perse": 0,
+        "posizione": 1,
+        "punti": 6,
+        "squadra": "Bundesdini All-Stars",
+        "vinte": 2
+      },
+      {
+        "gf": 6,
+        "giocate": 2,
+        "gs": 5,
+        "pareggiate": 0,
+        "perse": 1,
+        "posizione": 2,
+        "punti": 3,
+        "squadra": "Staff Poco Tecnico",
+        "vinte": 1
+      },
+      {
+        "gf": 3,
+        "giocate": 2,
+        "gs": 8,
+        "pareggiate": 0,
+        "perse": 2,
+        "posizione": 3,
+        "punti": 0,
+        "squadra": "Narcos",
+        "vinte": 0
+      }
+    ],
+    "B": [
+      {
+        "gf": 12,
+        "giocate": 2,
+        "gs": 2,
+        "pareggiate": 0,
+        "perse": 0,
+        "posizione": 1,
+        "punti": 6,
+        "squadra": "DA PIERINO PSG",
+        "vinte": 2
+      },
+      {
+        "gf": 9,
+        "giocate": 2,
+        "gs": 7,
+        "pareggiate": 0,
+        "perse": 1,
+        "posizione": 2,
+        "punti": 3,
+        "squadra": "ADLSR FC",
+        "vinte": 1
+      },
+      {
+        "gf": 3,
+        "giocate": 2,
+        "gs": 15,
+        "pareggiate": 0,
+        "perse": 2,
+        "posizione": 3,
+        "punti": 0,
+        "squadra": "Atletico Gaza",
+        "vinte": 0
+      }
+    ]
+  },
+  "formazioni": {
+    "2": {
+      "casa": {
+        "def": {
+          "left": 15.7,
+          "top": 46
+        },
+        "fw": {
+          "left": 39.6,
+          "top": 45.4
+        },
+        "gk": {
+          "left": 2,
+          "top": 47.8
+        },
+        "ml": {
+          "left": 29.7,
+          "top": 18.5
+        },
+        "mr": {
+          "left": 28.8,
+          "top": 69.9
+        }
+      },
+      "trasferta": {
+        "def": {
+          "left": 72.2,
+          "top": 43
+        },
+        "fw": {
+          "left": 50.7,
+          "top": 47.8
+        },
+        "gk": {
+          "left": 90.7,
+          "top": 47.8
+        },
+        "ml": {
+          "left": 63.8,
+          "top": 71.7
+        },
+        "mr": {
+          "left": 62.9,
+          "top": 11.9
+        }
+      }
+    },
+    "3": {
+      "casa": {
+        "def": {
+          "left": 15.8,
+          "top": 44.9
+        },
+        "fw": {
+          "left": 41.8,
+          "top": 41.9
+        },
+        "gk": {
+          "left": 2.6,
+          "top": 44.3
+        },
+        "ml": {
+          "left": 26.2,
+          "top": 12
+        },
+        "mr": {
+          "left": 27.7,
+          "top": 71.8
+        }
+      },
+      "trasferta": {
+        "def": {
+          "left": 76.1,
+          "top": 40.7
+        },
+        "fw": {
+          "left": 53.8,
+          "top": 40.1
+        },
+        "gk": {
+          "left": 90.8,
+          "top": 41.9
+        },
+        "ml": {
+          "left": 53.2,
+          "top": 2
+        },
+        "mr": {
+          "left": 55.5,
+          "top": 77.1
+        }
+      }
+    },
+    "6": {
+      "casa": {
+        "def": {
+          "left": 19.3,
+          "top": 41.2
+        },
+        "fw": {
+          "left": 42,
+          "top": 41.8
+        },
+        "gk": {
+          "left": 2,
+          "top": 45.4
+        },
+        "ml": {
+          "left": 31.8,
+          "top": 13.1
+        },
+        "mr": {
+          "left": 32.4,
+          "top": 72.9
+        }
+      },
+      "trasferta": {
+        "def": {
+          "left": 78.4,
+          "top": 53.7
+        },
+        "fw": {
+          "left": 54,
+          "top": 7.8
+        },
+        "gk": {
+          "left": 90.1,
+          "top": 50.7
+        },
+        "ml": {
+          "left": 66.8,
+          "top": 51.3
+        },
+        "mr": {
+          "left": 51.3,
+          "top": 77.6
+        }
+      }
+    }
+  },
+  "giocatoriStats": {
+    "Alessandro Petracchi": {
+      "assist": 0,
+      "marcatori": 2,
+      "nome": "Alessandro Petracchi",
+      "squadra": "DA PIERINO PSG"
+    },
+    "Andrea Sorrentino": {
+      "assist": 0,
+      "marcatori": 4,
+      "nome": "Andrea Sorrentino",
+      "squadra": "Staff Poco Tecnico"
+    },
+    "Cesare Kevin Desi": {
+      "assist": 0,
+      "marcatori": 1,
+      "nome": "Cesare Kevin Desi",
+      "squadra": "Bundesdini All-Stars"
+    },
+    "Christian Del Nobile": {
+      "assist": 1,
+      "marcatori": 0,
+      "nome": "Christian Del Nobile",
+      "squadra": "Bundesdini All-Stars"
+    },
+    "Diego Giannetti": {
+      "assist": 0,
+      "marcatori": 0,
+      "nome": "Diego Giannetti",
+      "squadra": "Atletico Gaza"
+    },
+    "Elias Meliani": {
+      "assist": 0,
+      "marcatori": 2,
+      "nome": "Elias Meliani",
+      "squadra": "Bundesdini All-Stars"
+    },
+    "Emanuele Cavallini": {
+      "assist": 0,
+      "marcatori": 7,
+      "nome": "Emanuele Cavallini",
+      "squadra": "ADLSR FC"
+    },
+    "Francesco Ceccarelli": {
+      "assist": 2,
+      "marcatori": 1,
+      "nome": "Francesco Ceccarelli",
+      "squadra": "Atletico Gaza"
+    },
+    "Francesco Francese": {
+      "assist": 0,
+      "marcatori": 0,
+      "nome": "Francesco Francese",
+      "squadra": "ADLSR FC"
+    },
+    "Francesco Marinai": {
+      "assist": 2,
+      "marcatori": 2,
+      "nome": "Francesco Marinai",
+      "squadra": "DA PIERINO PSG"
+    },
+    "Francesko Vrapi": {
+      "assist": 0,
+      "marcatori": 1,
+      "nome": "Francesko Vrapi",
+      "squadra": "Bundesdini All-Stars"
+    },
+    "Gabriele Lemmi": {
+      "assist": 0,
+      "marcatori": 1,
+      "nome": "Gabriele Lemmi",
+      "squadra": "ADLSR FC"
+    },
+    "Gabriele Massimo Catalano Belisario": {
+      "assist": 0,
+      "marcatori": 0,
+      "nome": "Gabriele Massimo Catalano Belisario",
+      "squadra": "ADLSR FC"
+    },
+    "Gianmarco Lelli": {
+      "assist": 0,
+      "marcatori": 1,
+      "nome": "Gianmarco Lelli",
+      "squadra": "ADLSR FC"
+    },
+    "Giannetti Giorgio": {
+      "assist": 0,
+      "marcatori": 0,
+      "nome": "Giannetti Giorgio",
+      "squadra": "DA PIERINO PSG"
+    },
+    "Gianni Landi": {
+      "assist": 0,
+      "marcatori": 3,
+      "nome": "Gianni Landi",
+      "squadra": "ADLSR FC"
+    },
+    "Giorgio Giannetti": {
+      "assist": 0,
+      "marcatori": 4,
+      "nome": "Giorgio Giannetti",
+      "squadra": "DA PIERINO PSG"
+    },
+    "Leonardo Castagnoli": {
+      "assist": 3,
+      "marcatori": 1,
+      "nome": "Leonardo Castagnoli",
+      "squadra": "Atletico Gaza"
+    },
+    "Leonardo Lemmi": {
+      "assist": 0,
+      "marcatori": 2,
+      "nome": "Leonardo Lemmi",
+      "squadra": "ADLSR FC"
+    },
+    "Leonardo Manetti": {
+      "assist": 0,
+      "marcatori": 6,
+      "nome": "Leonardo Manetti",
+      "squadra": "Atletico Gaza"
+    },
+    "Lorenzo Bacci": {
+      "assist": 0,
+      "marcatori": 0,
+      "nome": "Lorenzo Bacci",
+      "squadra": "Atletico Gaza"
+    },
+    "Lorenzo Baldi": {
+      "assist": 0,
+      "marcatori": 1,
+      "nome": "Lorenzo Baldi",
+      "squadra": "Staff Poco Tecnico"
+    },
+    "Luigi Bartolozzi": {
+      "assist": 1,
+      "marcatori": 1,
+      "nome": "Luigi Bartolozzi",
+      "squadra": "ADLSR FC"
+    },
+    "Marinai Francesco": {
+      "assist": 0,
+      "marcatori": 0,
+      "nome": "Marinai Francesco",
+      "squadra": "DA PIERINO PSG"
+    },
+    "Matteo Abrans": {
+      "assist": 0,
+      "marcatori": 10,
+      "nome": "Matteo Abrans",
+      "squadra": "Staff Poco Tecnico"
+    },
+    "Matteo Casapieri": {
+      "assist": 0,
+      "marcatori": 10,
+      "nome": "Matteo Casapieri",
+      "squadra": "DA PIERINO PSG"
+    },
+    "Mattia Aprile": {
+      "assist": 0,
+      "marcatori": 5,
+      "nome": "Mattia Aprile",
+      "squadra": "ADLSR FC"
+    },
+    "Mohamed": {
+      "assist": 0,
+      "marcatori": 3,
+      "nome": "Mohamed",
+      "squadra": "Narcos"
+    },
+    "Petracchi Alessandro": {
+      "assist": 0,
+      "marcatori": 0,
+      "nome": "Petracchi Alessandro",
+      "squadra": "DA PIERINO PSG"
+    },
+    "Rei Pilinci": {
+      "assist": 0,
+      "marcatori": 0,
+      "nome": "Rei Pilinci",
+      "squadra": "Narcos"
+    },
+    "Samuele Norfini": {
+      "assist": 0,
+      "marcatori": 0,
+      "nome": "Samuele Norfini",
+      "squadra": "Staff Poco Tecnico"
+    },
+    "Stefan Piendibene": {
+      "assist": 0,
+      "marcatori": 3,
+      "nome": "Stefan Piendibene",
+      "squadra": "DA PIERINO PSG"
+    },
+    "Tommaso Albanesi": {
+      "assist": 1,
+      "marcatori": 1,
+      "nome": "Tommaso Albanesi",
+      "squadra": "Bundesdini All-Stars"
+    },
+    "Tommaso Carbonel": {
+      "assist": 0,
+      "marcatori": 3,
+      "nome": "Tommaso Carbonel",
+      "squadra": "Narcos"
+    },
+    "Xhovani Hokja": {
+      "assist": 0,
+      "marcatori": 4,
+      "nome": "Xhovani Hokja",
+      "squadra": "Bundesdini All-Stars"
+    }
+  },
+  "partite": {
+    "1": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 3,
+          "nome": "Mohamed",
+          "squadra": "Narcos"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Andrea Sorrentino",
+          "squadra": "Staff Poco Tecnico"
+        },
+        {
+          "assist": 0,
+          "gol": 4,
+          "nome": "Matteo Abrans",
+          "squadra": "Staff Poco Tecnico"
+        }
+      ],
+      "mvp": "Matteo Abrans",
+      "risultato": "3 - 5"
+    },
+    "101": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Lorenzo Baldi",
+          "squadra": "Staff Poco Tecnico"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Leonardo Manetti",
+          "squadra": "Atletico Gaza"
+        },
+        {
+          "assist": 0,
+          "gol": 2,
+          "nome": "Matteo Abrans",
+          "squadra": "Staff Poco Tecnico"
+        }
+      ],
+      "mvp": "Diego Giannetti",
+      "risultato": "3 - 1"
+    },
+    "102": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 3,
+          "nome": "Emanuele Cavallini",
+          "squadra": "ADLSR FC"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Leonardo Lemmi",
+          "squadra": "ADLSR FC"
+        },
+        {
+          "assist": 0,
+          "gol": 2,
+          "nome": "Tommaso Carbonel",
+          "squadra": "Narcos"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Gianni Landi",
+          "squadra": "ADLSR FC"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Gianmarco Lelli",
+          "squadra": "ADLSR FC"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Mattia Aprile",
+          "squadra": "ADLSR FC"
+        }
+      ],
+      "mvp": "Emanuele Cavallini",
+      "risultato": "7 - 3"
+    },
+    "103": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Gianni Landi",
+          "squadra": "ADLSR FC"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Emanuele Cavallini",
+          "squadra": "ADLSR FC"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Cesare Kevin Desi",
+          "squadra": "Bundesdini All-Stars"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Elias Meliani",
+          "squadra": "Bundesdini All-Stars"
+        }
+      ],
+      "mvp": "Alessandro Salvadori",
+      "rigori": "1 - 2",
+      "risultato": "2 - 2"
+    },
+    "104": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 4,
+          "nome": "Matteo Casapieri",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Giorgio Giannetti",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 0,
+          "gol": 2,
+          "nome": "Andrea Sorrentino",
+          "squadra": "Staff Poco Tecnico"
+        }
+      ],
+      "risultato": "5 - 2"
+    },
+    "105": {
+      "marcatori": [
+        {
+          "assist": 2,
+          "gol": 1,
+          "nome": "Francesco Ceccarelli",
+          "squadra": "Atletico Gaza"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Tommaso Carbonel",
+          "squadra": "Narcos"
+        },
+        {
+          "assist": 3,
+          "gol": 0,
+          "nome": "Leonardo Castagnoli",
+          "squadra": "Atletico Gaza"
+        },
+        {
+          "assist": 0,
+          "gol": 4,
+          "nome": "Leonardo Manetti",
+          "squadra": "Atletico Gaza"
+        }
+      ],
+      "mvp": "Leonardo Manetti",
+      "risultato": "1 - 5"
+    },
+    "106": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 3,
+          "nome": "Matteo Abrans",
+          "squadra": "Staff Poco Tecnico"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Elias Meliani",
+          "squadra": "Bundesdini All-Stars"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Andrea Sorrentino",
+          "squadra": "Staff Poco Tecnico"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Francesko Vrapi",
+          "squadra": "Bundesdini All-Stars"
+        }
+      ],
+      "mvp": "Matteo Abrans",
+      "risultato": "6 - 2"
+    },
+    "107": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Alessandro Petracchi",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 0,
+          "gol": 2,
+          "nome": "Matteo Casapieri",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Stefan Piendibene",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Gianni Landi",
+          "squadra": "ADLSR FC"
+        },
+        {
+          "assist": 1,
+          "gol": 1,
+          "nome": "Luigi Bartolozzi",
+          "squadra": "ADLSR FC"
+        }
+      ],
+      "mvp": "Matteo Casapieri",
+      "risultato": "5 - 2"
+    },
+    "2": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Stefan Piendibene",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 0,
+          "gol": 2,
+          "nome": "Matteo Casapieri",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Alessandro Petracchi",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 0,
+          "gol": 2,
+          "nome": "Giorgio Giannetti",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Francesco Marinai",
+          "squadra": "DA PIERINO PSG"
+        }
+      ],
+      "mvp": "Giorgio Giannetti",
+      "risultato": "1 - 7"
+    },
+    "3": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Matteo Abrans",
+          "squadra": "Staff Poco Tecnico"
+        },
+        {
+          "assist": 0,
+          "gol": 2,
+          "nome": "Xhovani Hokja",
+          "squadra": "Bundesdini All-Stars"
+        },
+        {
+          "assist": 1,
+          "gol": 0,
+          "nome": "Tommaso Albanesi",
+          "squadra": "Bundesdini All-Stars"
+        }
+      ],
+      "mvp": "Xhovani Hokja",
+      "risultato": "2 - 1"
+    },
+    "4": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 2,
+          "nome": "Matteo Casapieri",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Mattia Aprile",
+          "squadra": "ADLSR FC"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Stefan Piendibene",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 2,
+          "gol": 1,
+          "nome": "Francesco Marinai",
+          "squadra": "DA PIERINO PSG"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Giorgio Giannetti",
+          "squadra": "DA PIERINO PSG"
+        }
+      ],
+      "mvp": "Francesco Marinai",
+      "risultato": "1 - 5"
+    },
+    "5": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 2,
+          "nome": "Xhovani Hokja",
+          "squadra": "Bundesdini All-Stars"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Tommaso Albanesi",
+          "squadra": "Bundesdini All-Stars"
+        },
+        {
+          "assist": 1,
+          "gol": 0,
+          "nome": "Christian Del Nobile",
+          "squadra": "Bundesdini All-Stars"
+        }
+      ],
+      "mvp": "Xhovani Hokja",
+      "risultato": "0 - 3"
+    },
+    "6": {
+      "marcatori": [
+        {
+          "assist": 0,
+          "gol": 3,
+          "nome": "Mattia Aprile",
+          "squadra": "ADLSR FC"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Gabriele Lemmi",
+          "squadra": "ADLSR FC"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Leonardo Manetti",
+          "squadra": "Atletico Gaza"
+        },
+        {
+          "assist": 0,
+          "gol": 3,
+          "nome": "Emanuele Cavallini",
+          "squadra": "ADLSR FC"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Leonardo Castagnoli",
+          "squadra": "Atletico Gaza"
+        },
+        {
+          "assist": 0,
+          "gol": 1,
+          "nome": "Leonardo Lemmi",
+          "squadra": "ADLSR FC"
+        }
+      ],
+      "mvp": "Emanuele Cavallini",
+      "risultato": "8 - 2"
+    }
+  }
+}
