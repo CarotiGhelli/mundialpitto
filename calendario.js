@@ -121,8 +121,40 @@ function renderCalendarioPlayoff() {
     calendarContainer.insertAdjacentHTML('beforeend', html);
 }
 
+// Classifica marcatori dell'edizione in corso, a fianco del calendario
+function renderMarcatoriSidebar() {
+    const container = document.getElementById('marcatori-sidebar');
+    if (!container) return;
+
+    const marcatori = [...giocatoriStatsDB]
+        .filter(g => g.marcatori > 0)
+        .sort((a, b) => b.marcatori - a.marcatori);
+
+    if (marcatori.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:1rem;">Nessun dato ancora</p>';
+        return;
+    }
+
+    container.innerHTML = `<table class="classifica-table">
+        <thead><tr>
+            <th>Pos</th><th>Giocatore</th><th>Squadra</th>
+            <th class="col-data" style="text-align:center;">Gol</th>
+        </tr></thead>
+        <tbody>
+            ${marcatori.slice(0, 10).map((g, i) => `
+            <tr>
+                <td class="col-pos">${i + 1}</td>
+                <td class="col-team" style="font-weight:600;">${g.nome}</td>
+                <td style="color:var(--text-muted);font-size:0.85rem;">${g.squadra}</td>
+                <td class="col-highlight" style="text-align:center;">${g.marcatori}</td>
+            </tr>`).join('')}
+        </tbody>
+    </table>`;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     await firebaseReady;
     renderCalendario();
     renderCalendarioPlayoff();
+    renderMarcatoriSidebar();
 });

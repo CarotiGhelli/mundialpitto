@@ -33,32 +33,6 @@ function capocannonieriLabel(ed) {
     return getCapocannonieri(ed).length > 1 ? 'Capocannonieri' : 'Capocannoniere';
 }
 
-// Classifica marcatori completa dell'edizione in corso (stessa tabella di
-// classifica.html). Le edizioni archiviate non la mostrano qui: i loro dati
-// completi si trovano in archivio.js, non in questa pagina.
-function classificaMarcatoriHtml(lista) {
-    if (lista.length === 0) return '';
-    return `
-        <div class="girone-card" style="margin-top:2rem;text-align:left;">
-            <h2 class="girone-title">&#9917; CLASSIFICA MARCATORI</h2>
-            <table class="classifica-table">
-                <thead><tr>
-                    <th>Pos</th><th>Giocatore</th><th>Squadra</th>
-                    <th class="col-data" style="text-align:center;">Gol</th>
-                </tr></thead>
-                <tbody>
-                    ${lista.slice(0, 10).map((g, i) => `
-                    <tr>
-                        <td class="col-pos">${i + 1}</td>
-                        <td class="col-team" style="font-weight:600;">${g.nome}</td>
-                        <td style="color:var(--text-muted);font-size:0.85rem;">${g.squadra}</td>
-                        <td class="col-highlight" style="text-align:center;">${g.marcatori}</td>
-                    </tr>`).join('')}
-                </tbody>
-            </table>
-        </div>`;
-}
-
 function renderEdizioneCorrente() {
     const box = document.getElementById('edizione-corrente-box');
     const ed = getEdizioneCorrente();
@@ -96,7 +70,6 @@ function renderEdizioneCorrente() {
                     <span class="edizione-stat-value">${getCapocannonieri(ed).length ? capocannonieriHtml(ed, false).replace(/<\/?strong>/g, '') : '—'}</span>
                 </div>
             </div>
-            ${classificaMarcatoriHtml([...giocatoriStatsDB].filter(g => g.marcatori > 0).sort((a, b) => b.marcatori - a.marcatori))}
         </div>`;
 }
 
