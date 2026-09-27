@@ -101,6 +101,7 @@ function renderAlboOro() {
                 // ancora in corso, si punta alle pagine live del sito.
                 const squadreHref = ed.archivioId ? `squadre-archivio.html?ed=${ed.archivioId}` : (ed.corrente ? 'squadre.html' : null);
                 const calendarioHref = ed.archivioId ? `calendario-archivio.html?ed=${ed.archivioId}` : (ed.corrente ? 'calendario.html' : null);
+                const classificheHref = ed.archivioId ? `classifica-archivio.html?ed=${ed.archivioId}` : (ed.corrente ? 'classifica.html' : null);
 
                 return `
                 <div class="girone-card albo-oro-item">
@@ -118,6 +119,7 @@ function renderAlboOro() {
                         <div class="albo-oro-actions">
                             <a href="${squadreHref}" class="btn-roster">Squadre</a>
                             <a href="${calendarioHref}" class="btn-roster">Calendario</a>
+                            <a href="${classificheHref}" class="btn-roster">Classifiche</a>
                         </div>` : ''}
                 </div>`;
             }).join('')}

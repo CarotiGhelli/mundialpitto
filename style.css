@@ -322,20 +322,7 @@ nav {
 }
 
 /* STRUTTURA CALENDARIO */
-.calendario-layout {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2.5rem;
-    align-items: start;
-}
-@media (max-width: 1000px) {
-    .calendario-layout { grid-template-columns: 1fr; }
-}
-.calendario-container { max-width: 900px; margin: 0 auto; width: 100%; }
-.calendario-sidebar { min-width: 0; }
-@media (max-width: 1000px) {
-    .calendario-sidebar { max-width: 900px; margin: 0 auto; width: 100%; }
-}
+.calendario-container { max-width: 900px; margin: 0 auto; }
 .giornata-box { margin-bottom: 3rem; }
 .giornata-header {
     display: flex; justify-content: space-between; align-items: center;
