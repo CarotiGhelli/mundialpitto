@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     document.getElementById('ed-nome').textContent = ed.nome;
     document.title = `Classifiche ${ed.nome} - MundialPitto`;
+    document.getElementById('playoff-link').href = `playoff-archivio.html?ed=${ed.id}`;
     renderClassificheArchivio(ed);
     renderStatisticheArchivio(ed);
 });
