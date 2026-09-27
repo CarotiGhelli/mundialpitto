@@ -429,7 +429,24 @@ const archivioIdEdizioneCorrente = 'estate-2026';
 // Esempio: { anno: 2025, nome: 'Estate 2025', campione: 'Nome Squadra', finalista: 'Nome Squadra', terzo: 'Nome Squadra',
 //            capocannonieri: [{ nome: 'Nome Giocatore', squadra: 'Nome Squadra', gol: 5 }] (piu' voci se pari merito), squadrePartecipanti: 6,
 //            archivioId: 'estate-2025' }
-const storicoDB = [];
+// "ordine": solo se due edizioni hanno lo stesso "anno" (es. Pasqua ed Estate
+// dello stesso anno) — numero progressivo cronologico (1 = prima). Senza
+// "ordine" l'edizione conta come la piu' recente di quell'anno.
+// "archivioId" va aggiunto solo se esiste anche uno snapshot completo in
+// archivio.js (squadre/rose/calendario): senza, l'Albo d'Oro mostra solo il
+// riepilogo, senza i bottoni Squadre/Calendario.
+const storicoDB = [
+    {
+        anno: 2026,
+        nome: 'Pasqua 2026',
+        ordine: 1,
+        campione: 'ADLSR FC',
+        finalista: 'Bundesdini All-Stars',
+        terzo: 'Atletico Gaza',
+        capocannonieri: [{ nome: 'Emanuele Nannetti', squadra: 'Bundesdini All-Stars', gol: 6 }]
+        // Nessun archivioId: non abbiamo dati di squadre/calendario per questa edizione.
+    }
+];
 
 // Calcola l'esito (vincitore/perdente) di una partita, considerando anche i rigori
 function esitoPartita(p) {

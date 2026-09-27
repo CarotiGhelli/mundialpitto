@@ -79,7 +79,10 @@ function renderAlboOro() {
 
     const edizioni = [...storicoDB];
     if (edCorrente.conclusa) edizioni.push({ ...edCorrente, corrente: true });
-    edizioni.sort((a, b) => b.anno - a.anno);
+    // A parita' di anno, "ordine" decide quale viene prima cronologicamente
+    // (es. Pasqua prima di Estate). Senza "ordine" un'edizione conta come la
+    // piu' recente del suo anno.
+    edizioni.sort((a, b) => (b.anno - a.anno) || ((b.ordine ?? Infinity) - (a.ordine ?? Infinity)));
 
     if (edizioni.length === 0) {
         grid.innerHTML = `
