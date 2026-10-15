@@ -28,6 +28,8 @@ const squadreDB = [
         girone: "Girone Unico",
         colore: "#6b3fa0",
         coloreScuro: "#2e1a47",
+        allenatore: "Pietro Caroti Ghelli",
+        dirigente: "Giacomo Cunardi, Pietro Caroti Ghelli, Matteo Lo Giudice",
         giocatori: [
             { numero: 2,  nome: "Emanuele Nannetti" },
             { numero: 6,  nome: "Elias Meliani" },
