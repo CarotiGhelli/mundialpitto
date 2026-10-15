@@ -2,7 +2,7 @@ function renderClassifiche() {
     const container = document.querySelector('.gironi-container');
 
     let html = '';
-    ['A', 'B'].forEach(girone => {
+    Object.keys(classificheDB).forEach(girone => {
         const squadre = classificheDB[girone];
         html += `
         <div class="girone-card">

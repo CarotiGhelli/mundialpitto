@@ -1,163 +1,136 @@
-// Database centrale di squadre e giocatori - MUNDIAL PITTO 2024
+// Database centrale di squadre e giocatori - MUNDIAL PITTO Autunno 2026
 const squadreDB = [
     {
         id: 1,
         nome: "ADLSR FC",
         badge: "ADLSR",
         logo: "ADLSR.png",
-        girone: "Girone B",
+        girone: "Girone Unico",
         colore: "#00cc44",
         coloreScuro: "#008833",
         giocatori: [
-            { numero: 3,  nome: "Francesco Francese" },
             { numero: 7,  nome: "Emanuele Cavallini", capitano: true },
             { numero: 8,  nome: "Leonardo Lemmi" },
-            { numero: 10, nome: "Luigi Bartolozzi" },
+            { numero: 9,  nome: "Alessandro Riccardi" },
+            { numero: 14, nome: "Gabriele Massimo Catalano Belisario" },
             { numero: 20, nome: "Gianni Landi" },
-            { numero: 47, nome: "Alessandro Salvadori" },
+            { numero: 47, nome: "Alessandro Salvadori", portiere: true },
             { numero: 63, nome: "Mattia Aprile" },
             { numero: 67, nome: "Gianmarco Lelli" },
-            { numero: 77, nome: "Gabriele Lemmi" },
-            { numero: 9,  nome: "Alessandro Riccardi" },
-            { numero: 14, nome: "Gabriele Massimo Catalano Belisario" }
+            { numero: 77, nome: "Gabriele Lemmi" }
         ]
     },
     {
         id: 2,
-        nome: "Narcos",
-        badge: "NC",
-        logo: "Narcos.png",
-        girone: "Girone A",
-        colore: "#cc2200",
-        coloreScuro: "#882200",
+        nome: "Cripta",
+        badge: "CRIPTA",
+        logo: "Cripta.webp",
+        girone: "Girone Unico",
+        colore: "#6b3fa0",
+        coloreScuro: "#2e1a47",
         giocatori: [
-            { nome: "Rei Pilinci", capitano: true },
-            { nome: "Tommaso Carbonel" },
-            { nome: "Mohamed" },
-            { nome: "Gabriele Gentile" },
-            { nome: "Lorenzo Bertozzi" },
-            { nome: "Andrea Pengo" },
-            { nome: "Gregorio Cozy" }
+            { numero: 2,  nome: "Emanuele Nannetti" },
+            { numero: 6,  nome: "Elias Meliani" },
+            { numero: 9,  nome: "Francesko Vrapi" },
+            { numero: 11, nome: "André Bergamo" },
+            { numero: 13, nome: "Christian Del Nobile" }
         ]
     },
     {
         id: 3,
-        nome: "DA PIERINO PSG",
-        badge: "PSG",
-        logo: "Pierino.png",
-        girone: "Girone B",
-        colore: "#004488",
-        coloreScuro: "#002244",
+        nome: "Raccattati FC",
+        badge: "RACC",
+        logo: "Raccattati.jpg",
+        girone: "Girone Unico",
+        colore: "#c9a227",
+        coloreScuro: "#1a1a1a",
         giocatori: [
-            { nome: "Giorgio Giannetti", capitano: true },
-            { nome: "Francesco Marinai" },
-            { nome: "Stefan Piendibene" },
-            { nome: "Cristiano Mannucci" },
+            { nome: "Stefan Piendibene", capitano: true },
             { nome: "Matteo Casapieri" },
-            { nome: "Alessandro Petracchi" }
+            { nome: "Matteo Ferrini" },
+            { nome: "Alessandro Petracchi" },
+            { nome: "Edoardo Ribecai" },
+            { nome: "Gabriele Pagano" },
+            { nome: "Andrea Sorrentino" },
+            { nome: "Daniele Cicorelli" }
         ]
     },
     {
         id: 4,
-        nome: "Atletico Gaza",
-        badge: "AG",
-        logo: "Atletico_Gaza.png",
-        girone: "Girone B",
-        colore: "#1e3a8a",
-        coloreScuro: "#0f172a",
+        nome: "Here We Calcio",
+        badge: "HWC",
+        logo: "HereWeCalcio.jpg",
+        girone: "Girone Unico",
+        colore: "#e8c400",
+        coloreScuro: "#1a1a1a",
         giocatori: [
-            { nome: "Leonardo Castagnoli", capitano: true },
-            { nome: "Lorenzo Bacci" },
-            { nome: "Gregorio Paglini" },
-            { nome: "Francesco Ceccarelli" },
-            { nome: "Leonardo Manetti" },
-            { nome: "Diego Giannetti" }
+            { nome: "Leonardo Castagnoli" },
+            { nome: "Giorgio Giannetti Junior" },
+            { nome: "Lorenzo Libia" },
+            { nome: "Lorenzo One" },
+            { nome: "Kekko Marinai" },
+            { nome: "Pietro Asei" }
         ]
     },
     {
         id: 5,
-        nome: "Staff Poco Tecnico",
-        badge: "SPT",
-        logo: "Football_Livorno.png",
-        girone: "Girone A",
-        colore: "#cc1111",
-        coloreScuro: "#880000",
+        nome: "Pam FC",
+        badge: "PAM",
+        logo: "Pam.jpg",
+        girone: "Girone Unico",
+        colore: "#1a5c38",
+        coloreScuro: "#0d2e1c",
+        allenatore: "Lorenzo Stefanutti",
+        dirigente: "Manfredi Zecca, Daniele Marradi, Luca Musolino",
         giocatori: [
-            { nome: "Andrea Sorrentino" },
-            { nome: "Matteo Abrans" },
-            { nome: "Marzio Casaccio" },
-            { nome: "Lorenzo Baldi" },
-            { nome: "Samuele Norfini" },
-            { nome: "Simone Bernardi" },
-            { nome: "Elia Mannelli" },
-            { nome: "Alberto Dainelli" }
-        ]
-    },
-    {
-        id: 6,
-        nome: "Bundesdini All-Stars",
-        badge: "BUN",
-        logo: "Bundesdini.png",
-        girone: "Girone A",
-        colore: "#cc0000",
-        coloreScuro: "#880000",
-        allenatore: "Pietro Caroti Ghelli",
-        assistente: "Giacomo Cunardi",
-        dirigente: "Mattia Lo Giudice",
-        giocatori: [
-            { nome: "Emanuele Nannetti" },
-            { nome: "Elias Meliani" },
-            { nome: "Christian Del Nobile" },
-            { nome: "Francesko Vrapi" },
-            { nome: "Matteo Biagi" },
-            { nome: "Tommaso Albanesi" },
-            { nome: "Cesare Kevin Desi" },
-            { nome: "Xhovani Hokja" }
+            { nome: "Lorenzo Stefanutti" },
+            { nome: "Daniele Marradi" },
+            { nome: "Tommaso Marradi" },
+            { nome: "Diego Marradi" },
+            { nome: "Matteo Morelli" },
+            { nome: "Mattia Cirinei" },
+            { nome: "Gabriele Palumbo" },
+            { nome: "Francesco Fiori" },
+            { nome: "Nicola Endrizzi" },
+            { nome: "Andrea Claudio Panciatici" },
+            { nome: "Francesco Valentin Badiu" },
+            { nome: "Tancredi Vannucci" },
+            { nome: "Simone Capobianco" },
+            { nome: "Vittorio Orsetti" },
+            { nome: "Carlo Amaroni" },
+            { nome: "Tommaso Casamassima" },
+            { nome: "Niccolò Bechini" }
         ]
     }
 ];
 
-// Database partite - MUNDIAL PITTO 2026
-const partiteDB = [
-    // GIORNATA 1 - 29 giugno
-    { id: 1, giorno: 1, orario: "18:30-19:00", girone: "A", squadra1: "Narcos", squadra2: "Staff Poco Tecnico", risultato: null, marcatori: [] },
-    { id: 2, giorno: 1, orario: "19:00-19:30", girone: "B", squadra1: "Atletico Gaza", squadra2: "DA PIERINO PSG", risultato: null, marcatori: [] },
-    { id: 3, giorno: 1, orario: "19:30-20:00", girone: "A", squadra1: "Bundesdini All-Stars", squadra2: "Staff Poco Tecnico", risultato: null, marcatori: [] },
-    { id: 4, giorno: 1, orario: "20:00-20:30", girone: "B", squadra1: "ADLSR FC", squadra2: "DA PIERINO PSG", risultato: null, marcatori: [] },
-    { id: 5, giorno: 1, orario: "20:30-21:00", girone: "A", squadra1: "Narcos", squadra2: "Bundesdini All-Stars", risultato: null, marcatori: [] },
-    { id: 6, giorno: 1, orario: "21:00-21:30", girone: "B", squadra1: "ADLSR FC", squadra2: "Atletico Gaza", risultato: null, marcatori: [] },
-    // PLAYOFF - 30 giugno
-    { id: 101, giorno: 2, orario: '18:30', girone: 'PO', playoffRound: 'qf2', label: 'Quarti di Finale', squadra1: '2° Girone A', squadra2: '3° Girone B', risultato: null, marcatori: [] },
-    { id: 102, giorno: 2, orario: '19:00', girone: 'PO', playoffRound: 'qf1', label: 'Quarti di Finale', squadra1: '2° Girone B', squadra2: '3° Girone A', risultato: null, marcatori: [] },
-    { id: 103, giorno: 2, orario: '19:30', girone: 'PO', playoffRound: 'sf2', label: 'Semifinale',        squadra1: '1° Girone A', squadra2: 'Vin. QF1',    risultato: null, marcatori: [] },
-    { id: 104, giorno: 2, orario: '20:00', girone: 'PO', playoffRound: 'sf1', label: 'Semifinale',        squadra1: '1° Girone B', squadra2: 'Vin. QF2',    risultato: null, marcatori: [] },
-    { id: 105, giorno: 2, orario: '20:30', girone: 'PO', playoffRound: 'p56', label: '5° / 6° Posto',     squadra1: 'Perd. QF1',   squadra2: 'Perd. QF2',   risultato: null, marcatori: [] },
-    { id: 106, giorno: 2, orario: '21:00', girone: 'PO', playoffRound: 'p34', label: '3° / 4° Posto',     squadra1: 'Perd. SF1',   squadra2: 'Perd. SF2',   risultato: null, marcatori: [] },
-    { id: 107, giorno: 2, orario: '21:30', girone: 'PO', playoffRound: 'fin', label: 'Finale',             squadra1: 'Vin. SF1',    squadra2: 'Vin. SF2',    risultato: null, marcatori: [] }
-];
+// Database partite - MUNDIAL PITTO Autunno 2026
+// Calendario non ancora disponibile (sorteggio casuale, da definire). Le partite
+// verranno aggiunte qui non appena arrivano date/orari/accoppiamenti.
+const partiteDB = [];
 
 // Database centrale dei marcatori e assist
-const giocatoriStatsDB = [
-    { nome: "Francesco Francese", squadra: "ADLSR FC", marcatori: 0, assist: 0 },
-    { nome: "Emanuele Cavallini", squadra: "ADLSR FC", marcatori: 0, assist: 0 },
-    { nome: "Leonardo Lemmi", squadra: "ADLSR FC", marcatori: 0, assist: 0 }
-];
+const giocatoriStatsDB = [];
 
-// Database classifiche
+// Database classifiche: girone unico da 5 squadre (formato Autunno 2026).
+// classifica.js/admin.js leggono le chiavi dinamicamente (Object.keys), quindi
+// il nome della chiave ("UNICO") puo' essere cambiato liberamente in futuro.
 const classificheDB = {
-    'A': [
-        { posizione: 1, squadra: 'Narcos', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
-        { posizione: 2, squadra: 'Bundesdini All-Stars', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
-        { posizione: 3, squadra: 'Staff Poco Tecnico', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 }
-    ],
-    'B': [
+    'UNICO': [
         { posizione: 1, squadra: 'ADLSR FC', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
-        { posizione: 2, squadra: 'Atletico Gaza', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
-        { posizione: 3, squadra: 'DA PIERINO PSG', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 }
+        { posizione: 2, squadra: 'Cripta', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
+        { posizione: 3, squadra: 'Raccattati FC', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
+        { posizione: 4, squadra: 'Here We Calcio', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 },
+        { posizione: 5, squadra: 'Pam FC', punti: 0, giocate: 0, vinte: 0, pareggiate: 0, perse: 0, gf: 0, gs: 0 }
     ]
 };
 
-// Popola le squadre nelle partite playoff in base a classifiche e risultati precedenti
+// Popola le squadre nelle partite playoff in base a classifiche e risultati precedenti.
+// NOTA Autunno 2026: scritta per il vecchio formato (2 gironi A/B + QF/SF/Finale).
+// Il nuovo formato (girone unico + triangolare retrocessione + semifinali) e'
+// diverso: finche' partiteDB non ha voci playoffRound per il nuovo tabellone,
+// questa funzione non trova nulla da popolare e non fa niente (safe no-op).
+// Da riscrivere quando sara' definito l'esatto tabellone della domenica.
 function applyPlayoffTeams() {
     function tp(girone, pos) {
         const arr = classificheDB[girone] || [];
@@ -215,12 +188,13 @@ firebase.initializeApp(firebaseConfig);
 const firebaseDB = firebase.database();
 
 // Percorso Firebase dei dati dell'edizione corrente. Per una nuova edizione
-// cambiare SOLO questo valore, es. 'mundialPitto/edizioni/inverno-2026': i
+// cambiare SOLO questo valore, es. 'mundialPitto/edizioni/inverno-2027': i
 // risultati della nuova edizione finiscono in un ramo separato e quelli vecchi
 // restano intatti. Deve stare DENTRO 'mundialPitto': le regole del database
 // negano l'accesso ad altri rami (verificato: 'edizioni/...' -> permission_denied).
-// 'mundialPitto' = edizione Estate 2026 (dati originali, mai spostati).
-const FIREBASE_PATH = 'mundialPitto';
+// 'mundialPitto' (radice) = edizione Estate 2026, congelata in archivio.js: non
+// toccare quel ramo, resta il record storico di quell'edizione.
+const FIREBASE_PATH = 'mundialPitto/edizioni/autunno-2026';
 
 // Promise globale che si risolve quando Firebase ha caricato i dati
 let _firebaseReadyResolve;
@@ -417,11 +391,12 @@ function getScorerText(partita, squadra, side) {
 
 // Anno e nome dell'edizione attualmente in corso
 const annoCorrente = 2026;
-const nomeEdizioneCorrente = 'Estate 2026';
+const nomeEdizioneCorrente = 'Autunno 2026';
 
 // Id dell'edizione corrente dentro archivioEdizioniDB (vedi archivio.js), se già
 // stata congelata in archivio. Va aggiornato quando si prepara una nuova edizione.
-const archivioIdEdizioneCorrente = 'estate-2026';
+// Vuoto finche' questa edizione non e' conclusa e congelata.
+const archivioIdEdizioneCorrente = '';
 
 // Albo d'oro: un oggetto per ogni edizione CONCLUSA in anni precedenti.
 // Quando un'edizione finisce, aggiungere qui uno snapshot e azzerare/aggiornare
@@ -445,6 +420,20 @@ const storicoDB = [
         terzo: 'Atletico Gaza',
         capocannonieri: [{ nome: 'Emanuele Nannetti', squadra: 'Bundesdini All-Stars', gol: 6 }]
         // Nessun archivioId: non abbiamo dati di squadre/calendario per questa edizione.
+    },
+    {
+        anno: 2026,
+        nome: 'Estate 2026',
+        ordine: 2,
+        campione: 'DA PIERINO PSG',
+        finalista: 'ADLSR FC',
+        terzo: 'Staff Poco Tecnico',
+        capocannonieri: [
+            { nome: 'Matteo Abrans', squadra: 'Staff Poco Tecnico', gol: 10 },
+            { nome: 'Matteo Casapieri', squadra: 'DA PIERINO PSG', gol: 10 }
+        ],
+        squadrePartecipanti: 6,
+        archivioId: 'estate-2026'
     }
 ];
 

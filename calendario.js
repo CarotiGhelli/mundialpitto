@@ -1,17 +1,29 @@
 // Renderizza il calendario con le partite dal database
 function renderCalendario() {
+    const calendarContainer = document.querySelector('.calendario-container');
+
+    if (partiteDB.length === 0) {
+        calendarContainer.innerHTML = `
+            <div class="no-results-msg">
+                <p class="no-results-icon">&#128197;</p>
+                <p class="no-results-title">Calendario non ancora disponibile</p>
+                <p class="no-results-sub">Le partite di questa edizione verranno pubblicate a breve.</p>
+            </div>`;
+        return;
+    }
+
     const giornate = {};
     partiteDB.filter(p => !p.playoffRound).forEach(partita => {
         if (!giornate[partita.giorno]) giornate[partita.giorno] = [];
         giornate[partita.giorno].push(partita);
     });
 
-    const calendarContainer = document.querySelector('.calendario-container');
     let html = '';
 
     Object.keys(giornate).sort().forEach(giorno => {
         const partite = giornate[giorno];
-        const data = giorno == 1 ? '29 Giugno 2026' : '30 Giugno 2026';
+        // TODO: aggiornare con le date reali del weekend di Autunno 2026 non appena note.
+        const data = giorno == 1 ? 'Sabato' : 'Domenica';
 
         html += `<div class="giornata-box">
             <div class="giornata-header">
@@ -20,7 +32,7 @@ function renderCalendario() {
             </div>`;
 
         partite.forEach(partita => {
-            const gironeLabel = partita.girone === 'A' ? 'Girone A' : 'Girone B';
+            const gironeLabel = partita.girone === 'PO' ? (partita.label || 'Playoff') : `Girone ${partita.girone}`;
             const badge1 = getSquadraLogo(partita.squadra1);
             const badge2 = getSquadraLogo(partita.squadra2);
             const risultato = partita.risultato || '- - -';
@@ -73,8 +85,10 @@ function getSquadraLogo(nomeSquadra) {
 }
 
 function renderCalendarioPlayoff() {
-    const calendarContainer = document.querySelector('.calendario-container');
     const playoff = partiteDB.filter(p => p.playoffRound).sort((a, b) => a.id - b.id);
+    if (playoff.length === 0) return;
+
+    const calendarContainer = document.querySelector('.calendario-container');
 
     let html = `
         <div class="giornata-box">

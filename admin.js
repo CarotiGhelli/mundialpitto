@@ -208,7 +208,7 @@ function deleteCurrentResult() {
 }
 
 function recomputeAllClassifications() {
-    ['A', 'B'].forEach(girone => {
+    Object.keys(classificheDB).forEach(girone => {
         classificheDB[girone].forEach(s => {
             s.punti = 0; s.giocate = 0; s.vinte = 0; s.pareggiate = 0; s.perse = 0; s.gf = 0; s.gs = 0;
         });
@@ -228,7 +228,7 @@ function recomputeAllClassifications() {
         else if (g1 < g2) { sq2.vinte++; sq1.perse++; sq2.punti += 3; }
         else { sq1.pareggiate++; sq2.pareggiate++; sq1.punti++; sq2.punti++; }
     });
-    ['A', 'B'].forEach(girone => {
+    Object.keys(classificheDB).forEach(girone => {
         classificheDB[girone].sort((a, b) => b.punti !== a.punti ? b.punti - a.punti : (b.gf - b.gs) - (a.gf - a.gs));
         classificheDB[girone].forEach((s, i) => s.posizione = i + 1);
     });
