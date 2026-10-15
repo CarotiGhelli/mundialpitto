@@ -107,9 +107,34 @@ const squadreDB = [
 ];
 
 // Database partite - MUNDIAL PITTO Autunno 2026
-// Calendario non ancora disponibile (sorteggio casuale, da definire). Le partite
-// verranno aggiunte qui non appena arrivano date/orari/accoppiamenti.
-const partiteDB = [];
+// ATTENZIONE: abbinamenti del girone scelti a caso (ciclo: ogni squadra gioca le
+// 2 "vicine" nell'elenco squadreDB) in attesa del sorteggio reale dell'organizzazione.
+// Anche gli ORARI sono stimati dalle durate del regolamento, non confermati.
+// Quando arrivano gli abbinamenti/orari veri, aggiornare qui (girone) e in
+// Play In/Semifinali/Finale solo orario+label restano uguali, le squadre si
+// ricompilano da sole (vedi applyPlayoffTeams).
+const partiteDB = [
+    // GIRONE UNICO - Sabato (giorno 1), ogni squadra gioca 2 partite
+    { id: 1, giorno: 1, orario: "18:30", girone: "UNICO", squadra1: "ADLSR FC", squadra2: "Cripta", risultato: null, marcatori: [] },
+    { id: 2, giorno: 1, orario: "19:10", girone: "UNICO", squadra1: "Cripta", squadra2: "Raccattati FC", risultato: null, marcatori: [] },
+    { id: 3, giorno: 1, orario: "19:50", girone: "UNICO", squadra1: "Raccattati FC", squadra2: "Here We Calcio", risultato: null, marcatori: [] },
+    { id: 4, giorno: 1, orario: "20:30", girone: "UNICO", squadra1: "Here We Calcio", squadra2: "Pam FC", risultato: null, marcatori: [] },
+    { id: 5, giorno: 1, orario: "21:10", girone: "UNICO", squadra1: "Pam FC", squadra2: "ADLSR FC", risultato: null, marcatori: [] },
+
+    // PLAY IN (triangolare 3a/4a/5a del girone) - Domenica (giorno 2)
+    // Le squadre si compilano da sole appena il girone e' concluso (5/5 risultati).
+    { id: 101, giorno: 2, orario: "17:30", girone: "PO", playoffRound: "pi1", label: "Play In", squadra1: "3° Girone", squadra2: "4° Girone", risultato: null, marcatori: [] },
+    { id: 102, giorno: 2, orario: "18:10", girone: "PO", playoffRound: "pi2", label: "Play In", squadra1: "4° Girone", squadra2: "5° Girone", risultato: null, marcatori: [] },
+    { id: 103, giorno: 2, orario: "18:50", girone: "PO", playoffRound: "pi3", label: "Play In", squadra1: "3° Girone", squadra2: "5° Girone", risultato: null, marcatori: [] },
+
+    // SEMIFINALI - le squadre si compilano da sole appena il Play In e' concluso (3/3 risultati)
+    { id: 104, giorno: 2, orario: "19:40", girone: "PO", playoffRound: "sf1", label: "Semifinale", squadra1: "1° Play In", squadra2: "2° Girone", risultato: null, marcatori: [] },
+    { id: 105, giorno: 2, orario: "20:20", girone: "PO", playoffRound: "sf2", label: "Semifinale", squadra1: "2° Play In", squadra2: "1° Girone", risultato: null, marcatori: [] },
+
+    // 3°/4° posto e FINALE - si compilano da sole a semifinali concluse
+    { id: 106, giorno: 2, orario: "21:00", girone: "PO", playoffRound: "p34", label: "3° / 4° Posto", squadra1: "Perd. SF1", squadra2: "Perd. SF2", risultato: null, marcatori: [] },
+    { id: 107, giorno: 2, orario: "21:40", girone: "PO", playoffRound: "fin", label: "Finale", squadra1: "Vin. SF1", squadra2: "Vin. SF2", risultato: null, marcatori: [] }
+];
 
 // Database centrale dei marcatori e assist
 const giocatoriStatsDB = [];
@@ -127,36 +152,50 @@ const classificheDB = {
     ]
 };
 
-// Popola le squadre nelle partite playoff in base a classifiche e risultati precedenti.
-// NOTA Autunno 2026: scritta per il vecchio formato (2 gironi A/B + QF/SF/Finale).
-// Il nuovo formato (girone unico + triangolare retrocessione + semifinali) e'
-// diverso: finche' partiteDB non ha voci playoffRound per il nuovo tabellone,
-// questa funzione non trova nulla da popolare e non fa niente (safe no-op).
-// Da riscrivere quando sara' definito l'esatto tabellone della domenica.
+// Calcola l'esito (vincitore/perdente) di una partita playoff, rigori inclusi
+function esitoPlayoff(round) {
+    const p = partiteDB.find(x => x.playoffRound === round);
+    if (!p || !p.risultato) return { vincitore: null, perdente: null };
+    const [g1, g2] = p.risultato.split(' - ').map(Number);
+    if (g1 > g2) return { vincitore: p.squadra1, perdente: p.squadra2 };
+    if (g2 > g1) return { vincitore: p.squadra2, perdente: p.squadra1 };
+    if (!p.rigori) return { vincitore: null, perdente: null };
+    const [r1, r2] = p.rigori.split(' - ').map(Number);
+    if (r1 > r2) return { vincitore: p.squadra1, perdente: p.squadra2 };
+    if (r2 > r1) return { vincitore: p.squadra2, perdente: p.squadra1 };
+    return { vincitore: null, perdente: null };
+}
+
+// Mini-classifica del Play In (triangolare 3a/4a/5a del girone): null finche'
+// non sono state giocate tutte e 3 le partite pi1/pi2/pi3. Stesse regole punti
+// (3/1/0) e differenza reti della classifica del girone.
+function getClassificaPlayIn() {
+    const partite = ['pi1', 'pi2', 'pi3'].map(r => partiteDB.find(p => p.playoffRound === r)).filter(Boolean);
+    if (partite.length < 3 || !partite.every(p => p.risultato)) return null;
+
+    const nomi = [...new Set(partite.flatMap(p => [p.squadra1, p.squadra2]))];
+    const tab = {};
+    nomi.forEach(n => { tab[n] = { squadra: n, punti: 0, gf: 0, gs: 0 }; });
+    partite.forEach(p => {
+        const [g1, g2] = p.risultato.split(' - ').map(Number);
+        tab[p.squadra1].gf += g1; tab[p.squadra1].gs += g2;
+        tab[p.squadra2].gf += g2; tab[p.squadra2].gs += g1;
+        if (g1 > g2) tab[p.squadra1].punti += 3;
+        else if (g2 > g1) tab[p.squadra2].punti += 3;
+        else { tab[p.squadra1].punti++; tab[p.squadra2].punti++; }
+    });
+    return Object.values(tab).sort((a, b) =>
+        b.punti !== a.punti ? b.punti - a.punti : (b.gf - b.gs) - (a.gf - a.gs));
+}
+
+// Popola automaticamente Play In, Semifinali, Finale e 3°/4° posto non appena le
+// partite da cui dipendono sono state giocate. Formato Autunno 2026 (5 squadre):
+// Girone Unico -> Play In/triangolare (3a/4a/5a del girone) -> Semifinali
+// (1a Play In vs 2a Girone, 2a Play In vs 1a Girone) -> Finale + 3°/4° posto.
 function applyPlayoffTeams() {
-    function tp(girone, pos) {
-        const arr = classificheDB[girone] || [];
+    function posizioneGirone(pos) {
+        const arr = classificheDB['UNICO'] || [];
         return [...arr].sort((a, b) => a.posizione - b.posizione)[pos - 1]?.squadra || null;
-    }
-    function getWinner(round) {
-        const p = partiteDB.find(x => x.playoffRound === round);
-        if (!p || !p.risultato) return null;
-        const [g1, g2] = p.risultato.split(' - ').map(Number);
-        if (g1 > g2) return p.squadra1;
-        if (g2 > g1) return p.squadra2;
-        if (!p.rigori) return null;
-        const [r1, r2] = p.rigori.split(' - ').map(Number);
-        return r1 > r2 ? p.squadra1 : r2 > r1 ? p.squadra2 : null;
-    }
-    function getLoser(round) {
-        const p = partiteDB.find(x => x.playoffRound === round);
-        if (!p || !p.risultato) return null;
-        const [g1, g2] = p.risultato.split(' - ').map(Number);
-        if (g1 > g2) return p.squadra2;
-        if (g2 > g1) return p.squadra1;
-        if (!p.rigori) return null;
-        const [r1, r2] = p.rigori.split(' - ').map(Number);
-        return r1 > r2 ? p.squadra2 : r2 > r1 ? p.squadra1 : null;
     }
     function set(round, t1, t2) {
         const p = partiteDB.find(x => x.playoffRound === round);
@@ -164,16 +203,28 @@ function applyPlayoffTeams() {
         if (t1) p.squadra1 = t1;
         if (t2) p.squadra2 = t2;
     }
-    // QF: team da classifica gironi
-    set('qf2', tp('A', 2), tp('B', 3));
-    set('qf1', tp('B', 2), tp('A', 3));
-    // SF: 1° girone + vincitore QF
-    set('sf1', tp('B', 1), getWinner('qf2'));
-    set('sf2', tp('A', 1), getWinner('qf1'));
-    // Piazzamenti e finale
-    set('p56', getLoser('qf1'), getLoser('qf2'));
-    set('p34', getLoser('sf1'), getLoser('sf2'));
-    set('fin', getWinner('sf1'), getWinner('sf2'));
+
+    // 1) Girone concluso (tutte le partite del girone hanno un risultato) -> Play In
+    const girone = partiteDB.filter(p => p.girone === 'UNICO');
+    const gironeConcluso = girone.length > 0 && girone.every(p => p.risultato);
+    if (gironeConcluso) {
+        set('pi1', posizioneGirone(3), posizioneGirone(4));
+        set('pi2', posizioneGirone(4), posizioneGirone(5));
+        set('pi3', posizioneGirone(3), posizioneGirone(5));
+    }
+
+    // 2) Play In concluso -> Semifinali
+    const classificaPlayIn = getClassificaPlayIn();
+    if (classificaPlayIn) {
+        set('sf1', classificaPlayIn[0]?.squadra, posizioneGirone(2));
+        set('sf2', classificaPlayIn[1]?.squadra, posizioneGirone(1));
+    }
+
+    // 3) Semifinali concluse -> Finale e 3°/4° posto
+    const esSf1 = esitoPlayoff('sf1');
+    const esSf2 = esitoPlayoff('sf2');
+    set('p34', esSf1.perdente, esSf2.perdente);
+    set('fin', esSf1.vincitore, esSf2.vincitore);
 }
 
 // --- FIREBASE ---

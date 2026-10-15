@@ -94,7 +94,7 @@ function renderCalendarioPlayoff() {
         <div class="giornata-box">
             <div class="giornata-header">
                 <h2>FASE PLAYOFF</h2>
-                <span class="riposo-tag">30 Giugno 2026</span>
+                <span class="riposo-tag">Domenica</span>
             </div>`;
 
     playoff.forEach(partita => {

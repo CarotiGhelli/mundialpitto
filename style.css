@@ -1844,3 +1844,114 @@ body.mp-loading::before {
     color: var(--text-main);
     margin: 0;
 }
+
+
+/* CLASSIFICA - evidenzia le squadre che vanno al Play In (triangolare) */
+.classifica-table tr.row-playin {
+    background: rgba(201, 154, 46, 0.1);
+}
+.classifica-table tr.row-playin .col-pos {
+    color: var(--senape-dark, var(--neon-green));
+}
+.playin-legend {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+.playin-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: rgba(201, 154, 46, 0.5);
+    flex-shrink: 0;
+}
+
+
+/* PAGINA PLAYOFF - formato Autunno 2026 (Girone -> Play In -> Semifinali -> Finale) */
+.playoff-intro {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0.5rem 0 1.5rem;
+    max-width: 700px;
+}
+
+.playin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.placement-grid-single {
+    grid-template-columns: minmax(260px, 420px);
+    justify-content: center;
+}
+
+.playin-classifica-card {
+    margin-top: 1.5rem;
+    max-width: 480px;
+}
+
+.playin-classifica-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 1rem;
+    margin: 0 0 1rem 0;
+    color: var(--text-main);
+}
+
+.classifica-table tr.row-playin-qualificata .col-pos {
+    color: var(--accent, var(--neon-green));
+}
+
+.playin-dot-up { background: var(--accent, var(--neon-green)); }
+
+/* FINALE - resa piu' grande e visibile delle altre partite */
+.finale-section-label {
+    text-align: center;
+    border-bottom: none !important;
+    background-image: none !important;
+    font-size: 1.6rem;
+    color: var(--accent, var(--neon-green));
+}
+
+.finale-showcase {
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.finale-showcase .finale-block {
+    border: 3px solid var(--accent, var(--neon-green));
+    border-radius: 16px;
+    padding: 0.5rem 0;
+}
+
+.finale-showcase .bracket-team {
+    font-size: 1.15rem;
+}
+
+.finale-showcase .bracket-goals {
+    font-size: 1.4rem;
+}
+
+.finale-showcase .bracket-seed {
+    font-size: 0.75rem;
+}
+
+.winner-trophy-grande {
+    margin-top: 1.5rem;
+    padding: 2rem;
+}
+
+.winner-trophy-grande .trophy-icon { font-size: 3rem; }
+.winner-trophy-grande .trophy-label { font-size: 0.85rem; letter-spacing: 3px; }
+.winner-trophy-grande .trophy-name { font-size: 1.8rem; }
+
+@media (max-width: 768px) {
+    .playin-grid { grid-template-columns: 1fr; }
+    .placement-grid-single { grid-template-columns: 1fr; }
+    .finale-showcase .bracket-team { font-size: 1rem; }
+    .finale-showcase .bracket-goals { font-size: 1.15rem; }
+    .winner-trophy-grande .trophy-name { font-size: 1.4rem; }
+}

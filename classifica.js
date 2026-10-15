@@ -4,6 +4,8 @@ function renderClassifiche() {
     let html = '';
     Object.keys(classificheDB).forEach(girone => {
         const squadre = classificheDB[girone];
+        // Le ultime 3 posizioni vanno al Play In (triangolare) di domenica
+        const sogliaPlayIn = squadre.length - 3;
         html += `
         <div class="girone-card">
             <h2 class="girone-title">GIRONE ${girone}</h2>
@@ -23,7 +25,7 @@ function renderClassifiche() {
                 </thead>
                 <tbody>
                     ${squadre.map((sq, i) => `
-                    <tr>
+                    <tr class="${i >= sogliaPlayIn ? 'row-playin' : ''}">
                         <td class="col-pos">${sq.posizione}</td>
                         <td class="col-team">
                             <div style="display:flex;align-items:center;gap:0.6rem;">
@@ -41,6 +43,7 @@ function renderClassifiche() {
                     </tr>`).join('')}
                 </tbody>
             </table>
+            ${sogliaPlayIn > 0 ? '<p class="playin-legend"><span class="playin-dot"></span>Vanno al Play In (triangolare) di domenica</p>' : ''}
         </div>`;
     });
     container.innerHTML = html;
