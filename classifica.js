@@ -1,5 +1,5 @@
 function renderClassifiche() {
-    const container = document.querySelector('.gironi-container');
+    const container = document.querySelector('.gironi-list');
 
     let html = '';
     Object.keys(classificheDB).forEach(girone => {
