@@ -241,6 +241,10 @@ function populateMvpSelect(partita) {
 }
 
 // ===== SALVATAGGIO RISULTATO =====
+function playSaveSound() {
+    new Audio('save-sound.mp3').play().catch(() => {});
+}
+
 function saveAll() {
     if (!currentMatchId) { showError('Seleziona una partita'); return; }
     const partita = partiteDB.find(p => p.id === currentMatchId);
@@ -277,6 +281,7 @@ function saveAll() {
     applyPlayoffTeams();
     recomputeGiocatoriStats();
     saveDataToFirebase();
+    playSaveSound();
 
     showSuccess(`Salvato: ${partita.squadra1} ${g1}-${g2} ${partita.squadra2}`);
 

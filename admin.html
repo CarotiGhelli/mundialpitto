@@ -6,7 +6,6 @@
     <title>Admin - MundialPitto</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Anton&family=Montserrat:ital,wght@0,800;0,900;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" id="main-style">
-    <script>if(localStorage.getItem('mpTheme')==='old'){document.getElementById('main-style').setAttribute('href','style-old.css');}</script>
     <style>
         .admin-container {
             max-width: 1200px;
@@ -476,9 +475,6 @@
         <div class="nav-links">
             <a href="index.html">&#8592; Torna al Sito</a>
         </div>
-        <div class="nav-spacer">
-            <button id="theme-toggle-btn" class="btn-roster theme-toggle-btn" onclick="mpToggleTheme()" type="button">Stile precedente</button>
-        </div>
     </nav>
 
     <div class="admin-container">
@@ -623,7 +619,5 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script src="script.js"></script>
     <script src="admin.js"></script>
-
-    <script src="theme-toggle.js"></script>
 </body>
 </html>

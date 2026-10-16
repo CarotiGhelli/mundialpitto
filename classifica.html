@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -21,7 +21,6 @@
     <title>Classifiche - MundialPitto</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Anton&family=Montserrat:ital,wght@0,800;0,900;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" id="main-style">
-    <script>if(localStorage.getItem('mpTheme')==='old'){document.getElementById('main-style').setAttribute('href','style-old.css');}</script>
 </head>
 <body>
 
@@ -34,9 +33,6 @@
             <a href="classifica.html" class="active">Classifiche</a>
             <a href="storico.html">Albo d'Oro</a>
             <a href="regolamento.html">Regolamento</a>
-        </div>
-        <div class="nav-spacer">
-            <button id="theme-toggle-btn" class="btn-roster theme-toggle-btn" onclick="mpToggleTheme()" type="button">Stile precedente</button>
         </div>
     </nav>
 
@@ -64,7 +60,5 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script src="script.js"></script>
     <script src="classifica.js"></script>
-
-    <script src="theme-toggle.js"></script>
 </body>
 </html>
