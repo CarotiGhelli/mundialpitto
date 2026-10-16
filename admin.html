@@ -284,6 +284,10 @@
             .result-team { flex-direction: row; justify-content: center; width: 100%; }
             .result-team img, .result-team .team-badge { width: 42px; height: 42px; }
             .score-sep { display: none; }
+            /* Il contatore gol sta sempre a destra del nome, su entrambe le righe */
+            .result-team-row { justify-content: flex-start; }
+            #rh-name2 { order: 1; }
+            #goals-team2 { order: 2; }
         }
 
         /* ===== LISTE EVENTI (marcatori/cartellini) ===== */
