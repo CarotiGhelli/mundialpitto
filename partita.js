@@ -11,15 +11,15 @@ function renderTeamList(container, partita, squadra, nomeSquadra) {
     const rows = squadra.giocatori.map((g, i) => {
         const stats = getPlayerMatchStats(partita, g.nome);
         const isMvp = partita.mvp && partita.mvp === g.nome;
+        const cartellino = (partita.cartellini || []).find(c => c.nome === g.nome);
         const label = (g.numero ? g.numero + '. ' : '') + g.nome + (g.capitano ? ' (C)' : '');
         const mvpTag = isMvp ? ' <span class="player-mvp-tag">&#11088;</span>' : '';
-        const gol = stats && stats.gol   > 0 ? stats.gol   + '&#9917;'      : '';
-        const ast = stats && stats.assist > 0 ? stats.assist + '&#x1F45F;'   : '';
+        const cardTag = cartellino ? ` <span class="player-card-tag">${cartellino.tipo === 'rosso' ? '&#128308;' : '&#128992;'}</span>` : '';
+        const gol = stats && stats.gol > 0 ? stats.gol + '&#9917;' : '';
         const sep = i > 0 ? '<div class="player-sep"></div>' : '';
         return `${sep}<div class="player-row">
-            <span class="pr-name">${label}${mvpTag}</span>
+            <span class="pr-name">${label}${mvpTag}${cardTag}</span>
             <span class="pr-g">${gol}</span>
-            <span class="pr-a">${ast}</span>
         </div>`;
     }).join('');
     container.innerHTML = `<h3>${nomeSquadra}</h3><div class="players-table">${rows}</div>`;

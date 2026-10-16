@@ -61,6 +61,7 @@ function renderCalendario() {
                         <div class="scorers-col right">${getScorerText(partita, partita.squadra2, 'right')}</div>
                     </div>
                     ${partita.mvp ? `<div class="mvp-card-row">&#11088; MVP: ${partita.mvp}</div>` : ''}
+                    ${getCartelliniText(partita) ? `<div class="cards-row">${getCartelliniText(partita)}</div>` : ''}
                 </a>`;
         });
 
@@ -128,6 +129,7 @@ function renderCalendarioPlayoff() {
                     <div class="scorers-col right">${getScorerText(partita, partita.squadra2, 'right')}</div>
                 </div>
                 ${partita.mvp ? `<div class="mvp-card-row">&#11088; MVP: ${partita.mvp}</div>` : ''}
+                ${getCartelliniText(partita) ? `<div class="cards-row">${getCartelliniText(partita)}</div>` : ''}
             </a>`;
     });
 

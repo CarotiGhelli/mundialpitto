@@ -180,8 +180,8 @@ nav.nav-centered .nav-links {
     font-size: 0.82rem;
     color: var(--text-muted);
 }
-.scorers-col { flex: 1; min-width: 0; display: grid; grid-template-columns: max-content max-content 1fr; column-gap: 0.3rem; align-items: baseline; }
-.scorers-col.right { grid-template-columns: 1fr max-content max-content; }
+.scorers-col { flex: 1; min-width: 0; display: grid; grid-template-columns: max-content 1fr; column-gap: 0.3rem; align-items: baseline; }
+.scorers-col.right { grid-template-columns: 1fr max-content; }
 .scorer-g, .scorer-a { white-space: nowrap; text-align: right; }
 .scorers-col.right .scorer-name { text-align: right; }
 .no-scorer { opacity: 0.35; grid-column: 1 / -1; }
@@ -538,20 +538,20 @@ nav.nav-centered .nav-links {
 
 .players-table {
     display: grid;
-    grid-template-columns: 1fr max-content max-content;
+    grid-template-columns: 1fr max-content;
     column-gap: 0.5rem;
 }
 .player-row { display: contents; }
-.pr-name, .pr-g, .pr-a {
+.pr-name, .pr-g {
     padding: 0.8rem 0;
     align-self: center;
     font-size: 0.95rem;
 }
 .pr-name { font-weight: 600; }
-.pr-g, .pr-a { white-space: nowrap; text-align: right; font-size: 0.82rem; color: var(--neon-green); font-weight: 700; }
+.pr-g { white-space: nowrap; text-align: right; font-size: 0.82rem; color: var(--neon-green); font-weight: 700; }
 .player-sep { grid-column: 1 / -1; height: 1px; background: var(--border-glass); }
 
-.player-mvp-tag { font-size: 0.88rem; margin-left: 0.25rem; }
+.player-mvp-tag, .player-card-tag { font-size: 0.88rem; margin-left: 0.25rem; }
 
 /* MVP box in partita.html */
 .mvp-box {
@@ -585,6 +585,37 @@ nav.nav-centered .nav-links {
     margin-top: 0.5rem;
     padding-top: 0.5rem;
     border-top: 1px solid rgba(255,215,0,0.25);
+}
+
+/* Riga cartellini nelle card partita */
+.cards-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255,215,0,0.25);
+}
+
+.card-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 20px;
+}
+
+.card-chip-giallo {
+    background: rgba(255, 215, 0, 0.15);
+    color: #ffd700;
+}
+
+.card-chip-rosso {
+    background: rgba(255, 60, 60, 0.18);
+    color: #ff6b6b;
 }
 
 /* Mini pitch for admin formation editor */

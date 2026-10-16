@@ -64,14 +64,10 @@ function renderStatistiche() {
     const statsContainer = document.querySelector('.stats-container');
     if (!statsContainer) return;
 
-    // Ordina marcatori e assist
+    // Ordina marcatori
     const marcatori = [...giocatoriStatsDB]
         .filter(g => g.marcatori > 0)
         .sort((a, b) => b.marcatori - a.marcatori);
-
-    const assist = [...giocatoriStatsDB]
-        .filter(g => g.assist > 0)
-        .sort((a, b) => b.assist - a.assist);
 
     const emptyMsg = '<p style="color:var(--text-muted);text-align:center;padding:1rem;">Nessun dato ancora</p>';
 

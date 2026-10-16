@@ -262,22 +262,24 @@ function _applyFirebaseData(data) {
                 p.marcatori = saved.marcatori
                     ? (Array.isArray(saved.marcatori) ? saved.marcatori : Object.values(saved.marcatori))
                     : [];
+                p.cartellini = saved.cartellini
+                    ? (Array.isArray(saved.cartellini) ? saved.cartellini : Object.values(saved.cartellini))
+                    : [];
                 p.mvp = saved.mvp || null;
                 p.rigori = saved.rigori || null;
             }
         });
     }
     if (data.giocatoriStats) {
-        giocatoriStatsDB.forEach(g => { g.marcatori = 0; g.assist = 0; });
+        giocatoriStatsDB.forEach(g => { g.marcatori = 0; });
         const stats = Array.isArray(data.giocatoriStats)
             ? data.giocatoriStats : Object.values(data.giocatoriStats);
         stats.forEach(saved => {
             const g = giocatoriStatsDB.find(x => x.nome === saved.nome);
             if (g) {
                 g.marcatori = saved.marcatori || 0;
-                g.assist = saved.assist || 0;
             } else {
-                giocatoriStatsDB.push({ nome: saved.nome, squadra: saved.squadra, marcatori: saved.marcatori || 0, assist: saved.assist || 0 });
+                giocatoriStatsDB.push({ nome: saved.nome, squadra: saved.squadra, marcatori: saved.marcatori || 0 });
             }
         });
     }
@@ -286,6 +288,19 @@ function _applyFirebaseData(data) {
             const arr = data.classifiche[girone];
             classificheDB[girone] = (Array.isArray(arr) ? arr : Object.values(arr))
                 .map(s => ({ ...s, squadra: s.squadra === 'ADLSR' ? 'ADLSR FC' : s.squadra }));
+        });
+    }
+    // Giocatori aggiunti a rosa dopo l'iscrizione iniziale (via admin), salvati
+    // separatamente per non duplicare l'intera rosa hardcoded in squadreDB.
+    if (data.rosterExtra) {
+        Object.keys(data.rosterExtra).forEach(squadraId => {
+            const sq = squadreDB.find(s => s.id === parseInt(squadraId, 10));
+            if (!sq) return;
+            const extraRaw = data.rosterExtra[squadraId];
+            const extra = Array.isArray(extraRaw) ? extraRaw : Object.values(extraRaw);
+            extra.forEach(g => {
+                if (g && g.nome && !sq.giocatori.some(x => x.nome === g.nome)) sq.giocatori.push(g);
+            });
         });
     }
     // Migra vecchio nome nei marcatori
@@ -372,18 +387,33 @@ function mpEnableLive(onUpdate) {
 function saveDataToFirebase() {
     const partiteDaSalvare = {};
     partiteDB.forEach(p => {
-        partiteDaSalvare[p.id] = { risultato: p.risultato || null, marcatori: p.marcatori || [], mvp: p.mvp || null, rigori: p.rigori || null };
+        partiteDaSalvare[p.id] = {
+            risultato: p.risultato || null,
+            marcatori: p.marcatori || [],
+            cartellini: p.cartellini || [],
+            mvp: p.mvp || null,
+            rigori: p.rigori || null
+        };
     });
     const statsDaSalvare = {};
     giocatoriStatsDB.forEach(g => {
         const key = g.nome.replace(/[.#$[\]/]/g, '_');
-        statsDaSalvare[key] = { nome: g.nome, squadra: g.squadra, marcatori: g.marcatori || 0, assist: g.assist || 0 };
+        statsDaSalvare[key] = { nome: g.nome, squadra: g.squadra, marcatori: g.marcatori || 0 };
     });
     return firebaseDB.ref(FIREBASE_PATH).update({
         partite: partiteDaSalvare,
         giocatoriStats: statsDaSalvare,
         classifiche: classificheDB
     });
+}
+
+// Aggiunge uno o piu' giocatori nuovi alla rosa di una squadra (persistito su
+// Firebase, separato dalla rosa hardcoded: vedi _applyFirebaseData/rosterExtra).
+function saveRosterExtraToFirebase(squadraId, giocatori) {
+    const ref = firebaseDB.ref(`${FIREBASE_PATH}/rosterExtra/${squadraId}`);
+    const updates = {};
+    giocatori.forEach(g => { updates[ref.push().key] = g; });
+    return ref.update(updates);
 }
 
 // Default formation positions (used as fallback if no formation is saved)
@@ -425,21 +455,26 @@ function loadBracketFromFirebase() {
     });
 }
 
-// Utility: testo marcatori per una squadra in una partita
-// 3 celle per giocatore: gol | assist | nome (left) oppure nome | gol | assist (right)
-// Il grid a 3 colonne sul parent mantiene goals e assists sempre nella stessa colonna
+// Utility: testo marcatori per una squadra in una partita (solo gol: l'assist
+// non viene piu' tracciato a partire dall'edizione Autunno 2026)
 function getScorerText(partita, squadra, side) {
     if (!partita.risultato) return '<span class="no-scorer">&mdash;</span>';
-    const lista = (partita.marcatori || []).filter(m => m.squadra === squadra && (m.gol > 0 || m.assist > 0));
+    const lista = (partita.marcatori || []).filter(m => m.squadra === squadra && m.gol > 0);
     if (lista.length === 0) return '<span class="no-scorer">&mdash;</span>';
     return lista.map(m => {
-        const g = m.gol   > 0 ? `${m.gol}&#9917;`    : '';
-        const a = m.assist > 0 ? `${m.assist}&#x1F45F;` : '';
-        const gSpan = `<span class="scorer-g">${g}</span>`;
-        const aSpan = `<span class="scorer-a">${a}</span>`;
+        const gSpan = `<span class="scorer-g">${m.gol}&#9917;</span>`;
         const nSpan = `<span class="scorer-name">${m.nome}</span>`;
-        return side === 'right' ? nSpan + gSpan + aSpan : gSpan + aSpan + nSpan;
+        return side === 'right' ? nSpan + gSpan : gSpan + nSpan;
     }).join('');
+}
+
+// Utility: testo cartellini (giallo/rosso) di una partita, per mostrarli nelle
+// card dei risultati (Home, Calendario)
+function getCartelliniText(partita) {
+    if (!partita.cartellini || partita.cartellini.length === 0) return '';
+    return partita.cartellini.map(c =>
+        `<span class="card-chip card-chip-${c.tipo}">${c.tipo === 'rosso' ? '&#128308;' : '&#128992;'} ${c.nome}</span>`
+    ).join('');
 }
 
 // Anno e nome dell'edizione attualmente in corso

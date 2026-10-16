@@ -1,42 +1,99 @@
 let currentMatchId = null;
+let currentFase = null;
+let currentEvents = []; // { nome, squadra, tipo: 'gol'|'giallo'|'rosso' }
+const tipoSelezionato = { 1: 'gol', 2: 'gol' };
+
+const FASI = {
+    girone:      { titolo: 'Girone',   filter: p => !p.playoffRound },
+    triangolare: { titolo: 'Play In',  filter: p => ['pi1', 'pi2', 'pi3'].includes(p.playoffRound) },
+    semifinale:  { titolo: 'Semifinale', filter: p => ['sf1', 'sf2'].includes(p.playoffRound) },
+    finalina:    { titolo: 'Finalina', filter: p => p.playoffRound === 'p34' },
+    finale:      { titolo: 'Finale',   filter: p => p.playoffRound === 'fin' }
+};
 
 function initAdmin() {
-    loadMatchesInSelect();
-    displayMatches();
-    document.getElementById('match-select').addEventListener('change', onMatchSelect);
-    initFormationEditor();
+    popolaSelectSquadreAggiungiGiocatore();
+    aggiungiRigaGiocatore();
 }
 
-function loadMatchesInSelect() {
-    const sel = document.getElementById('match-select');
-    sel.innerHTML = '<option value="">-- Seleziona una partita --</option>';
-    partiteDB.forEach(p => {
-        const opt = document.createElement('option');
-        opt.value = p.id;
-        const stato = p.risultato ? ` [${p.risultato}${p.rigori ? ` rig. ${p.rigori}` : ''}]` : '';
-        const prefix = p.playoffRound
-            ? `${p.label} ${p.orario}`
-            : `G${p.giorno} ${p.orario} | Girone ${p.girone}`;
-        const t1 = p.squadra1 || '—';
-        const t2 = p.squadra2 || '—';
-        opt.textContent = `${prefix} | ${t1} vs ${t2}${stato}`;
-        sel.appendChild(opt);
+function escHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ===== NAVIGAZIONE VISTE =====
+function mostraVista(id) {
+    ['view-menu', 'view-matches', 'view-result'].forEach(v => {
+        document.getElementById(v).style.display = v === id ? 'block' : 'none';
     });
 }
 
-function onMatchSelect() {
-    const posEditor = document.getElementById('posizioni-partita-editor');
-    if (posEditor) posEditor.style.display = 'none';
-    const id = parseInt(this.value);
-    const section = document.getElementById('match-detail-section');
-    if (!id) { section.style.display = 'none'; currentMatchId = null; return; }
+function tornaAlMenu() {
+    currentFase = null;
+    mostraVista('view-menu');
+}
 
-    currentMatchId = id;
-    section.style.display = 'block';
+function tornaAFase() {
+    currentMatchId = null;
+    mostraVista('view-matches');
+}
 
+function apriFase(fase) {
+    currentFase = fase;
+    renderListaPartiteFase();
+    mostraVista('view-matches');
+}
+
+function renderListaPartiteFase() {
+    const info = FASI[currentFase];
+    document.getElementById('matches-fase-title').textContent = info.titolo;
+    const list = partiteDB.filter(info.filter).sort((a, b) => a.id - b.id);
+    const container = document.getElementById('fase-matches-list');
+
+    let html = '';
+    list.forEach(p => {
+        const risDisplay = p.risultato
+            ? `${p.risultato}${p.rigori ? ` (rig. ${p.rigori})` : ''}`
+            : null;
+        const stato = risDisplay
+            ? `<strong style="color:var(--neon-green)">${risDisplay}</strong>`
+            : '<span style="color:var(--text-muted)">In attesa</span>';
+        const t1 = escHtml(p.squadra1 || '—');
+        const t2 = escHtml(p.squadra2 || '—');
+        const meta = p.playoffRound
+            ? `${p.label || ''} &ndash; ${p.orario}`
+            : `G${p.giorno} &ndash; ${p.orario} | Girone ${p.girone}`;
+        html += `
+            <div class="match-item" onclick="apriRisultato(${p.id})">
+                <div class="match-info">
+                    <div class="match-title">${t1} vs ${t2}</div>
+                    <div class="match-meta">${meta} | ${stato}</div>
+                </div>
+            </div>
+        `;
+    });
+    container.innerHTML = html || '<p style="color: var(--text-muted);">Nessuna partita in questa fase</p>';
+}
+
+function getBadgeHtml(nomeSquadra) {
+    const sq = squadreDB.find(s => s.nome === nomeSquadra);
+    if (sq && sq.logo) return `<img src="Loghi/${sq.logo}" alt="${sq.nome}" class="team-badge-img">`;
+    return `<div class="team-badge">${sq ? sq.badge : '?'}</div>`;
+}
+
+// ===== APERTURA RISULTATO PARTITA =====
+function apriRisultato(id) {
     const partita = partiteDB.find(p => p.id === id);
-    document.getElementById('label-team1').textContent = partita.squadra1;
-    document.getElementById('label-team2').textContent = partita.squadra2;
+    if (!partita) return;
+    currentMatchId = id;
+
+    document.getElementById('rh-name1').textContent = partita.squadra1 || '—';
+    document.getElementById('rh-name2').textContent = partita.squadra2 || '—';
+    document.getElementById('rh-badge1').innerHTML = getBadgeHtml(partita.squadra1);
+    document.getElementById('rh-badge2').innerHTML = getBadgeHtml(partita.squadra2);
+    document.getElementById('aep-name1').textContent = partita.squadra1 || '—';
+    document.getElementById('aep-name2').textContent = partita.squadra2 || '—';
+    document.getElementById('rig-label1').textContent = partita.squadra1 || 'Squa. 1';
+    document.getElementById('rig-label2').textContent = partita.squadra2 || 'Squa. 2';
 
     if (partita.risultato) {
         const [g1, g2] = partita.risultato.split(' - ').map(Number);
@@ -48,65 +105,107 @@ function onMatchSelect() {
     }
 
     const rigoriSection = document.getElementById('rigori-section');
-    if (rigoriSection) {
-        rigoriSection.style.display = partita.playoffRound ? 'block' : 'none';
-        if (partita.rigori) {
-            const [r1, r2] = partita.rigori.split(' - ').map(Number);
-            document.getElementById('rigori-team1').value = r1;
-            document.getElementById('rigori-team2').value = r2;
-        } else {
-            document.getElementById('rigori-team1').value = 0;
-            document.getElementById('rigori-team2').value = 0;
-        }
+    rigoriSection.style.display = partita.playoffRound ? 'block' : 'none';
+    if (partita.rigori) {
+        const [r1, r2] = partita.rigori.split(' - ').map(Number);
+        document.getElementById('rigori-team1').value = r1;
+        document.getElementById('rigori-team2').value = r2;
+    } else {
+        document.getElementById('rigori-team1').value = 0;
+        document.getElementById('rigori-team2').value = 0;
     }
 
-    document.getElementById('scorers-list').innerHTML = '';
-    if (partita.marcatori && partita.marcatori.length > 0) {
-        partita.marcatori.forEach(m => addScorerRow(m.nome, m.gol || 0, m.assist || 0));
-    }
-
-    populateMvpSelect(partita);
-    if (partita.mvp) document.getElementById('mvp-select').value = partita.mvp;
-}
-
-function escHtml(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-function buildPlayerOptionsHtml(partita, defaultValue) {
-    let html = '<option value="">-- Giocatore --</option>';
-    [partita.squadra1, partita.squadra2].filter(Boolean).forEach(nomeSquadra => {
-        const sq = squadreDB.find(s => s.nome === nomeSquadra);
-        if (!sq) return;
-        html += `<optgroup label="${escHtml(nomeSquadra)}">`;
-        sq.giocatori.forEach(g => {
-            const sel = g.nome === defaultValue ? 'selected' : '';
-            html += `<option value="${escHtml(g.nome)}" ${sel}>${escHtml(g.nome)}${g.capitano ? ' (C)' : ''}</option>`;
-        });
-        html += '</optgroup>';
+    currentEvents = [];
+    (partita.marcatori || []).forEach(m => {
+        for (let i = 0; i < (m.gol || 0); i++) currentEvents.push({ nome: m.nome, squadra: m.squadra, tipo: 'gol' });
     });
-    return html;
+    (partita.cartellini || []).forEach(c => currentEvents.push({ nome: c.nome, squadra: c.squadra, tipo: c.tipo }));
+
+    tipoSelezionato[1] = 'gol';
+    tipoSelezionato[2] = 'gol';
+    aggiornaToggleUI(1);
+    aggiornaToggleUI(2);
+    document.getElementById('aep-search1').value = '';
+    document.getElementById('aep-search2').value = '';
+
+    renderEventsLists();
+    renderPickList(1);
+    renderPickList(2);
+    populateMvpSelect(partita);
+    document.getElementById('mvp-select').value = partita.mvp || '';
+
+    mostraVista('view-result');
 }
 
-function addScorerRow(playerName, gol, assist) {
-    playerName = playerName || '';
-    gol = gol || 0;
-    assist = assist || 0;
+// ===== LISTE EVENTI (marcatori/cartellini) =====
+function iconaTipo(tipo) {
+    if (tipo === 'gol') return '&#9917;';
+    if (tipo === 'giallo') return '&#128992;';
+    return '&#128308;';
+}
+
+function renderEventsLists() {
     const partita = partiteDB.find(p => p.id === currentMatchId);
     if (!partita) return;
+    [1, 2].forEach(side => {
+        const nomeSquadra = side === 1 ? partita.squadra1 : partita.squadra2;
+        const container = document.getElementById(`events-list${side}`);
+        let html = '';
+        currentEvents.forEach((ev, idx) => {
+            if (ev.squadra !== nomeSquadra) return;
+            html += `
+                <div class="event-chip">
+                    <span>${iconaTipo(ev.tipo)} ${escHtml(ev.nome)}</span>
+                    <button class="ec-remove" onclick="rimuoviEvento(${idx})">&#x2715;</button>
+                </div>`;
+        });
+        container.innerHTML = html || '<p style="color:var(--text-muted);font-size:0.85rem;">Nessuno</p>';
+    });
+}
 
-    const list = document.getElementById('scorers-list');
-    const row = document.createElement('div');
-    row.className = 'scorer-row';
-    row.innerHTML = `
-        <select class="s-player">${buildPlayerOptionsHtml(partita, playerName)}</select>
-        <span class="s-lbl">Gol</span>
-        <input type="number" class="s-gol scorer-num" min="0" value="${gol}">
-        <span class="s-lbl">Ast</span>
-        <input type="number" class="s-ast scorer-num" min="0" value="${assist}">
-        <button class="btn-remove-scorer" onclick="this.closest('.scorer-row').remove()">&#x2715;</button>
-    `;
-    list.appendChild(row);
+function rimuoviEvento(idx) {
+    currentEvents.splice(idx, 1);
+    renderEventsLists();
+}
+
+function aggiungiEvento(side, nome, squadra) {
+    currentEvents.push({ nome, squadra, tipo: tipoSelezionato[side] });
+    renderEventsLists();
+}
+
+function setTipoEvento(side, tipo) {
+    tipoSelezionato[side] = tipo;
+    aggiornaToggleUI(side);
+}
+
+function aggiornaToggleUI(side) {
+    const toggle = document.getElementById(`aep-toggle${side}`);
+    const tipo = tipoSelezionato[side];
+    toggle.querySelectorAll('button').forEach((btn, i) => {
+        const map = ['gol', 'giallo', 'rosso'];
+        btn.className = map[i] === tipo ? `active-${tipo}` : '';
+    });
+}
+
+function renderPickList(side) {
+    const partita = partiteDB.find(p => p.id === currentMatchId);
+    if (!partita) return;
+    const nomeSquadra = side === 1 ? partita.squadra1 : partita.squadra2;
+    const sq = squadreDB.find(s => s.nome === nomeSquadra);
+    const container = document.getElementById(`pick-list${side}`);
+    if (!sq) { container.innerHTML = ''; return; }
+
+    const query = (document.getElementById(`aep-search${side}`).value || '').toLowerCase().trim();
+    const giocatori = sq.giocatori.filter(g => g.nome.toLowerCase().includes(query));
+
+    container.innerHTML = giocatori.map(g => {
+        const label = (g.numero ? g.numero + '. ' : '') + g.nome + (g.capitano ? ' (C)' : '');
+        return `<button type="button" class="player-pick-item" data-nome="${escHtml(g.nome)}">${escHtml(label)}</button>`;
+    }).join('') || '<p style="color:var(--text-muted);font-size:0.85rem;">Nessun giocatore</p>';
+
+    container.querySelectorAll('.player-pick-item').forEach(btn => {
+        btn.addEventListener('click', () => aggiungiEvento(side, btn.dataset.nome, nomeSquadra));
+    });
 }
 
 function populateMvpSelect(partita) {
@@ -127,33 +226,31 @@ function populateMvpSelect(partita) {
     });
 }
 
+// ===== SALVATAGGIO RISULTATO =====
 function saveAll() {
     if (!currentMatchId) { showError('Seleziona una partita'); return; }
-
     const partita = partiteDB.find(p => p.id === currentMatchId);
     if (!partita) return;
 
     const g1 = parseInt(document.getElementById('goals-team1').value) || 0;
     const g2 = parseInt(document.getElementById('goals-team2').value) || 0;
 
-    const newMarcatori = [];
-    document.querySelectorAll('.scorer-row').forEach(row => {
-        const nome = row.querySelector('.s-player').value;
-        if (!nome) return;
-        const gol = parseInt(row.querySelector('.s-gol').value) || 0;
-        const assist = parseInt(row.querySelector('.s-ast').value) || 0;
-        if (gol === 0 && assist === 0) return;
-
-        let squadra = '';
-        [partita.squadra1, partita.squadra2].forEach(nomeSquadra => {
-            const sq = squadreDB.find(s => s.nome === nomeSquadra);
-            if (sq && sq.giocatori.some(g => g.nome === nome)) squadra = nomeSquadra;
-        });
-        newMarcatori.push({ nome, squadra, gol, assist });
+    const marcatoriMap = {};
+    const cartellini = [];
+    currentEvents.forEach(ev => {
+        if (ev.tipo === 'gol') {
+            const key = ev.nome + '|' + ev.squadra;
+            if (!marcatoriMap[key]) marcatoriMap[key] = { nome: ev.nome, squadra: ev.squadra, gol: 0 };
+            marcatoriMap[key].gol++;
+        } else {
+            cartellini.push({ nome: ev.nome, squadra: ev.squadra, tipo: ev.tipo });
+        }
     });
+    const newMarcatori = Object.values(marcatoriMap);
 
     partita.risultato = `${g1} - ${g2}`;
     partita.marcatori = newMarcatori;
+    partita.cartellini = cartellini;
     partita.mvp = document.getElementById('mvp-select').value || null;
     partita.rigori = null;
     if (partita.playoffRound && g1 === g2) {
@@ -169,15 +266,13 @@ function saveAll() {
 
     showSuccess(`Salvato: ${partita.squadra1} ${g1}-${g2} ${partita.squadra2}`);
 
-    // Avviso (non blocca): i gol dei marcatori non sommano al risultato
     const elencati1 = newMarcatori.filter(m => m.squadra === partita.squadra1).reduce((s, m) => s + m.gol, 0);
     const elencati2 = newMarcatori.filter(m => m.squadra === partita.squadra2).reduce((s, m) => s + m.gol, 0);
     if (elencati1 !== g1 || elencati2 !== g2) {
         showWarning(`Gol dei marcatori non tornano col risultato: ${partita.squadra1} ${elencati1}/${g1}, ${partita.squadra2} ${elencati2}/${g2}. Salvato comunque (autogol o marcatori ignoti?).`);
     }
 
-    loadMatchesInSelect();
-    displayMatches();
+    renderListaPartiteFase();
 }
 
 function deleteCurrentResult() {
@@ -189,6 +284,7 @@ function deleteCurrentResult() {
 
     partita.risultato = null;
     partita.marcatori = [];
+    partita.cartellini = [];
     partita.mvp = null;
     partita.rigori = null;
 
@@ -198,13 +294,7 @@ function deleteCurrentResult() {
     saveDataToFirebase();
 
     showSuccess('Risultato cancellato');
-    loadMatchesInSelect();
-    displayMatches();
-
-    // Nascondi il form e resetta la selezione (la partita torna "non giocata")
-    currentMatchId = null;
-    document.getElementById('match-select').value = '';
-    document.getElementById('match-detail-section').style.display = 'none';
+    tornaAFase();
 }
 
 function recomputeAllClassifications() {
@@ -235,55 +325,17 @@ function recomputeAllClassifications() {
 }
 
 function recomputeGiocatoriStats() {
-    giocatoriStatsDB.forEach(g => { g.marcatori = 0; g.assist = 0; });
+    giocatoriStatsDB.forEach(g => { g.marcatori = 0; });
     partiteDB.forEach(p => {
         (p.marcatori || []).forEach(m => {
             let g = giocatoriStatsDB.find(x => x.nome === m.nome);
             if (!g) {
-                g = { nome: m.nome, squadra: m.squadra, marcatori: 0, assist: 0 };
+                g = { nome: m.nome, squadra: m.squadra, marcatori: 0 };
                 giocatoriStatsDB.push(g);
             }
             g.marcatori += m.gol || 0;
-            g.assist += m.assist || 0;
         });
     });
-}
-
-function displayMatches() {
-    const container = document.getElementById('matches-list');
-    let html = '';
-    partiteDB.forEach(partita => {
-        const risDisplay = partita.risultato
-            ? `${partita.risultato}${partita.rigori ? ` (rig. ${partita.rigori})` : ''}`
-            : null;
-        const stato = risDisplay
-            ? `<strong style="color:var(--neon-green)">${risDisplay}</strong>`
-            : '<span style="color:var(--text-muted)">In attesa</span>';
-        const mvpTag = partita.mvp ? ` | MVP: ${escHtml(partita.mvp)}` : '';
-        const t1 = escHtml(partita.squadra1 || '—');
-        const t2 = escHtml(partita.squadra2 || '—');
-        const meta = partita.playoffRound
-            ? `${partita.label} &ndash; ${partita.orario}`
-            : `G${partita.giorno} &ndash; ${partita.orario} | Girone ${partita.girone}`;
-        html += `
-            <div class="match-item">
-                <div class="match-info">
-                    <div class="match-title">${t1} vs ${t2}</div>
-                    <div class="match-meta">${meta} | ${stato}${mvpTag}</div>
-                </div>
-                <div class="match-actions">
-                    <button class="btn-small btn-edit" onclick="editMatch(${partita.id})">Modifica</button>
-                </div>
-            </div>
-        `;
-    });
-    container.innerHTML = html || '<p style="color: var(--text-muted);">Nessuna partita</p>';
-}
-
-function editMatch(id) {
-    document.getElementById('match-select').value = id;
-    document.getElementById('match-select').dispatchEvent(new Event('change'));
-    document.getElementById('match-select').scrollIntoView({ behavior: 'smooth' });
 }
 
 function showSuccess(msg) {
@@ -317,168 +369,71 @@ function vittoriaATavolino(teamNum) {
 
     partita.risultato = teamNum === 1 ? '3 - 0' : '0 - 3';
     partita.marcatori = [];
+    partita.cartellini = [];
     partita.mvp = null;
+    currentEvents = [];
 
     document.getElementById('goals-team1').value = teamNum === 1 ? 3 : 0;
     document.getElementById('goals-team2').value = teamNum === 1 ? 0 : 3;
-    document.getElementById('scorers-list').innerHTML = '';
+    renderEventsLists();
     document.getElementById('mvp-select').value = '';
 
     recomputeAllClassifications();
+    applyPlayoffTeams();
     recomputeGiocatoriStats();
     saveDataToFirebase();
     showSuccess(`Vittoria a tavolino: ${partita.squadra1} ${partita.risultato} ${partita.squadra2}`);
-    loadMatchesInSelect();
-    displayMatches();
+    renderListaPartiteFase();
 }
 
-// ===== FORMATION EDITOR =====
-const formState = { squadraId: null, casa: null, trasferta: null };
-const matchPosState = { team1: null, team2: null };
-let activeDrag = null;
-
-function deepCopyFormation(f) {
-    const result = {};
-    Object.keys(f).forEach(r => { result[r] = { left: f[r].left, top: f[r].top }; });
-    return result;
-}
-
-function initFormationEditor() {
-    const sel = document.getElementById('formazione-team-select');
+// ===== AGGIUNGI GIOCATORI =====
+function popolaSelectSquadreAggiungiGiocatore() {
+    const sel = document.getElementById('aggp-team-select');
     squadreDB.forEach(sq => {
         const o = document.createElement('option');
         o.value = sq.id;
         o.textContent = sq.nome;
         sel.appendChild(o);
     });
-    document.addEventListener('mousemove', onDragMove);
-    document.addEventListener('mouseup', onDragEnd);
-    document.addEventListener('touchmove', onTouchDragMove, { passive: false });
-    document.addEventListener('touchend', onDragEnd);
 }
 
-function onTeamSelectChange() {
-    const id = parseInt(document.getElementById('formazione-team-select').value);
-    const editor = document.getElementById('formazione-editor');
-    if (!id) { editor.style.display = 'none'; return; }
-    formState.squadraId = id;
-    editor.style.display = 'block';
-    loadFormazioniFromFirebase(id).then(data => {
-        formState.casa      = data && data.casa      ? deepCopyFormation(data.casa)      : deepCopyFormation(DEFAULT_FORMATION.casa);
-        formState.trasferta = data && data.trasferta ? deepCopyFormation(data.trasferta) : deepCopyFormation(DEFAULT_FORMATION.trasferta);
-        renderFormDots('pitch-casa',      formState.casa,      'team1-dot', 'casa');
-        renderFormDots('pitch-trasferta', formState.trasferta, 'team2-dot', 'trasferta');
+function aggiungiRigaGiocatore() {
+    const container = document.getElementById('aggp-rows');
+    const row = document.createElement('div');
+    row.className = 'aggp-row';
+    row.innerHTML = `
+        <input type="text" class="aggp-nome" placeholder="Nome">
+        <input type="text" class="aggp-cognome" placeholder="Cognome">
+        <input type="number" class="aggp-numero" placeholder="N.º" min="0">
+        <button class="btn-remove-scorer" onclick="this.closest('.aggp-row').remove()" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:6px;cursor:pointer;padding:0.4rem 0.6rem;">&#x2715;</button>
+    `;
+    container.appendChild(row);
+}
+
+async function salvaGiocatoriNuovi() {
+    const squadraId = parseInt(document.getElementById('aggp-team-select').value);
+    if (!squadraId) { showError('Seleziona una squadra'); return; }
+    const sq = squadreDB.find(s => s.id === squadraId);
+    if (!sq) return;
+
+    const nuovi = [];
+    document.querySelectorAll('#aggp-rows .aggp-row').forEach(row => {
+        const nome = row.querySelector('.aggp-nome').value.trim();
+        const cognome = row.querySelector('.aggp-cognome').value.trim();
+        const numero = parseInt(row.querySelector('.aggp-numero').value) || null;
+        if (!nome && !cognome) return;
+        const nomeCompleto = [nome, cognome].filter(Boolean).join(' ');
+        nuovi.push({ nome: nomeCompleto, numero });
     });
-}
 
-const ROLE_LABELS = { gk: 'POR', def: 'DIF', ml: 'CL', mr: 'CR', fw: 'ATT' };
+    if (nuovi.length === 0) { showError('Inserisci almeno un giocatore'); return; }
 
-function renderFormDots(pitchId, formation, dotClass, stateKey) {
-    const pitch = document.getElementById(pitchId);
-    if (!pitch) return;
-    pitch.querySelectorAll('.form-dot').forEach(d => d.remove());
-    Object.entries(formation).forEach(([role, pos]) => {
-        const dot = document.createElement('div');
-        dot.className = `form-dot ${dotClass}`;
-        dot.style.left = pos.left + '%';
-        dot.style.top  = pos.top  + '%';
-        dot.textContent = ROLE_LABELS[role] || role.toUpperCase();
-        dot.dataset.role     = role;
-        dot.dataset.stateKey = stateKey;
-        dot.addEventListener('mousedown',  onDragStart);
-        dot.addEventListener('touchstart', onDragStart, { passive: false });
-        pitch.appendChild(dot);
-    });
-}
+    await saveRosterExtraToFirebase(squadraId, nuovi);
+    nuovi.forEach(g => { if (!sq.giocatori.some(x => x.nome === g.nome)) sq.giocatori.push(g); });
 
-function onDragStart(e) {
-    activeDrag = {
-        dot: e.currentTarget,
-        pitch: e.currentTarget.parentElement,
-        stateKey: e.currentTarget.dataset.stateKey,
-        role: e.currentTarget.dataset.role
-    };
-    e.preventDefault();
-}
-
-function getPosPct(clientX, clientY, pitch) {
-    const rect = pitch.getBoundingClientRect();
-    return {
-        left: Math.max(2, Math.min(98, (clientX - rect.left) / rect.width  * 100)),
-        top:  Math.max(2, Math.min(98, (clientY - rect.top)  / rect.height * 100))
-    };
-}
-
-function applyDrag(clientX, clientY) {
-    if (!activeDrag) return;
-    const pos = getPosPct(clientX, clientY, activeDrag.pitch);
-    activeDrag.dot.style.left = pos.left.toFixed(1) + '%';
-    activeDrag.dot.style.top  = pos.top.toFixed(1)  + '%';
-    const stored = { left: parseFloat(pos.left.toFixed(1)), top: parseFloat(pos.top.toFixed(1)) };
-    const sk = activeDrag.stateKey;
-    if (sk === 'casa')      formState.casa[activeDrag.role]      = stored;
-    else if (sk === 'trasferta') formState.trasferta[activeDrag.role] = stored;
-    else if (sk === 'match1')    matchPosState.team1[activeDrag.role] = stored;
-    else if (sk === 'match2')    matchPosState.team2[activeDrag.role] = stored;
-}
-
-function onDragMove(e)      { applyDrag(e.clientX, e.clientY); }
-function onTouchDragMove(e) { if (activeDrag) { applyDrag(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }
-function onDragEnd()        { activeDrag = null; }
-
-async function salvaFormazione() {
-    if (!formState.squadraId) { showError('Seleziona una squadra'); return; }
-    await saveFormazioniToFirebase(formState.squadraId, { casa: formState.casa, trasferta: formState.trasferta });
-    showSuccess('Formazione salvata!');
-}
-
-// ===== MATCH POSITION OVERRIDE =====
-async function togglePosizioniPartita() {
-    const editor = document.getElementById('posizioni-partita-editor');
-    if (editor.style.display !== 'none') { editor.style.display = 'none'; return; }
-    if (!currentMatchId) return;
-
-    const partita = partiteDB.find(p => p.id === currentMatchId);
-    if (!partita) return;
-
-    document.getElementById('label-pitch1').textContent = partita.squadra1;
-    document.getElementById('label-pitch2').textContent = partita.squadra2;
-
-    const existing = await loadPosizioniPartitaFromFirebase(currentMatchId);
-    const sq1 = squadreDB.find(s => s.nome === partita.squadra1);
-    const sq2 = squadreDB.find(s => s.nome === partita.squadra2);
-    let f1 = null, f2 = null;
-    if (!existing) {
-        [f1, f2] = await Promise.all([
-            sq1 ? loadFormazioniFromFirebase(sq1.id) : Promise.resolve(null),
-            sq2 ? loadFormazioniFromFirebase(sq2.id) : Promise.resolve(null)
-        ]);
-    }
-
-    matchPosState.team1 = existing && existing.squadra1
-        ? deepCopyFormation(existing.squadra1)
-        : f1 && f1.casa ? deepCopyFormation(f1.casa) : deepCopyFormation(DEFAULT_FORMATION.casa);
-    matchPosState.team2 = existing && existing.squadra2
-        ? deepCopyFormation(existing.squadra2)
-        : f2 && f2.trasferta ? deepCopyFormation(f2.trasferta) : deepCopyFormation(DEFAULT_FORMATION.trasferta);
-
-    renderFormDots('pitch-match1', matchPosState.team1, 'team1-dot', 'match1');
-    renderFormDots('pitch-match2', matchPosState.team2, 'team2-dot', 'match2');
-    editor.style.display = 'block';
-}
-
-async function salvaPosizioniPartita() {
-    if (!currentMatchId) return;
-    await savePosizioniPartitaToFirebase(currentMatchId, { squadra1: matchPosState.team1, squadra2: matchPosState.team2 });
-    showSuccess('Posizioni partita salvate!');
-}
-
-async function cancellaPosizioniPartita() {
-    if (!currentMatchId) return;
-    if (!confirm('Rimuovere le posizioni personalizzate per questa partita?')) return;
-    await firebaseDB.ref(`${FIREBASE_PATH}/posizioniPartita/${currentMatchId}`).remove();
-    document.getElementById('posizioni-partita-editor').style.display = 'none';
-    showSuccess('Posizioni personalizzate rimosse');
+    showSuccess(`Aggiunti ${nuovi.length} giocatori a ${sq.nome}`);
+    document.getElementById('aggp-rows').innerHTML = '';
+    aggiungiRigaGiocatore();
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
