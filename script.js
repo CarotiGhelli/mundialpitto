@@ -78,7 +78,7 @@ const squadreDB = [
         id: 5,
         nome: "Pam FC",
         badge: "PAM",
-        logo: "Pam.jpg",
+        logo: "Pam.png",
         girone: "Girone Unico",
         colore: "#1a5c38",
         coloreScuro: "#0d2e1c",
