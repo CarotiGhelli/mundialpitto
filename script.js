@@ -115,11 +115,11 @@ const squadreDB = [
 // ricompilano da sole (vedi applyPlayoffTeams).
 const partiteDB = [
     // GIRONE UNICO - Sabato (giorno 1), ogni squadra gioca 2 partite
-    { id: 1, giorno: 1, orario: "18:30", girone: "UNICO", squadra1: "ADLSR FC", squadra2: "Cripta", risultato: null, marcatori: [] },
-    { id: 2, giorno: 1, orario: "19:10", girone: "UNICO", squadra1: "Cripta", squadra2: "Raccattati FC", risultato: null, marcatori: [] },
-    { id: 3, giorno: 1, orario: "19:50", girone: "UNICO", squadra1: "Raccattati FC", squadra2: "Here We Calcio", risultato: null, marcatori: [] },
-    { id: 4, giorno: 1, orario: "20:30", girone: "UNICO", squadra1: "Here We Calcio", squadra2: "Pam FC", risultato: null, marcatori: [] },
-    { id: 5, giorno: 1, orario: "21:10", girone: "UNICO", squadra1: "Pam FC", squadra2: "ADLSR FC", risultato: null, marcatori: [] },
+    { id: 1, giorno: 1, orario: "18:30", girone: "UNICO", squadra1: "Here We Calcio", squadra2: "Raccattati FC", risultato: null, marcatori: [] },
+    { id: 2, giorno: 1, orario: "19:10", girone: "UNICO", squadra1: "Pam FC", squadra2: "Cripta", risultato: null, marcatori: [] },
+    { id: 3, giorno: 1, orario: "19:50", girone: "UNICO", squadra1: "Here We Calcio", squadra2: "ADLSR FC", risultato: null, marcatori: [] },
+    { id: 4, giorno: 1, orario: "20:30", girone: "UNICO", squadra1: "Raccattati FC", squadra2: "Pam FC", risultato: null, marcatori: [] },
+    { id: 5, giorno: 1, orario: "21:10", girone: "UNICO", squadra1: "Cripta", squadra2: "ADLSR FC", risultato: null, marcatori: [] },
 
     // PLAY IN (triangolare 3a/4a/5a del girone) - Domenica (giorno 2)
     // Le squadre si compilano da sole appena il girone e' concluso (5/5 risultati).
@@ -303,6 +303,16 @@ function _applyFirebaseData(data) {
             });
         });
     }
+    // Giocatori rimossi dalla rosa via admin (sia hardcoded che rosterExtra).
+    if (data.rosterRemoved) {
+        Object.keys(data.rosterRemoved).forEach(squadraId => {
+            const sq = squadreDB.find(s => s.id === parseInt(squadraId, 10));
+            if (!sq) return;
+            const removedRaw = data.rosterRemoved[squadraId];
+            const removedNames = Array.isArray(removedRaw) ? removedRaw : Object.values(removedRaw);
+            sq.giocatori = sq.giocatori.filter(g => !removedNames.includes(g.nome));
+        });
+    }
     // Migra vecchio nome nei marcatori
     partiteDB.forEach(p => {
         (p.marcatori || []).forEach(m => { if (m.squadra === 'ADLSR') m.squadra = 'ADLSR FC'; });
@@ -414,6 +424,14 @@ function saveRosterExtraToFirebase(squadraId, giocatori) {
     const updates = {};
     giocatori.forEach(g => { updates[ref.push().key] = g; });
     return ref.update(updates);
+}
+
+// Segna un giocatore come rimosso dalla rosa di una squadra (persistito su
+// Firebase: vedi _applyFirebaseData/rosterRemoved). Funziona sia per i
+// giocatori hardcoded che per quelli aggiunti via rosterExtra.
+function removePlayerFromRoster(squadraId, nomeGiocatore) {
+    const ref = firebaseDB.ref(`${FIREBASE_PATH}/rosterRemoved/${squadraId}`);
+    return ref.push(nomeGiocatore);
 }
 
 // Default formation positions (used as fallback if no formation is saved)

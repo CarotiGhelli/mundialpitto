@@ -164,12 +164,26 @@ function renderEventsLists() {
 }
 
 function rimuoviEvento(idx) {
+    const ev = currentEvents[idx];
+    if (ev && ev.tipo === 'gol') {
+        const partita = partiteDB.find(p => p.id === currentMatchId);
+        const side = partita && ev.squadra === partita.squadra1 ? 1 : (partita && ev.squadra === partita.squadra2 ? 2 : null);
+        if (side) {
+            const input = document.getElementById(`goals-team${side}`);
+            input.value = Math.max(0, (parseInt(input.value) || 0) - 1);
+        }
+    }
     currentEvents.splice(idx, 1);
     renderEventsLists();
 }
 
 function aggiungiEvento(side, nome, squadra) {
-    currentEvents.push({ nome, squadra, tipo: tipoSelezionato[side] });
+    const tipo = tipoSelezionato[side];
+    currentEvents.push({ nome, squadra, tipo });
+    if (tipo === 'gol') {
+        const input = document.getElementById(`goals-team${side}`);
+        input.value = (parseInt(input.value) || 0) + 1;
+    }
     renderEventsLists();
 }
 
@@ -386,7 +400,7 @@ function vittoriaATavolino(teamNum) {
     renderListaPartiteFase();
 }
 
-// ===== AGGIUNGI GIOCATORI =====
+// ===== AGGIUNGI / RIMUOVI GIOCATORI =====
 function popolaSelectSquadreAggiungiGiocatore() {
     const sel = document.getElementById('aggp-team-select');
     squadreDB.forEach(sq => {
@@ -395,6 +409,41 @@ function popolaSelectSquadreAggiungiGiocatore() {
         o.textContent = sq.nome;
         sel.appendChild(o);
     });
+    sel.addEventListener('change', renderRosterCorrente);
+    renderRosterCorrente();
+}
+
+function renderRosterCorrente() {
+    const container = document.getElementById('aggp-roster-corrente');
+    if (!container) return;
+    const squadraId = parseInt(document.getElementById('aggp-team-select').value);
+    const sq = squadreDB.find(s => s.id === squadraId);
+    if (!sq) { container.innerHTML = ''; return; }
+
+    container.innerHTML = sq.giocatori.map(g => {
+        const label = (g.numero ? g.numero + '. ' : '') + g.nome + (g.capitano ? ' (C)' : '');
+        return `
+            <div class="event-chip">
+                <span>${escHtml(label)}</span>
+                <button type="button" class="ec-remove" data-nome="${escHtml(g.nome)}">&#x2715;</button>
+            </div>`;
+    }).join('') || '<p style="color:var(--text-muted);font-size:0.85rem;">Nessun giocatore</p>';
+
+    container.querySelectorAll('.ec-remove').forEach(btn => {
+        btn.addEventListener('click', () => rimuoviGiocatore(sq.id, btn.dataset.nome));
+    });
+}
+
+async function rimuoviGiocatore(squadraId, nomeGiocatore) {
+    if (!confirm(`Rimuovere ${nomeGiocatore} dalla rosa?`)) return;
+    const sq = squadreDB.find(s => s.id === squadraId);
+    if (!sq) return;
+
+    await removePlayerFromRoster(squadraId, nomeGiocatore);
+    sq.giocatori = sq.giocatori.filter(g => g.nome !== nomeGiocatore);
+
+    showSuccess(`${nomeGiocatore} rimosso dalla rosa`);
+    renderRosterCorrente();
 }
 
 function aggiungiRigaGiocatore() {
@@ -434,6 +483,7 @@ async function salvaGiocatoriNuovi() {
     showSuccess(`Aggiunti ${nuovi.length} giocatori a ${sq.nome}`);
     document.getElementById('aggp-rows').innerHTML = '';
     aggiungiRigaGiocatore();
+    renderRosterCorrente();
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
