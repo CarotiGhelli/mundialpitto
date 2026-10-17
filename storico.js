@@ -1,5 +1,7 @@
 // Badge/logo di una squadra, cercata per nome nel DB dell'edizione corrente.
-// Le squadre di edizioni passate non sono più nel DB: in quel caso si mostra solo il nome.
+// Se non e' piu' nel DB corrente (edizione conclusa, rose sovrascritte), si
+// cerca nell'archivio delle edizioni concluse; solo come ultima risorsa si
+// mostra l'icona della coppa.
 function getBadgeStorico(nomeSquadra) {
     const sq = squadreDB.find(s => s.nome === nomeSquadra);
     if (sq && sq.logo) {
@@ -7,6 +9,16 @@ function getBadgeStorico(nomeSquadra) {
     }
     if (sq) {
         return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, ${sq.colore} 0%, ${sq.coloreScuro} 100%);font-weight:900;">${sq.badge}</div>`;
+    }
+    if (typeof archivioEdizioniDB !== 'undefined') {
+        for (const ed of archivioEdizioniDB) {
+            const arch = (ed.squadre || []).find(s => s.nome === nomeSquadra);
+            if (!arch) continue;
+            if (arch.logo) {
+                return `<img src="Loghi/${arch.logo}" alt="${arch.nome}" style="width:100%;height:100%;object-fit:contain;">`;
+            }
+            return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, ${arch.colore} 0%, ${arch.coloreScuro} 100%);font-weight:900;">${arch.badge}</div>`;
+        }
     }
     return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-card-hover);font-size:1.5rem;">&#127942;</div>`;
 }
