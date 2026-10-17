@@ -105,7 +105,7 @@ function apriRisultato(id) {
     }
 
     const rigoriSection = document.getElementById('rigori-section');
-    rigoriSection.style.display = partita.playoffRound ? 'block' : 'none';
+    rigoriSection.style.display = 'block';
     if (partita.rigori) {
         const [r1, r2] = partita.rigori.split(' - ').map(Number);
         document.getElementById('rigori-team1').value = r1;
@@ -271,7 +271,7 @@ function saveAll() {
     partita.cartellini = cartellini;
     partita.mvp = document.getElementById('mvp-select').value || null;
     partita.rigori = null;
-    if (partita.playoffRound && g1 === g2) {
+    if (g1 === g2) {
         const r1 = parseInt(document.getElementById('rigori-team1')?.value) || 0;
         const r2 = parseInt(document.getElementById('rigori-team2')?.value) || 0;
         if (r1 !== r2) partita.rigori = `${r1} - ${r2}`;
@@ -335,7 +335,19 @@ function recomputeAllClassifications() {
         sq2.gf += g2; sq2.gs += g1;
         if (g1 > g2) { sq1.vinte++; sq2.perse++; sq1.punti += 3; }
         else if (g1 < g2) { sq2.vinte++; sq1.perse++; sq2.punti += 3; }
-        else { sq1.pareggiate++; sq2.pareggiate++; sq1.punti++; sq2.punti++; }
+        else {
+            // Pareggio: se decisi i rigori, chi vince prende 2 punti e chi
+            // perde 1 (altrimenti 1 punto a testa come un normale pareggio).
+            sq1.pareggiate++; sq2.pareggiate++;
+            if (p.rigori) {
+                const [pr1, pr2] = p.rigori.split(' - ').map(Number);
+                if (pr1 > pr2) { sq1.punti += 2; sq2.punti += 1; }
+                else if (pr2 > pr1) { sq2.punti += 2; sq1.punti += 1; }
+                else { sq1.punti++; sq2.punti++; }
+            } else {
+                sq1.punti++; sq2.punti++;
+            }
+        }
     });
     Object.keys(classificheDB).forEach(girone => {
         classificheDB[girone].sort((a, b) => b.punti !== a.punti ? b.punti - a.punti : (b.gf - b.gs) - (a.gf - a.gs));
