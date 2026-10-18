@@ -123,17 +123,17 @@ const partiteDB = [
 
     // PLAY IN (triangolare 3a/4a/5a del girone) - Domenica (giorno 2)
     // Le squadre si compilano da sole appena il girone e' concluso (5/5 risultati).
-    { id: 101, giorno: 2, orario: "17:30", girone: "PO", playoffRound: "pi1", label: "Play In", squadra1: "3° Girone", squadra2: "4° Girone", risultato: null, marcatori: [] },
-    { id: 102, giorno: 2, orario: "18:10", girone: "PO", playoffRound: "pi2", label: "Play In", squadra1: "4° Girone", squadra2: "5° Girone", risultato: null, marcatori: [] },
-    { id: 103, giorno: 2, orario: "18:50", girone: "PO", playoffRound: "pi3", label: "Play In", squadra1: "3° Girone", squadra2: "5° Girone", risultato: null, marcatori: [] },
+    { id: 101, giorno: 2, orario: "17:00", girone: "PO", playoffRound: "pi1", label: "Play In", squadra1: "4° Girone", squadra2: "3° Girone", risultato: null, marcatori: [] },
+    { id: 102, giorno: 2, orario: "17:30", girone: "PO", playoffRound: "pi2", label: "Play In", squadra1: "4° Girone", squadra2: "5° Girone", risultato: null, marcatori: [] },
+    { id: 103, giorno: 2, orario: "18:00", girone: "PO", playoffRound: "pi3", label: "Play In", squadra1: "3° Girone", squadra2: "5° Girone", risultato: null, marcatori: [] },
 
     // SEMIFINALI - le squadre si compilano da sole appena il Play In e' concluso (3/3 risultati)
-    { id: 104, giorno: 2, orario: "19:40", girone: "PO", playoffRound: "sf1", label: "Semifinale", squadra1: "1° Play In", squadra2: "2° Girone", risultato: null, marcatori: [] },
-    { id: 105, giorno: 2, orario: "20:20", girone: "PO", playoffRound: "sf2", label: "Semifinale", squadra1: "2° Play In", squadra2: "1° Girone", risultato: null, marcatori: [] },
+    { id: 104, giorno: 2, orario: "19:00", girone: "PO", playoffRound: "sf1", label: "Semifinale", squadra1: "2° Girone", squadra2: "1° Play In", risultato: null, marcatori: [] },
+    { id: 105, giorno: 2, orario: "19:40", girone: "PO", playoffRound: "sf2", label: "Semifinale", squadra1: "1° Girone", squadra2: "2° Play In", risultato: null, marcatori: [] },
 
     // 3°/4° posto e FINALE - si compilano da sole a semifinali concluse
-    { id: 106, giorno: 2, orario: "21:00", girone: "PO", playoffRound: "p34", label: "3° / 4° Posto", squadra1: "Perd. SF1", squadra2: "Perd. SF2", risultato: null, marcatori: [] },
-    { id: 107, giorno: 2, orario: "21:40", girone: "PO", playoffRound: "fin", label: "Finale", squadra1: "Vin. SF1", squadra2: "Vin. SF2", risultato: null, marcatori: [] }
+    { id: 106, giorno: 2, orario: "20:30", girone: "PO", playoffRound: "p34", label: "3° / 4° Posto", squadra1: "Perd. SF1", squadra2: "Perd. SF2", risultato: null, marcatori: [] },
+    { id: 107, giorno: 2, orario: "21:15", girone: "PO", playoffRound: "fin", label: "Finale", squadra1: "Vin. SF1", squadra2: "Vin. SF2", risultato: null, marcatori: [] }
 ];
 
 // Database centrale dei marcatori e assist
@@ -208,7 +208,7 @@ function applyPlayoffTeams() {
     const girone = partiteDB.filter(p => p.girone === 'UNICO');
     const gironeConcluso = girone.length > 0 && girone.every(p => p.risultato);
     if (gironeConcluso) {
-        set('pi1', posizioneGirone(3), posizioneGirone(4));
+        set('pi1', posizioneGirone(4), posizioneGirone(3));
         set('pi2', posizioneGirone(4), posizioneGirone(5));
         set('pi3', posizioneGirone(3), posizioneGirone(5));
     }
@@ -216,8 +216,8 @@ function applyPlayoffTeams() {
     // 2) Play In concluso -> Semifinali
     const classificaPlayIn = getClassificaPlayIn();
     if (classificaPlayIn) {
-        set('sf1', classificaPlayIn[0]?.squadra, posizioneGirone(2));
-        set('sf2', classificaPlayIn[1]?.squadra, posizioneGirone(1));
+        set('sf1', posizioneGirone(2), classificaPlayIn[0]?.squadra);
+        set('sf2', posizioneGirone(1), classificaPlayIn[1]?.squadra);
     }
 
     // 3) Semifinali concluse -> Finale e 3°/4° posto
